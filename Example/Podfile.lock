@@ -1,5 +1,6 @@
 PODS:
-  - ChelseabandSDK (0.1.0)
+  - ChelseabandSDK (0.1.0):
+    - RxBluetoothKit (~> 6.0.0)
   - FBSnapshotTestCase (2.1.4):
     - FBSnapshotTestCase/SwiftSupport (= 2.1.4)
   - FBSnapshotTestCase/Core (2.1.4)
@@ -12,6 +13,9 @@ PODS:
     - FBSnapshotTestCase (~> 2.0)
     - Nimble (~> 7.0)
   - Quick (1.2.0)
+  - RxBluetoothKit (6.0.0):
+    - RxSwift (~> 5.1)
+  - RxSwift (5.1.1)
 
 DEPENDENCIES:
   - ChelseabandSDK (from `../`)
@@ -19,6 +23,7 @@ DEPENDENCIES:
   - Nimble (~> 7.0)
   - Nimble-Snapshots (~> 6.3.0)
   - Quick (~> 1.2.0)
+  - RxBluetoothKit (~> 6.0.0)
 
 SPEC REPOS:
   trunk:
@@ -26,18 +31,22 @@ SPEC REPOS:
     - Nimble
     - Nimble-Snapshots
     - Quick
+    - RxBluetoothKit
+    - RxSwift
 
 EXTERNAL SOURCES:
   ChelseabandSDK:
     :path: "../"
 
 SPEC CHECKSUMS:
-  ChelseabandSDK: 403bf81a2cf9aaac73e88c2218fba8cc4baeb4c6
+  ChelseabandSDK: dacc6cccd26763c3063b2241d93df6e8bb6532c6
   FBSnapshotTestCase: 094f9f314decbabe373b87cc339bea235a63e07a
   Nimble: 051e3d8912d40138fa5591c78594f95fb172af37
   Nimble-Snapshots: f5459b5b091678dc942d03ec4741cacb58ba4a52
   Quick: 58d203b1c5e27fff7229c4c1ae445ad7069a7a08
+  RxBluetoothKit: dad22912b15b74a40df8f60057f218d4e851746d
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
 
-PODFILE CHECKSUM: 307f8cc95ce5e92a679874fecb3fd45f6a2363c2
+PODFILE CHECKSUM: 426c7a79c4307253da24bdda7eb24b8dc0ba0cb7
 
 COCOAPODS: 1.10.0

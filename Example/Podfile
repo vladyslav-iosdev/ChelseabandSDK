@@ -2,7 +2,8 @@ use_frameworks!
 
 target 'ChelseabandSDK_Example' do
   pod 'ChelseabandSDK', :path => '../'
-
+  pod 'RxBluetoothKit', '~> 6.0.0'
+  
   target 'ChelseabandSDK_Tests' do
     inherit! :search_paths
 

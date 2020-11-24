@@ -18,5 +18,10 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "ChelseabandSDK/Classes/**/*"
+  "source_files": "ChelseabandSDK/Classes/**/*",
+  "dependencies": {
+    "RxBluetoothKit": [
+      "~> 6.0.0"
+    ]
+  }
 }

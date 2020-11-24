@@ -2,7 +2,7 @@
 
 import Quick
 import Nimble
-import ChelseabandSDK
+//import ChelseabandSDK
 
 class TableOfContentsSpec: QuickSpec {
     override func spec() {
