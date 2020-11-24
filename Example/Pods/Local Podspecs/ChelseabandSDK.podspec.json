@@ -1,0 +1,22 @@
+{
+  "name": "ChelseabandSDK",
+  "version": "0.1.0",
+  "summary": "A short description of ChelseabandSDK.",
+  "description": "TODO: Add long description of the pod here.",
+  "homepage": "https://github.com/vladyslav-iosdev/ChelseabandSDK",
+  "license": {
+    "type": "MIT",
+    "file": "LICENSE"
+  },
+  "authors": {
+    "vladyslav-iosdev": "vladyslav.shepitko@gmail.com"
+  },
+  "source": {
+    "git": "https://github.com/vladyslav-iosdev/ChelseabandSDK.git",
+    "tag": "0.1.0"
+  },
+  "platforms": {
+    "ios": "8.0"
+  },
+  "source_files": "ChelseabandSDK/Classes/**/*"
+}
