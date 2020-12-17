@@ -1,0 +1,4 @@
+module RxCocoaRuntime {
+    umbrella header "/Users/vladyslav/projects/ChelseabandSDK/.build/checkouts/RxSwift/Sources/RxCocoaRuntime/include/RxCocoaRuntime.h"
+    export *
+}

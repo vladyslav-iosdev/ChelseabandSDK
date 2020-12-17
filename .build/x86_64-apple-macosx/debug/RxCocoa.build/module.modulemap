@@ -1,0 +1,4 @@
+module RxCocoa {
+    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/RxCocoa.build/RxCocoa-Swift.h"
+    requires objc
+}

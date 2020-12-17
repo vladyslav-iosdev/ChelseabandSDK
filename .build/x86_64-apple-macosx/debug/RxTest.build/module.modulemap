@@ -1,0 +1,4 @@
+module RxTest {
+    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/RxTest.build/RxTest-Swift.h"
+    requires objc
+}

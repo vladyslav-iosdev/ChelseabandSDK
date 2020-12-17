@@ -1,0 +1,4 @@
+module RxBluetoothKit {
+    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/RxBluetoothKit.build/RxBluetoothKit-Swift.h"
+    requires objc
+}
