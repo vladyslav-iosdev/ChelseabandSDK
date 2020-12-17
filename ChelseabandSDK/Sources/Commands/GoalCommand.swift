@@ -20,4 +20,8 @@ public class GoalCommand: Command {
         let command = HexCommand(hex: GoalCommand.prefix + GoalCommand.suffix)
         return command.perform(on: executor, notifyWith: notifier)
     }
+
+    deinit {
+        print("\(self)-deinit")
+    }
 }

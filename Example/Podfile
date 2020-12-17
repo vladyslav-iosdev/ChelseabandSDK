@@ -6,4 +6,6 @@ target 'ChelseabandSDK_Example' do
   pod 'ChelseabandSDK', :path => '../'
   pod 'RxSwift'
   pod 'RxCocoa'
+  pod 'SnapKit'
+  pod 'DropDown'
 end

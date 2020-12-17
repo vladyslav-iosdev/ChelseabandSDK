@@ -8,25 +8,88 @@
 
 /* Begin PBXBuildFile section */
 		2AB34CB4FB8C1CA844B930F4 /* Pods_ChelseabandSDK_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 03E921720D88977703C7FC86 /* Pods_ChelseabandSDK_Example.framework */; };
-		607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD51AFB9204008FA782 /* AppDelegate.swift */; };
-		607FACD81AFB9204008FA782 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACD71AFB9204008FA782 /* ViewController.swift */; };
-		607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 607FACD91AFB9204008FA782 /* Main.storyboard */; };
-		607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDC1AFB9204008FA782 /* Images.xcassets */; };
-		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
+		8764A04D258BF330000F2A83 /* NotificationsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A014258BF32F000F2A83 /* NotificationsCoordinator.swift */; };
+		8764A04E258BF330000F2A83 /* DeviceConnectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A016258BF32F000F2A83 /* DeviceConnectionView.swift */; };
+		8764A04F258BF330000F2A83 /* DeviceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A017258BF32F000F2A83 /* DeviceViewController.swift */; };
+		8764A050258BF330000F2A83 /* DeviceConnectionViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A018258BF32F000F2A83 /* DeviceConnectionViewModel.swift */; };
+		8764A051258BF330000F2A83 /* DeviceCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A019258BF32F000F2A83 /* DeviceCoordinator.swift */; };
+		8764A052258BF330000F2A83 /* DeviceViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A01A258BF32F000F2A83 /* DeviceViewModel.swift */; };
+		8764A053258BF330000F2A83 /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A01B258BF32F000F2A83 /* AppCoordinator.swift */; };
+		8764A054258BF330000F2A83 /* BatteryViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A01E258BF32F000F2A83 /* BatteryViewModel.swift */; };
+		8764A055258BF330000F2A83 /* ViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A01F258BF32F000F2A83 /* ViewModelType.swift */; };
+		8764A056258BF330000F2A83 /* DropdownPicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A021258BF32F000F2A83 /* DropdownPicker.swift */; };
+		8764A057258BF330000F2A83 /* BatteryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A022258BF32F000F2A83 /* BatteryView.swift */; };
+		8764A058258BF330000F2A83 /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A023258BF32F000F2A83 /* LoadingView.swift */; };
+		8764A059258BF330000F2A83 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A024258BF32F000F2A83 /* Coordinator.swift */; };
+		8764A05B258BF330000F2A83 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8764A028258BF32F000F2A83 /* Images.xcassets */; };
+		8764A05D258BF330000F2A83 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8764A02A258BF32F000F2A83 /* LaunchScreen.storyboard */; };
+		8764A05F258BF330000F2A83 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A02D258BF32F000F2A83 /* UIView.swift */; };
+		8764A060258BF330000F2A83 /* Array.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A02E258BF32F000F2A83 /* Array.swift */; };
+		8764A061258BF330000F2A83 /* UIStackView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A02F258BF32F000F2A83 /* UIStackView.swift */; };
+		8764A062258BF330000F2A83 /* UIBarButtonItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A030258BF32F000F2A83 /* UIBarButtonItem.swift */; };
+		8764A063258BF330000F2A83 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A031258BF32F000F2A83 /* UIColor.swift */; };
+		8764A064258BF330000F2A83 /* UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A032258BF32F000F2A83 /* UITableView.swift */; };
+		8764A065258BF330000F2A83 /* UINavigationBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A033258BF32F000F2A83 /* UINavigationBar.swift */; };
+		8764A066258BF330000F2A83 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A034258BF32F000F2A83 /* AppDelegate.swift */; };
+		8764A067258BF330000F2A83 /* OnbordingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A036258BF330000F2A83 /* OnbordingViewController.swift */; };
+		8764A068258BF330000F2A83 /* OnbordingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A037258BF330000F2A83 /* OnbordingCoordinator.swift */; };
+		8764A06A258BF330000F2A83 /* SoundRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */; };
+		8764A06B258BF330000F2A83 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03E258BF330000F2A83 /* SettingsViewModel.swift */; };
+		8764A06C258BF330000F2A83 /* AlertRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */; };
+		8764A06D258BF330000F2A83 /* VibrateRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */; };
+		8764A06E258BF330000F2A83 /* SettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A041258BF330000F2A83 /* SettingsCoordinator.swift */; };
+		8764A06F258BF330000F2A83 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A043258BF330000F2A83 /* AlertType.swift */; };
+		8764A070258BF330000F2A83 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A045258BF330000F2A83 /* SettingsView.swift */; };
+		8764A071258BF330000F2A83 /* SoundTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A046258BF330000F2A83 /* SoundTableViewCell.swift */; };
+		8764A072258BF330000F2A83 /* ToggleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A047258BF330000F2A83 /* ToggleTableViewCell.swift */; };
+		8764A073258BF330000F2A83 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A048258BF330000F2A83 /* SettingsService.swift */; };
+		8764A074258BF330000F2A83 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A04A258BF330000F2A83 /* SettingsViewController.swift */; };
+		8764A075258BF330000F2A83 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A04B258BF330000F2A83 /* Configuration.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		03E921720D88977703C7FC86 /* Pods_ChelseabandSDK_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChelseabandSDK_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		37E372D058D6206A47C9667F /* ChelseabandSDK.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = ChelseabandSDK.podspec; path = ../ChelseabandSDK.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		607FACD01AFB9204008FA782 /* ChelseabandSDK_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ChelseabandSDK_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		607FACD41AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		607FACD51AFB9204008FA782 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		607FACD71AFB9204008FA782 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		607FACDA1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		607FACDC1AFB9204008FA782 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		607FACDF1AFB9204008FA782 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		66E3B60370019D1A87B6C2A7 /* Pods-ChelseabandSDK_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Example.release.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Example/Pods-ChelseabandSDK_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6E22779235F6EB1A58AC6DE7 /* Pods-ChelseabandSDK_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Tests.release.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Tests/Pods-ChelseabandSDK_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		8764A014258BF32F000F2A83 /* NotificationsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsCoordinator.swift; sourceTree = "<group>"; };
+		8764A016258BF32F000F2A83 /* DeviceConnectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceConnectionView.swift; sourceTree = "<group>"; };
+		8764A017258BF32F000F2A83 /* DeviceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewController.swift; sourceTree = "<group>"; };
+		8764A018258BF32F000F2A83 /* DeviceConnectionViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceConnectionViewModel.swift; sourceTree = "<group>"; };
+		8764A019258BF32F000F2A83 /* DeviceCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceCoordinator.swift; sourceTree = "<group>"; };
+		8764A01A258BF32F000F2A83 /* DeviceViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DeviceViewModel.swift; sourceTree = "<group>"; };
+		8764A01B258BF32F000F2A83 /* AppCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
+		8764A01E258BF32F000F2A83 /* BatteryViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryViewModel.swift; sourceTree = "<group>"; };
+		8764A01F258BF32F000F2A83 /* ViewModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ViewModelType.swift; sourceTree = "<group>"; };
+		8764A021258BF32F000F2A83 /* DropdownPicker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DropdownPicker.swift; sourceTree = "<group>"; };
+		8764A022258BF32F000F2A83 /* BatteryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BatteryView.swift; sourceTree = "<group>"; };
+		8764A023258BF32F000F2A83 /* LoadingView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		8764A024258BF32F000F2A83 /* Coordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Coordinator.swift; sourceTree = "<group>"; };
+		8764A028258BF32F000F2A83 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		8764A02A258BF32F000F2A83 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8764A02D258BF32F000F2A83 /* UIView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
+		8764A02E258BF32F000F2A83 /* Array.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array.swift; sourceTree = "<group>"; };
+		8764A02F258BF32F000F2A83 /* UIStackView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIStackView.swift; sourceTree = "<group>"; };
+		8764A030258BF32F000F2A83 /* UIBarButtonItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIBarButtonItem.swift; sourceTree = "<group>"; };
+		8764A031258BF32F000F2A83 /* UIColor.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
+		8764A032258BF32F000F2A83 /* UITableView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UITableView.swift; sourceTree = "<group>"; };
+		8764A033258BF32F000F2A83 /* UINavigationBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UINavigationBar.swift; sourceTree = "<group>"; };
+		8764A034258BF32F000F2A83 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		8764A036258BF330000F2A83 /* OnbordingViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnbordingViewController.swift; sourceTree = "<group>"; };
+		8764A037258BF330000F2A83 /* OnbordingCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnbordingCoordinator.swift; sourceTree = "<group>"; };
+		8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundRowViewModel.swift; sourceTree = "<group>"; };
+		8764A03E258BF330000F2A83 /* SettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
+		8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertRowViewModel.swift; sourceTree = "<group>"; };
+		8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrateRowViewModel.swift; sourceTree = "<group>"; };
+		8764A041258BF330000F2A83 /* SettingsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
+		8764A043258BF330000F2A83 /* AlertType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
+		8764A045258BF330000F2A83 /* SettingsView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		8764A046258BF330000F2A83 /* SoundTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundTableViewCell.swift; sourceTree = "<group>"; };
+		8764A047258BF330000F2A83 /* ToggleTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ToggleTableViewCell.swift; sourceTree = "<group>"; };
+		8764A048258BF330000F2A83 /* SettingsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
+		8764A04A258BF330000F2A83 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		8764A04B258BF330000F2A83 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		A53DB09AFA252BCD3BE62E14 /* Pods-ChelseabandSDK_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Example.debug.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Example/Pods-ChelseabandSDK_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AB1E420647B434318CD365D8 /* Pods-ChelseabandSDK_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Tests/Pods-ChelseabandSDK_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B80BBF596A33E5629C7C6309 /* Pods_ChelseabandSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChelseabandSDK_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -88,11 +151,17 @@
 		607FACD21AFB9204008FA782 /* Example for ChelseabandSDK */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
-				607FACD71AFB9204008FA782 /* ViewController.swift */,
-				607FACD91AFB9204008FA782 /* Main.storyboard */,
-				607FACDC1AFB9204008FA782 /* Images.xcassets */,
-				607FACDE1AFB9204008FA782 /* LaunchScreen.xib */,
+				8764A01B258BF32F000F2A83 /* AppCoordinator.swift */,
+				8764A034258BF32F000F2A83 /* AppDelegate.swift */,
+				8764A01C258BF32F000F2A83 /* Common */,
+				8764A04B258BF330000F2A83 /* Configuration.swift */,
+				8764A015258BF32F000F2A83 /* Device */,
+				8764A02C258BF32F000F2A83 /* Extensions */,
+				8764A02A258BF32F000F2A83 /* LaunchScreen.storyboard */,
+				8764A014258BF32F000F2A83 /* NotificationsCoordinator.swift */,
+				8764A035258BF330000F2A83 /* Onbording */,
+				8764A025258BF32F000F2A83 /* Resources */,
+				8764A03B258BF330000F2A83 /* Settings */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for ChelseabandSDK";
@@ -102,7 +171,6 @@
 		607FACD31AFB9204008FA782 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				607FACD41AFB9204008FA782 /* Info.plist */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
@@ -115,6 +183,128 @@
 				EE4CE789D4D8437C93657100 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		8764A015258BF32F000F2A83 /* Device */ = {
+			isa = PBXGroup;
+			children = (
+				8764A016258BF32F000F2A83 /* DeviceConnectionView.swift */,
+				8764A017258BF32F000F2A83 /* DeviceViewController.swift */,
+				8764A018258BF32F000F2A83 /* DeviceConnectionViewModel.swift */,
+				8764A019258BF32F000F2A83 /* DeviceCoordinator.swift */,
+				8764A01A258BF32F000F2A83 /* DeviceViewModel.swift */,
+			);
+			path = Device;
+			sourceTree = "<group>";
+		};
+		8764A01C258BF32F000F2A83 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				8764A01D258BF32F000F2A83 /* ViewModel */,
+				8764A01F258BF32F000F2A83 /* ViewModelType.swift */,
+				8764A020258BF32F000F2A83 /* View */,
+				8764A024258BF32F000F2A83 /* Coordinator.swift */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		8764A01D258BF32F000F2A83 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				8764A01E258BF32F000F2A83 /* BatteryViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		8764A020258BF32F000F2A83 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8764A021258BF32F000F2A83 /* DropdownPicker.swift */,
+				8764A022258BF32F000F2A83 /* BatteryView.swift */,
+				8764A023258BF32F000F2A83 /* LoadingView.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8764A025258BF32F000F2A83 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8764A028258BF32F000F2A83 /* Images.xcassets */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8764A02C258BF32F000F2A83 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				8764A02D258BF32F000F2A83 /* UIView.swift */,
+				8764A02E258BF32F000F2A83 /* Array.swift */,
+				8764A02F258BF32F000F2A83 /* UIStackView.swift */,
+				8764A030258BF32F000F2A83 /* UIBarButtonItem.swift */,
+				8764A031258BF32F000F2A83 /* UIColor.swift */,
+				8764A032258BF32F000F2A83 /* UITableView.swift */,
+				8764A033258BF32F000F2A83 /* UINavigationBar.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		8764A035258BF330000F2A83 /* Onbording */ = {
+			isa = PBXGroup;
+			children = (
+				8764A036258BF330000F2A83 /* OnbordingViewController.swift */,
+				8764A037258BF330000F2A83 /* OnbordingCoordinator.swift */,
+			);
+			path = Onbording;
+			sourceTree = "<group>";
+		};
+		8764A03B258BF330000F2A83 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				8764A03C258BF330000F2A83 /* ViewModel */,
+				8764A041258BF330000F2A83 /* SettingsCoordinator.swift */,
+				8764A042258BF330000F2A83 /* Model */,
+				8764A044258BF330000F2A83 /* View */,
+				8764A048258BF330000F2A83 /* SettingsService.swift */,
+				8764A049258BF330000F2A83 /* ViewController */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		8764A03C258BF330000F2A83 /* ViewModel */ = {
+			isa = PBXGroup;
+			children = (
+				8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */,
+				8764A03E258BF330000F2A83 /* SettingsViewModel.swift */,
+				8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */,
+				8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */,
+			);
+			path = ViewModel;
+			sourceTree = "<group>";
+		};
+		8764A042258BF330000F2A83 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				8764A043258BF330000F2A83 /* AlertType.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		8764A044258BF330000F2A83 /* View */ = {
+			isa = PBXGroup;
+			children = (
+				8764A045258BF330000F2A83 /* SettingsView.swift */,
+				8764A046258BF330000F2A83 /* SoundTableViewCell.swift */,
+				8764A047258BF330000F2A83 /* ToggleTableViewCell.swift */,
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		8764A049258BF330000F2A83 /* ViewController */ = {
+			isa = PBXGroup;
+			children = (
+				8764A04A258BF330000F2A83 /* SettingsViewController.swift */,
+			);
+			path = ViewController;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -151,6 +341,7 @@
 				TargetAttributes = {
 					607FACCF1AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
+						DevelopmentTeam = 52R582CQR2;
 						LastSwiftMigration = 1170;
 					};
 				};
@@ -178,9 +369,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACDB1AFB9204008FA782 /* Main.storyboard in Resources */,
-				607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */,
-				607FACDD1AFB9204008FA782 /* Images.xcassets in Resources */,
+				8764A05B258BF330000F2A83 /* Images.xcassets in Resources */,
+				8764A05D258BF330000F2A83 /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,18 +407,22 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-ChelseabandSDK_Example/Pods-ChelseabandSDK_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/ChelseabandSDK/ChelseabandSDK.framework",
+				"${BUILT_PRODUCTS_DIR}/DropDown/DropDown.framework",
 				"${BUILT_PRODUCTS_DIR}/RxBluetoothKit/RxBluetoothKit.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxRelay/RxRelay.framework",
 				"${BUILT_PRODUCTS_DIR}/RxSwift/RxSwift.framework",
+				"${BUILT_PRODUCTS_DIR}/SnapKit/SnapKit.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ChelseabandSDK.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DropDown.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxBluetoothKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxRelay.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxSwift.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SnapKit.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -242,31 +436,45 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				607FACD81AFB9204008FA782 /* ViewController.swift in Sources */,
-				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
+				8764A054258BF330000F2A83 /* BatteryViewModel.swift in Sources */,
+				8764A052258BF330000F2A83 /* DeviceViewModel.swift in Sources */,
+				8764A059258BF330000F2A83 /* Coordinator.swift in Sources */,
+				8764A057258BF330000F2A83 /* BatteryView.swift in Sources */,
+				8764A062258BF330000F2A83 /* UIBarButtonItem.swift in Sources */,
+				8764A051258BF330000F2A83 /* DeviceCoordinator.swift in Sources */,
+				8764A04E258BF330000F2A83 /* DeviceConnectionView.swift in Sources */,
+				8764A06A258BF330000F2A83 /* SoundRowViewModel.swift in Sources */,
+				8764A060258BF330000F2A83 /* Array.swift in Sources */,
+				8764A058258BF330000F2A83 /* LoadingView.swift in Sources */,
+				8764A06B258BF330000F2A83 /* SettingsViewModel.swift in Sources */,
+				8764A067258BF330000F2A83 /* OnbordingViewController.swift in Sources */,
+				8764A071258BF330000F2A83 /* SoundTableViewCell.swift in Sources */,
+				8764A06C258BF330000F2A83 /* AlertRowViewModel.swift in Sources */,
+				8764A056258BF330000F2A83 /* DropdownPicker.swift in Sources */,
+				8764A064258BF330000F2A83 /* UITableView.swift in Sources */,
+				8764A075258BF330000F2A83 /* Configuration.swift in Sources */,
+				8764A070258BF330000F2A83 /* SettingsView.swift in Sources */,
+				8764A04D258BF330000F2A83 /* NotificationsCoordinator.swift in Sources */,
+				8764A073258BF330000F2A83 /* SettingsService.swift in Sources */,
+				8764A050258BF330000F2A83 /* DeviceConnectionViewModel.swift in Sources */,
+				8764A061258BF330000F2A83 /* UIStackView.swift in Sources */,
+				8764A063258BF330000F2A83 /* UIColor.swift in Sources */,
+				8764A05F258BF330000F2A83 /* UIView.swift in Sources */,
+				8764A068258BF330000F2A83 /* OnbordingCoordinator.swift in Sources */,
+				8764A06D258BF330000F2A83 /* VibrateRowViewModel.swift in Sources */,
+				8764A04F258BF330000F2A83 /* DeviceViewController.swift in Sources */,
+				8764A072258BF330000F2A83 /* ToggleTableViewCell.swift in Sources */,
+				8764A053258BF330000F2A83 /* AppCoordinator.swift in Sources */,
+				8764A066258BF330000F2A83 /* AppDelegate.swift in Sources */,
+				8764A074258BF330000F2A83 /* SettingsViewController.swift in Sources */,
+				8764A06E258BF330000F2A83 /* SettingsCoordinator.swift in Sources */,
+				8764A055258BF330000F2A83 /* ViewModelType.swift in Sources */,
+				8764A06F258BF330000F2A83 /* AlertType.swift in Sources */,
+				8764A065258BF330000F2A83 /* UINavigationBar.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXVariantGroup section */
-		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDA1AFB9204008FA782 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
-		607FACDE1AFB9204008FA782 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				607FACDF1AFB9204008FA782 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
-/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		607FACED1AFB9204008FA782 /* Debug */ = {
@@ -379,12 +587,17 @@
 			baseConfigurationReference = A53DB09AFA252BCD3BE62E14 /* Pods-ChelseabandSDK_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = ChelseabandSDK/Info.plist;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 52R582CQR2;
+				INFOPLIST_FILE = "$(SRCROOT)/ChelseabandSDK/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 5.0;
 			};
@@ -395,9 +608,13 @@
 			baseConfigurationReference = 66E3B60370019D1A87B6C2A7 /* Pods-ChelseabandSDK_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				INFOPLIST_FILE = ChelseabandSDK/Info.plist;
+				CLANG_ENABLE_MODULES = YES;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 52R582CQR2;
+				INFOPLIST_FILE = "$(SRCROOT)/ChelseabandSDK/Resources/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.0;
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";

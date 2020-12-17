@@ -30,4 +30,8 @@ public class HexCommand: Command {
             .mapToVoid()
             .flatMap { executor.write(data: data) }
     }
+
+    deinit {
+        print("\(self)-deinit")
+    }
 } 

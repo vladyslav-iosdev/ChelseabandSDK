@@ -2,6 +2,7 @@ PODS:
   - ChelseabandSDK (1.0.3):
     - RxBluetoothKit (~> 6.0.0)
     - RxCocoa (~> 5.1.1)
+  - DropDown (2.3.13)
   - RxBluetoothKit (6.0.0):
     - RxSwift (~> 5.1)
   - RxCocoa (5.1.1):
@@ -10,30 +11,37 @@ PODS:
   - RxRelay (5.1.1):
     - RxSwift (~> 5)
   - RxSwift (5.1.1)
+  - SnapKit (4.2.0)
 
 DEPENDENCIES:
   - ChelseabandSDK (from `../`)
+  - DropDown
   - RxCocoa
   - RxSwift
+  - SnapKit
 
 SPEC REPOS:
   trunk:
+    - DropDown
     - RxBluetoothKit
     - RxCocoa
     - RxRelay
     - RxSwift
+    - SnapKit
 
 EXTERNAL SOURCES:
   ChelseabandSDK:
     :path: "../"
 
 SPEC CHECKSUMS:
-  ChelseabandSDK: 0c92b79fbc2bf7d8af270228f3d71bef7a99e65d
+  ChelseabandSDK: 7c15a50e4126d2b153e8aa69a200bfb4fcdf86ef
+  DropDown: 8a2116376c1981888557f72ec2ffc9a5e0e456ec
   RxBluetoothKit: dad22912b15b74a40df8f60057f218d4e851746d
   RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
   RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
   RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+  SnapKit: fe8a619752f3f27075cc9a90244d75c6c3f27e2a
 
-PODFILE CHECKSUM: 859a4be425422d896e91fc4235782da312a85538
+PODFILE CHECKSUM: 77170cdb0bfe88f4d51390bd247f9fa85303e8a8
 
 COCOAPODS: 1.10.0

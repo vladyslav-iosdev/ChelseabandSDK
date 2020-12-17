@@ -62,24 +62,20 @@ class BatteryCommand: Command {
             batteryLevel = .init(value: value)
         } else {
             batteryLevel = .init(value: 0)
-        }
+        } 
     }
 
     func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        return Observable.create { [weak self] seal -> Disposable in
-            guard let strongSelf = self else {
-                seal.onError(RxError.unknown)
-
-                return Disposables.create()
-            }
+        return Observable.create { seal -> Disposable in
 
             let timerObservable = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
+                .debug("\(self)-initial trigger")
                 .withLatestFrom(executor.isConnected)
                 .filter { $0 }
-                .debug("\(strongSelf)-trigger")
+                .debug("\(self)-trigger")
                 .flatMap { _ -> Observable<Void> in
-                    return strongSelf.command.perform(on: executor, notifyWith: notifier)
-                        .debug("\(strongSelf)-write")
+                    return self.command.perform(on: executor, notifyWith: notifier)
+                        .debug("\(self)-write")
                 }.debug("t-t")
                 .subscribe()
 
@@ -93,14 +89,14 @@ class BatteryCommand: Command {
                         return nil
                     }
                 }
-                .debug("\(strongSelf)-read")
+                .debug("\(self)-read")
                 .subscribe(onNext: { value in
-                    strongSelf.batteryLevel.onNext(value)
-                    strongSelf.defaults.set(value, forKey: Keys.lastBatteryValue)
+                    self.batteryLevel.onNext(value)
+                    self.defaults.set(value, forKey: Keys.lastBatteryValue)
                 })
 
-            let initialWrite = strongSelf.command.perform(on: executor, notifyWith: notifier)
-                .debug("\(strongSelf)-initial write")
+            let initialWrite = self.command.perform(on: executor, notifyWith: notifier)
+                .debug("\(self)-initial write")
                 .subscribe()
 
             return Disposables.create {
@@ -109,5 +105,9 @@ class BatteryCommand: Command {
                 batteryLevelDisposable.dispose()
             }
         }
+    }
+
+    deinit {
+        print("\(self)-deinit")
     }
 }

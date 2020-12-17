@@ -32,4 +32,8 @@ public class LightCommand: Command {
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         command.perform(on: executor, notifyWith: notifier).debug("\(self)-write")
     }
+
+    deinit {
+        print("\(self)-deinit")
+    }
 }

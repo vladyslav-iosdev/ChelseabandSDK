@@ -2,7 +2,7 @@
 //  AppDelegate.swift
 //  ChelseabandSDK
 //
-//  Created by vladyslav-iosdev on 12/17/2020.
+//  Created by vladyslav-iosdev on 11/24/2020.
 //  Copyright (c) 2020 vladyslav-iosdev. All rights reserved.
 //
 
@@ -12,12 +12,25 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
+    var appCoordinator: AppCoordinator!
 
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+        let window = UIWindow(frame: UIScreen.main.bounds)
+        window.backgroundColor = .white
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        appCoordinator = AppCoordinator(window: window)
+        appCoordinator.start()
+
+        self.window = window
+
         return true
-    } 
+    }
 
+    func applicationDidEnterBackground(_ application: UIApplication) {
+        appCoordinator.applicationDidEnterBackground(application)
+    }
+
+    func applicationWillEnterForeground(_ application: UIApplication) {
+        appCoordinator.applicationWillEnterForeground(application)
+    }
 }
-

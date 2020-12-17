@@ -52,7 +52,7 @@ public final class Chelseaband: ChelseabandType {
     public func connect() {
         connectionDisposable = device
             .connect()
-            .do(afterNext: { device in
+            .do(onNext: { device in
                 self.setupChelseaband(device: device)
             })
             .subscribe()

@@ -95,6 +95,10 @@ public class NewsCommand: Command {
             }
         } 
     }
+
+    deinit {
+        print("\(self)-deinit")
+    }
 }
 
 //        return Observable.create { seal -> Disposable in

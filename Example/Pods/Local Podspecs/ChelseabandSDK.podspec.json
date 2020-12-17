@@ -18,6 +18,7 @@
   "platforms": {
     "ios": "11.0"
   },
+  "swift_versions": "5.0",
   "source_files": "ChelseabandSDK/Sources/**/*",
   "dependencies": {
     "RxBluetoothKit": [
@@ -26,5 +27,6 @@
     "RxCocoa": [
       "~> 5.1.1"
     ]
-  }
+  },
+  "swift_version": "5.0"
 }

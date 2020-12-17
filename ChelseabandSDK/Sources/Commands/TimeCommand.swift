@@ -22,23 +22,17 @@ public class TimeCommand: Command {
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        return Observable.create { [weak self] seal -> Disposable in
-            guard let strongSelf = self else {
-                seal.onError(RxError.unknown)
-
-                return Disposables.create()
-            }
-
+        return Observable.create { seal -> Disposable in
             let triggerObservable = notifier
                 .notifyObservable
                 .filter { $0.hex.starts(with: TimeCommand.trigger) }
-                .debug("\(strongSelf)-trigget")
+                .debug("\(self)-trigget")
                 .flatMap { data -> Observable<Void> in
-                    let command = HexCommand(hex: strongSelf.hex)
-                    print("\(strongSelf)-write: \(command.hex)")
+                    let command = HexCommand(hex: self.hex)
+                    print("\(self)-write: \(command.hex)")
                     return command.perform(on: executor, notifyWith: notifier)
                 }
-                .debug("\(strongSelf)-action")
+                .debug("\(self)-action")
                 .subscribe(seal)
 
             return Disposables.create {
@@ -78,4 +72,8 @@ public class TimeCommand: Command {
             }
         }
     }*/
+
+    deinit {
+        print("\(self)-deinit")
+    }
 }
