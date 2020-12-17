@@ -1,0 +1,6 @@
+framework module ChelseabandSDK {
+  umbrella header "ChelseabandSDK-umbrella.h"
+
+  export *
+  module * { export * }
+}

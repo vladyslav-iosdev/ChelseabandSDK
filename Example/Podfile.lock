@@ -1,0 +1,39 @@
+PODS:
+  - ChelseabandSDK (1.0.3):
+    - RxBluetoothKit (~> 6.0.0)
+    - RxCocoa (~> 5.1.1)
+  - RxBluetoothKit (6.0.0):
+    - RxSwift (~> 5.1)
+  - RxCocoa (5.1.1):
+    - RxRelay (~> 5)
+    - RxSwift (~> 5)
+  - RxRelay (5.1.1):
+    - RxSwift (~> 5)
+  - RxSwift (5.1.1)
+
+DEPENDENCIES:
+  - ChelseabandSDK (from `../`)
+  - RxCocoa
+  - RxSwift
+
+SPEC REPOS:
+  trunk:
+    - RxBluetoothKit
+    - RxCocoa
+    - RxRelay
+    - RxSwift
+
+EXTERNAL SOURCES:
+  ChelseabandSDK:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  ChelseabandSDK: 0c92b79fbc2bf7d8af270228f3d71bef7a99e65d
+  RxBluetoothKit: dad22912b15b74a40df8f60057f218d4e851746d
+  RxCocoa: 32065309a38d29b5b0db858819b5bf9ef038b601
+  RxRelay: d77f7d771495f43c556cbc43eebd1bb54d01e8e9
+  RxSwift: 81470a2074fa8780320ea5fe4102807cb7118178
+
+PODFILE CHECKSUM: 859a4be425422d896e91fc4235782da312a85538
+
+COCOAPODS: 1.10.0

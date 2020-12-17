@@ -1,0 +1,9 @@
+use_frameworks!
+
+platform :ios, '9.0'
+
+target 'ChelseabandSDK_Example' do
+  pod 'ChelseabandSDK', :path => '../'
+  pod 'RxSwift'
+  pod 'RxCocoa'
+end

@@ -16,15 +16,30 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/vladyslav-iosdev/RxBluetoothKit.git", from: "6.0.0")
-        //,
-//        .package(url: "https://github.com/ReactiveX/RxSwift.git", from: "5.0.0")
     ],
     targets: [
         .target(
             name: "ChelseabandSDK",
-            dependencies: ["RxBluetoothKit"/*, "RxSwift"*/]),
-        .testTarget(
-            name: "ChelseabandSDKTests",
-            dependencies: ["ChelseabandSDK"]),
+            dependencies: ["RxBluetoothKit"] ),
+//        .testTarget(
+//            name: "ChelseabandSDKTests",
+//            dependencies: ["ChelseabandSDK"]),
     ]
 )
+
+//.target(
+//    name: "RxBluetoothKit",
+//    dependencies: [
+//        "RxSwift"
+//    ],
+//    path: ".",
+//    exclude: [
+//        "Example",
+//        "Tests",
+//        "Source/Info.plist",
+//        "Source/RxBluetoothKit.h"
+//    ],
+//    sources: [
+//        "Source"
+//    ]
+//)
