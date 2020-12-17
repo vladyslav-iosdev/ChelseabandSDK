@@ -74,6 +74,10 @@ public protocol DeviceType {
 
     var readCharacteristicObservable: Observable<Characteristic> { get }
 
+    var scanningTimeout: DispatchTimeInterval { get set }
+
+    var scanningRetry: DispatchTimeInterval { get set }
+
     func connect() -> Observable<DeviceType>
 
     func write(data: Data, readTimeout timeout: DispatchTimeInterval) -> Observable<Void>
@@ -107,6 +111,9 @@ public final class Device: DeviceType {
         readCharacteristic.compactMap{ $0 }
     }
 
+    public var scanningTimeout: DispatchTimeInterval = .seconds(5)
+    public var scanningRetry: DispatchTimeInterval = .seconds(5)
+
     private let configuration: Configuration
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected(nil))
@@ -119,7 +126,7 @@ public final class Device: DeviceType {
     }
 
     public func connect() -> Observable<DeviceType> {
-        return connect(manager: manager, configuration: configuration).debug("device-connect")
+        return connect(manager: manager, configuration: configuration)
     }
 
     private func connect(manager: CentralManager, configuration: Configuration) -> Observable<DeviceType> {
@@ -139,7 +146,6 @@ public final class Device: DeviceType {
             let disconnectDisposable = connectionObservable
                 .flatMap { strongSelf.manager.observeDisconnect(for: $0.peripheral) }
                 .map { e in Device.State.disconnected(e.1) }
-                .catchErrorJustReturn(.disconnected(nil))
                 .share()
                 .debug("device-disconnect")
                 .subscribe(strongSelf.connectionBehaviourSubject)
@@ -173,10 +179,9 @@ public final class Device: DeviceType {
 
     private func discoverWriteCharacteristics(_ service: Service, id: ID) -> Observable<Characteristic> {
         Observable.just(service)
-        .compactMap { $0.discoverCharacteristics([id]) }
-        .flatMap { $0 }
-        .flatMap { Observable.from($0) } 
-        .debug("device-w")
+            .compactMap { $0.discoverCharacteristics([id]) }
+            .flatMap { $0 }
+            .flatMap { Observable.from($0) }
     }
 
     private func discoverReadCharacteristics(_ service: Service, id: ID) -> Observable<Characteristic> {
@@ -184,23 +189,24 @@ public final class Device: DeviceType {
             .compactMap { $0.discoverCharacteristics([id]) }
             .flatMap { $0 }
             .flatMap { Observable.from($0) }
-            .debug("device-r")
     }
 
-    private func startScanning(manager: CentralManager, service: ID, timeout: DispatchTimeInterval = .seconds(5), retry: DispatchTimeInterval = .seconds(5)) -> Observable<ScannedPeripheral> {
-        return Observable.just(manager).filter {
-                !$0.manager.isScanning && $0.retrieveConnectedPeripherals(withServices: [service]).isEmpty
-            }.do(onNext: { [weak self] _ in
+    private func startScanning(manager: CentralManager, service: ID) -> Observable<ScannedPeripheral> {
+        let scanningRetry = self.scanningRetry
+
+        return Observable.just(manager)
+            .filter { !$0.manager.isScanning }
+            .do(onNext: { [weak self] _ in
                 self?.connectionBehaviourSubject.onNext(.scanning)
             })
             .flatMap { $0.scanForPeripherals(withServices: [service]) }
             .take(1)
             .flatMap { Observable.just($0) }
-            .timeout(timeout, scheduler: MainScheduler.instance)
+            .timeout(scanningTimeout, scheduler: MainScheduler.instance)
             .retryWhen { error in
                 error.do(onNext: { error in
                     print("❌ An error occured subscribing to notification for the scanning for device: \(error) (will retry in 2s)")
-                }).delay(retry, scheduler: MainScheduler.instance)
+                }).delay(scanningRetry, scheduler: MainScheduler.instance)
             }
             .debug("device-scanning")
     }
@@ -227,7 +233,6 @@ public final class Device: DeviceType {
             .compactMap { $0 }
             .flatMap { $0.writeValue(data, type: .withResponse) }
             .take(1)
-            .debug("kkk-w_w")
             .mapToVoid()
     }
 }

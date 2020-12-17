@@ -45,6 +45,7 @@ public enum BatteryLevel: UInt64, CustomStringConvertible {
 }
 
 class BatteryCommand: Command {
+    
     private enum Keys {
         static let lastBatteryValue: String = "lastBatteryValueKey"
     }
@@ -62,22 +63,20 @@ class BatteryCommand: Command {
             batteryLevel = .init(value: value)
         } else {
             batteryLevel = .init(value: 0)
-        } 
+        }
     }
 
     func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         return Observable.create { seal -> Disposable in
 
             let timerObservable = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
-                .debug("\(self)-initial trigger")
                 .withLatestFrom(executor.isConnected)
                 .filter { $0 }
-                .debug("\(self)-trigger")
+                .debug("\(self)-trigget")
                 .flatMap { _ -> Observable<Void> in
                     return self.command.perform(on: executor, notifyWith: notifier)
                         .debug("\(self)-write")
-                }.debug("t-t")
-                .subscribe()
+                }.subscribe()
 
             let batteryLevelDisposable = notifier
                 .notifyObservable
@@ -96,7 +95,7 @@ class BatteryCommand: Command {
                 })
 
             let initialWrite = self.command.perform(on: executor, notifyWith: notifier)
-                .debug("\(self)-initial write")
+                .debug("\(self)-write.initial")
                 .subscribe()
 
             return Disposables.create {

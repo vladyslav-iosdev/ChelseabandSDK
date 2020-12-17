@@ -92,7 +92,7 @@ public final class Chelseaband: ChelseabandType {
             .perform(on: self, notifyWith: self)
             .mapToVoid()
             .observeOn(MainScheduler.instance)
-            .subscribeOn(SerialDispatchQueueScheduler.init(qos: .default))
+            .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
 
     public func disconnect() {
