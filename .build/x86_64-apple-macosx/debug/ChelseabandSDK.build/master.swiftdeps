@@ -1,0 +1,5 @@
+version: "Apple Swift version 5.2.4 (swiftlang-1103.0.32.9 clang-1103.0.32.53)"
+options: "ac050a6b65e271a86c35edf66575b2c1"
+build_time: [1608213081, 711814000]
+inputs:
+  "/Users/vladyslav/projects/ChelseabandSDK/Sources/ChelseabandSDK/ChelseabandSDK.swift": [1608213050, 216214329]

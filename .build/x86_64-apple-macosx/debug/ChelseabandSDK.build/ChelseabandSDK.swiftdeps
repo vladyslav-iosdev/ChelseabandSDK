@@ -1,0 +1,20 @@
+### Swift dependencies file v0 ###
+provides-top-level:
+- "ChelseabandSDK"
+provides-nominal:
+- "14ChelseabandSDKAAV"
+provides-member:
+- ["14ChelseabandSDKAAV", ""]
+provides-dynamic-lookup:
+depends-top-level:
+- "ChelseabandSDK"
+- "StringLiteralType"
+depends-member:
+- ["14ChelseabandSDKAAV", "init"]
+- ["14ChelseabandSDKAAV", "text"]
+depends-nominal:
+- "14ChelseabandSDKAAV"
+depends-dynamic-lookup:
+depends-external:
+- "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/ChelseabandSDK.build/module.modulemap"
+interface-hash: "2680bbdb1942fef6fa55d37d51224c16"

@@ -1,0 +1,25 @@
+{
+  "allExecutables" : [
+
+  ],
+  "builtTestProducts" : [
+    {
+      "packageName" : "ChelseabandSDK",
+      "productName" : "ChelseabandSDKPackageTests",
+      "testBinary" : "\/Users\/vladyslav\/projects\/ChelseabandSDK\/.build\/x86_64-apple-macosx\/debug\/ChelseabandSDKPackageTests.xctest\/Contents\/MacOS\/ChelseabandSDKPackageTests"
+    }
+  ],
+  "copyCommands" : {
+
+  },
+  "rootExecutables" : [
+
+  ],
+  "swiftTargetMap" : {
+    "C.ChelseabandSDK-debug.module" : "ChelseabandSDK",
+    "C.ChelseabandSDKTests-debug.module" : "ChelseabandSDKTests"
+  },
+  "testDiscoveryCommands" : {
+
+  }
+}
