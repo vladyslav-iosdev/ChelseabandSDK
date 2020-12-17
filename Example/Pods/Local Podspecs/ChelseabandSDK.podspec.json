@@ -16,12 +16,15 @@
     "tag": "0.1.0"
   },
   "platforms": {
-    "ios": "8.0"
+    "ios": "11.0"
   },
   "source_files": "ChelseabandSDK/Classes/**/*",
   "dependencies": {
     "RxBluetoothKit": [
       "~> 6.0.0"
+    ],
+    "RxCocoa": [
+      "~> 5.1.1"
     ]
   }
 }
