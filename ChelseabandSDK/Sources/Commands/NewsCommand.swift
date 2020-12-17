@@ -68,7 +68,7 @@ public class NewsCommand: Command {
 //                }.debug("t-t")
 //                .subscribe()
 
-            let triggerObservable = notifier
+            let _ = notifier
                 .notifyObservable
                 .debug("\(self)-trigget")
                 .skipWhile { !$0.hex.starts(with: NewsCommand.prefix) }
