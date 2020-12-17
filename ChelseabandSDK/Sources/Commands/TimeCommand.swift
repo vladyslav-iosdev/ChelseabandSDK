@@ -33,7 +33,9 @@ public class TimeCommand: Command {
                     return command.perform(on: executor, notifyWith: notifier)
                 }
                 .debug("\(self)-action")
-                .subscribe(seal)
+                .subscribe { e in
+                    seal.on(e)
+                }
 
             return Disposables.create {
                 triggerObservable.dispose()

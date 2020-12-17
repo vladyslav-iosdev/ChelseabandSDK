@@ -18,7 +18,7 @@ public class GoalCommand: Command {
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         let command = HexCommand(hex: GoalCommand.prefix + GoalCommand.suffix)
-        return command.perform(on: executor, notifyWith: notifier)
+        return command.perform(on: executor, notifyWith: notifier).debug("\(self).write")
     }
 
     deinit {

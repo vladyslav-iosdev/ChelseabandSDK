@@ -69,7 +69,6 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(readCharacteristicSubject)
             .disposed(by: setupDisposeBag)
 
-
         let batteryCommand = BatteryCommand()
         batteryCommand.batteryLevel
             .debug("bat-v: ")
@@ -90,7 +89,6 @@ public final class Chelseaband: ChelseabandType {
     public func perform(command: Command) -> Observable<Void> {
         command
             .perform(on: self, notifyWith: self)
-            .mapToVoid()
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
@@ -111,11 +109,13 @@ extension Chelseaband: CommandNotifier {
 extension Chelseaband: CommandExecutor {
 
     public var isConnected: Observable<Bool> {
-        connectionObservable.map { $0.isConnected }.startWith(false)
+        connectionObservable
+            .map { $0.isConnected }
+            .startWith(false)
     }
 
     public func write(data: Data) -> Observable<Void> {
-        device.write(data: data, readTimeout: .milliseconds(250))
+        device.write(data: data, readTimeout: .milliseconds(250)).debug("\(self).write")
     }
 }
 

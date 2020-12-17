@@ -232,7 +232,8 @@ public final class Device: DeviceType {
         writeCharacteristic
             .compactMap { $0 }
             .flatMap { $0.writeValue(data, type: .withResponse) }
-            .take(1)
             .mapToVoid()
+            .take(1)
+            .debug("\(self).write")
     }
 }

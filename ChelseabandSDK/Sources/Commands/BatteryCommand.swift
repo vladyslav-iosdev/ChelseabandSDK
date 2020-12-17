@@ -57,25 +57,25 @@ class BatteryCommand: Command {
 
     private let command = HexCommand(hex: BatteryCommand.prefix + BatteryCommand.suffix)
     private let defaults: UserDefaults = .standard
+    private let timeOut: DispatchTimeInterval
 
-    public init() {
+    public init(timeOut: DispatchTimeInterval = .seconds(5)) {
+        self.timeOut = timeOut
         if let value = defaults.value(forKey: Keys.lastBatteryValue) as? UInt64 {
             batteryLevel = .init(value: value)
         } else {
             batteryLevel = .init(value: 0)
         }
+        print("\(self).init")
     }
 
     func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         return Observable.create { seal -> Disposable in
 
-            let timerObservable = Observable<Int>.interval(.seconds(5), scheduler: MainScheduler.instance)
-                .withLatestFrom(executor.isConnected)
-                .filter { $0 }
-                .debug("\(self)-trigget")
+            let timerObservable = Observable<Int>.interval(self.timeOut, scheduler: MainScheduler.instance)
                 .flatMap { _ -> Observable<Void> in
                     return self.command.perform(on: executor, notifyWith: notifier)
-                        .debug("\(self)-write")
+                        .debug("\(self).write")
                 }.subscribe()
 
             let batteryLevelDisposable = notifier
@@ -88,14 +88,14 @@ class BatteryCommand: Command {
                         return nil
                     }
                 }
-                .debug("\(self)-read")
+                .debug("\(self).read")
                 .subscribe(onNext: { value in
                     self.batteryLevel.onNext(value)
                     self.defaults.set(value, forKey: Keys.lastBatteryValue)
                 })
 
             let initialWrite = self.command.perform(on: executor, notifyWith: notifier)
-                .debug("\(self)-write.initial")
+                .debug("\(self).write.initial")
                 .subscribe()
 
             return Disposables.create {

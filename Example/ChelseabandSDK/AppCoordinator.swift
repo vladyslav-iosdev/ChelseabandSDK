@@ -20,7 +20,6 @@ class AppCoordinator: Coordinator {
         return Chelseaband(device: device)
     }()
     private lazy var settings: SettingsServiceType = SettingsService()
-    private lazy var notificationsCoordinator = NotificationsCoordinator()
     private let disposeBag = DisposeBag()
     var coordinators: [Coordinator] = []
 
@@ -34,16 +33,6 @@ class AppCoordinator: Coordinator {
 
         UINavigationBar.setupAppearence()
 
-        let coordinator = OnbordingCoordinator(navigationController: navigationController)
-        addCoordinator(coordinator)
-        coordinator.start()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.showDevice()
-        }
-    }
-
-    private func showDevice() {
         let coordinator = DeviceCoordinator(navigationController: navigationController, chelseaband: chelseaband, settings: settings)
         addCoordinator(coordinator)
 
