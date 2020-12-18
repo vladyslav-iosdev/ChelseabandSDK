@@ -1,4 +1,0 @@
-module ChelseabandSDK {
-    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/ChelseabandSDK.build/ChelseabandSDK-Swift.h"
-    requires objc
-}

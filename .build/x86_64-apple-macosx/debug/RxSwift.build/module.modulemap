@@ -1,4 +1,0 @@
-module RxSwift {
-    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/RxSwift.build/RxSwift-Swift.h"
-    requires objc
-}
