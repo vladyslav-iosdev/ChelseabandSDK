@@ -10,7 +10,6 @@ import RxSwift
 enum CommandError: Error {
     case invalid
     case timeout
-    case deviceDisconnected
 }
 
 public class HexCommand: Command {
@@ -26,27 +25,7 @@ public class HexCommand: Command {
             return .error(CommandError.invalid)
         }
 
-        return Observable.create { seal -> Disposable in
-
-            let writeDisposable = Observable<Void>.just(())
-                .withLatestFrom(executor.isConnected)
-                .map { isConnected -> Void in
-                    if isConnected {
-                        //no op
-                    } else {
-                        throw CommandError.deviceDisconnected
-                    }
-                }
-                .flatMap { executor.write(data: data) }
-                .debug("\(self).write")
-                .subscribe { e in
-                    seal.on(e)
-                }
-
-            return Disposables.create {
-                writeDisposable.dispose()
-            }
-        }
+        return executor.write(data: data).debug("\(self).write")
     }
 
     deinit {

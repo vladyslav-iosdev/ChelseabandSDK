@@ -60,7 +60,7 @@ class DeviceViewModel: ViewModelType {
     }()
 
     func transform(input: Input) -> Output {
-        let connectionObservable = chelseaband.connectionObservable.startWith(.disconnected(nil))
+        let connectionObservable = chelseaband.connectionObservable.startWith(.disconnected)
 
         let connectionViewModel: DeviceConnectionViewModel = .init(status: connectionObservable)
         let batteryViewModel = BatteryViewModel(

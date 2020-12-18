@@ -77,17 +77,21 @@ class DeviceConnectionViewModel: ViewModelType {
 
     func transform(input: Input) -> Output {
         let connectionButtonEnabled = status
+            .startWith(.disconnected)
             .map { $0.connectionButtonEnabled }
 
         let connectionIconTintColorObservable = status
+            .startWith(.disconnected)
             .map { $0.connectionIconTintColor }
             .asDriver(onErrorJustReturn: .black)
 
         let connectionIconObservable = status
+            .startWith(.disconnected)
             .map { $0.connectionIcon }
             .asDriver(onErrorJustReturn: nil)
 
         let connectionStateTextObservable = status
+            .startWith(.disconnected)
             .map { $0.connectionStateText }
             .asDriver(onErrorJustReturn: String())
 
@@ -101,7 +105,7 @@ class DeviceConnectionViewModel: ViewModelType {
             connectionIconObservable: connectionIconObservable,
             connectionIconTintColorObservable: connectionIconTintColorObservable,
             connectionStateTextObservable: connectionStateTextObservable,
-            statusObservable: status.asDriver(onErrorJustReturn: .disconnected(nil))
+            statusObservable: status.asDriver(onErrorJustReturn: .disconnected)
         )
     }
 }

@@ -15,16 +15,21 @@ class AppCoordinator: Coordinator {
     
     private let window: UIWindow
     private lazy var navigationController = UINavigationController()
-    private lazy var chelseaband: ChelseabandType = {
-        let device = Device(configuration: ChelseabandConfiguration.initial)
-        return Chelseaband(device: device)
-    }()
+    private lazy var device = Device(configuration: ChelseabandConfiguration.initial)
+    private lazy var chelseaband: ChelseabandType = Chelseaband(device: device)
+
     private lazy var settings: SettingsServiceType = SettingsService()
     private let disposeBag = DisposeBag()
     var coordinators: [Coordinator] = []
 
     init(window: UIWindow) {
-        self.window = window 
+        self.window = window
+
+        device.bluetoothHasConnected.subscribe(onNext: { [weak self] _ in
+            guard let strongSelf = self else { return }
+
+            strongSelf.chelseaband.connect()
+        }).disposed(by: disposeBag)
     }
 
     func start() {
