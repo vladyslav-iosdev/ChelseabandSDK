@@ -1,4 +1,0 @@
-module RxRelay {
-    header "/Users/vladyslav/projects/ChelseabandSDK/.build/x86_64-apple-macosx/debug/RxRelay.build/RxRelay-Swift.h"
-    requires objc
-}
