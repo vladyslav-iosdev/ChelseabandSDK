@@ -64,7 +64,7 @@ class BatteryViewModel: ViewModelType {
             .asDriver(onErrorJustReturn: .init())
 
         let isHiddenObservable = status
-            .startWith(.disconnected(nil))
+            .startWith(.disconnected)
             .map { !$0.isConnected }
             .debug("bat-i-h")
             .asDriver(onErrorJustReturn: true)

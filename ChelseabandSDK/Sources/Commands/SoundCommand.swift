@@ -19,7 +19,6 @@ public class SoundCommand: Command {
     } 
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        
         command.perform(on: executor, notifyWith: notifier)
     }
 

@@ -41,21 +41,19 @@ public final class Chelseaband: ChelseabandType {
 
     required public init(device: DeviceType) {
         self.device = device
-
-        device.bluetoothHasConnected.subscribe { [weak self] _ in
-            guard let strongSelf = self else { return }
-
-            strongSelf.connect()
-        }.disposed(by: disposeBag)
     }
 
     public func connect() {
         connectionDisposable = device
             .connect()
-            .do(onNext: { device in
-                self.setupChelseaband(device: device)
+            .debug("\(self).main")
+            .subscribe(onNext: { [weak self] _ in
+                guard let strongSelf = self else { return }
+
+                strongSelf.setupChelseaband(device: strongSelf.device)
+            }, onError: { error in
+
             })
-            .subscribe()
     }
 
     private func setupChelseaband(device: DeviceType) {
@@ -65,13 +63,13 @@ public final class Chelseaband: ChelseabandType {
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
             .compactMap { $0.characteristic.value }
-            .catchError { _ in .never() }
+            .catchError { _ in .never() } //NOTE: update this to avoid sending never when error
             .subscribe(readCharacteristicSubject)
             .disposed(by: setupDisposeBag)
 
         let batteryCommand = BatteryCommand()
         batteryCommand.batteryLevel
-            .debug("bat-v: ")
+            .debug("\(self).read-BatteryCommand")
             .subscribe(batteryLevelSubject)
             .disposed(by: setupDisposeBag)
 
@@ -110,8 +108,8 @@ extension Chelseaband: CommandExecutor {
 
     public var isConnected: Observable<Bool> {
         connectionObservable
+            .startWith(.disconnected)
             .map { $0.isConnected }
-            .startWith(false)
     }
 
     public func write(data: Data) -> Observable<Void> {
