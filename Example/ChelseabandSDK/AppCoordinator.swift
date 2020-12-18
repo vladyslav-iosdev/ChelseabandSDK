@@ -32,6 +32,9 @@ class AppCoordinator: Coordinator {
         }).disposed(by: disposeBag)
     }
 
+
+    
+
     func start() {
         window.rootViewController = navigationController
         window.makeKeyAndVisible()
