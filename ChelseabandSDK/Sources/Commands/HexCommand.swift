@@ -7,7 +7,7 @@
 
 import RxSwift
 
-enum CommandError: Error {
+public enum CommandError: Error {
     case invalid
     case timeout
 }
