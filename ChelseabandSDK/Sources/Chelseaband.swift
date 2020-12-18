@@ -11,15 +11,18 @@ import RxBluetoothKit
 import CoreBluetooth
 
 public protocol ChelseabandType {
+    
     var connectionObservable: Observable<Device.State> { get }
     var batteryLevelObservable: Observable<UInt64> { get }
-
+    
     init(device: DeviceType)
     
     func connect()
     func disconnect()
 
     func perform(command: Command) -> Observable<Void>
+
+    func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -44,6 +47,7 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func connect() {
+
         connectionDisposable = device
             .connect()
             .debug("\(self).main")
@@ -58,7 +62,6 @@ public final class Chelseaband: ChelseabandType {
 
     private func setupChelseaband(device: DeviceType) {
         setupDisposeBag = DisposeBag()
-
         device
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
@@ -89,6 +92,18 @@ public final class Chelseaband: ChelseabandType {
             .perform(on: self, notifyWith: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
+    }
+
+    public func performSafe(command: Command, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+        connectionObservable
+            .skipWhile { !$0.isConnected }
+            .take(1)
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .debug("\(self).performSafe.trigger")
+            .flatMap { _ -> Observable<Void> in
+                self.perform(command: command)
+            }
+            .debug("\(self).performSafe.perform")
     }
 
     public func disconnect() {
