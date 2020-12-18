@@ -46,7 +46,7 @@ public extension ObservableType {
             error
                 .do(onNext: { error in
                     onError(error)
-                    print("❌ An error occured subscribing to notification for the scanning for device: \(error) (will retry in 2s)")
+                    print("❌ An error occured: \(error) (will retry in `n`s)")
                 })
                 .scan(0) { attempts, error in
                     guard attempts < maxAttempts else { throw DeviceError.maxRetryAttempts }
@@ -73,8 +73,6 @@ public protocol DeviceType {
     var bluetoothHasConnected: Observable<Void> { get }
 
     var connectionObservable: Observable<Device.State> { get }
-
-    var disconnectObservable: Observable<(Peripheral, DisconnectionReason?)> { get }
 
     var readCharacteristicObservable: Observable<Characteristic> { get }
 
@@ -125,10 +123,6 @@ public final class Device: DeviceType {
         connectionBehaviourSubject
     }
 
-    public var disconnectObservable: Observable<(Peripheral, DisconnectionReason?)> {
-        disconnectPublishSubject
-    }
-
     public var readCharacteristicObservable: Observable<Characteristic> {
         readCharacteristic.compactMap { $0 }
     }
@@ -139,7 +133,6 @@ public final class Device: DeviceType {
     private let configuration: Configuration
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
-    private let disconnectPublishSubject = PublishSubject<(Peripheral, DisconnectionReason?)>()
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
 
@@ -222,8 +215,6 @@ public final class Device: DeviceType {
     }
 
     private func startScanning(manager: CentralManager, service: ID) -> Observable<ScannedPeripheral> {
-        let scanningRetry = self.scanningRetry
-
         return Observable.just(manager)
             .filter { !$0.manager.isScanning }
             .do(onNext: { [weak self] _ in
