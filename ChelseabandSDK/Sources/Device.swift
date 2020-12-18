@@ -130,7 +130,7 @@ public final class Device: DeviceType {
     }
 
     public var readCharacteristicObservable: Observable<Characteristic> {
-        readCharacteristic.compactMap{ $0 }
+        readCharacteristic.compactMap { $0 }
     }
 
     public var scanningTimeout: DispatchTimeInterval = .seconds(5)
@@ -159,12 +159,12 @@ public final class Device: DeviceType {
                     return Disposables.create()
                 }
 
-                var yy: Disposable?
-                var ww: Disposable?
+                var connectionDisposable: Disposable?
+                var characteristicsDisposable: Disposable?
                 
-                let xx = strongSelf.startScanning(manager: manager, service: configuration.service)
+                let scanningDisposable = strongSelf.startScanning(manager: manager, service: configuration.service)
                     .subscribe(onNext: { peripheral in
-                        yy = strongSelf.connect(periferal: peripheral, service: configuration.service)
+                        connectionDisposable = strongSelf.connect(periferal: peripheral, service: configuration.service)
                             .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
                                 strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
                             })
@@ -179,7 +179,7 @@ public final class Device: DeviceType {
                                     let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
                                     let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
 
-                                    ww = Observable.combineLatest(writeCharacteristic, readCharacteristic)
+                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
                                         .debug("\(strongSelf).final-setup")
                                         .subscribe(onNext: { pair in
                                             strongSelf.writeCharacteristic.on(.next(pair.0))
@@ -205,63 +205,10 @@ public final class Device: DeviceType {
                 return Disposables.create {
                     strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
 
-                    xx.dispose()
-                    yy?.dispose()
-                    ww?.dispose()
+                    scanningDisposable.dispose()
+                    connectionDisposable?.dispose()
+                    characteristicsDisposable?.dispose()
                 }
-
-                //            let peripheralObservable = strongSelf.startScanning(manager: manager, service: configuration.service)
-                //
-                //            let connectionObservable = peripheralObservable
-                //                .flatMap { strongSelf.connect(periferal: $0, service: configuration.service) }
-                //                .share()
-                //                .debug("device-connection")
-                ////                .materialize()
-                //
-                //            let disconnectDisposable = connectionObservable
-                ////            connectionObservable.dematerialize()
-                //                .flatMap { strongSelf.manager.observeDisconnect(for: $0.peripheral) }
-                //                .map { e in Device.State.disconnected(e.1) }
-                //                .share()
-                //                .debug("device-disconnect")
-                //                .materialize()
-                //                .map({ e -> Device.State in
-                //                    switch e {
-                //                    case .next(let state):
-                //                        return state
-                //                    case .completed:
-                //                        return .disconnected(nil)
-                //                    case .error(let error):
-                //                        return .disconnected(error)
-                //                    }
-                //                })
-                //                .subscribe(strongSelf.connectionBehaviourSubject)
-                //
-                //            let subscription = connectionObservable
-                //                .flatMap { service -> Observable<Service> in
-                //                    let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
-                //                    let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
-                //
-                //                    return Observable.combineLatest(writeCharacteristic, readCharacteristic)
-                //                        .do(onNext: { characteristics in
-                //                            strongSelf.writeCharacteristic.on(.next(characteristics.0))
-                //                            strongSelf.readCharacteristic.on(.next(characteristics.1))
-                //                        })
-                //                        .map { _ in service }
-                //                        .do(onNext: { _ in
-                //                            strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
-                //                        })
-                //                }
-                //                .map { _ in strongSelf }
-                //                .subscribe(seal)
-                //
-                //            return Disposables.create {
-                //                strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected(nil))
-                //
-                //                disconnectDisposable.dispose()
-                //                subscription.dispose()
-                //            }
-
             }
         }
     }
