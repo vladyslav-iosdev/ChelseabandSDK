@@ -65,7 +65,7 @@ public final class Chelseaband: ChelseabandType {
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
             .compactMap { $0.characteristic.value }
-            .catchError { _ in .never() }
+            .catchError { _ in .never() } //NOTE: update this to avoid sending never when error
             .subscribe(readCharacteristicSubject)
             .disposed(by: setupDisposeBag)
 

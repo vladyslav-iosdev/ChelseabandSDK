@@ -12,86 +12,88 @@ public enum MessageType: String {
     case news = "02"
 }
 
+enum NewsCommandError: Error {
+    case done
+}
+
 public class NewsCommand: Command {
     private static let prefix = "00a10101"
     private static let suffix = "01"
-    private let commandStack: [HexCommand]
+    private var body: [HexCommand]
 
     private let initialCommand = HexCommand(hex: NewsCommand.prefix.uppercased() + NewsCommand.suffix.xor)
+    private let completionCommand = HexCommand(hex: "00A301" + "01" + NewsCommand.suffix.xor)
+    private lazy var isEmptyTrigger = Observable.of(body).filter{ $0.isEmpty }
 
-    init(value: String, type: MessageType) {
-        let values = value.components(length: 16)
-
-//        let initialCommand = HexCommand(hex: NewsCommand.prefix + NewsCommand.suffix.xor)
-
-        commandStack = values.map { part -> HexCommand in
-            let length = (part.count / 2).hex
-            let hex = GoalCommand.prefix.uppercased() + "\(length)" + NewsCommand.suffix + part + part.xor
+    public init(value: String) {
+        //NOTE: converted string into its hex, deviced by 16 cheracters in chunk
+        let values = value.hex.components(length: 16)
+        body = values.map { part -> HexCommand in
+            let lengthHex = (part.count / 2).hex
+            let hex = (GoalCommand.prefix + lengthHex + NewsCommand.suffix + part + part.xor).uppercased()
+            print("\(Self.self)-command: \(hex)")
 
             return HexCommand(hex: hex)
         }
-
-//        val make = PREFIX_NEWS.toUpperCase(Locale.US).plus(CmdUtils.checkXor("01"))
-//        writeHex(make)
-//
-//        commandStack = [initialCommand] + bodyPartCommands
-//    val length = Integer.toHexString((msgList[writeCurrent].length / 2))
-//    val makes = PREFIX_GOAL.toUpperCase(Locale.US)
-//            .plus(if (length.length == 1) "0$length" else length)
-//            .plus(msgType)//01消息标题  02进球
-//            .plus(msgList[writeCurrent])
-//            .plus(CmdUtils.checkXor(msgList[writeCurrent]))
-//
-//    writeHex(makes)
-
-//         "00A301".plus("01").plus(CmdUtils.checkXor("01"))
-
-//    to trigger “news” the app use more complex algorithm:
-//    Convert message text to hex string.
-//    Split converted message to parts 16 symbols length
-
-//    Send to device “00a10101" + result of function checkXor(“01”)
-//    Waiting for some callback from sdk ( onCharacteristicChanged(data: ByteArray) )
-//    In the loop send to device previously split parts of hex text message next way:  “00a10101" + part’s length + “01” + part of message + result of function checkXor(part of message)
-
+        print("\(self)-body: \(body)")
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         return Observable.create { seal -> Disposable in
 
-//            let timerObservable = Observable<Int>.interval(.seconds(1), scheduler: MainScheduler.instance)
-//                .debug("\(self)-trigger")
-//                .flatMap { _ -> Observable<Void> in
-//                    return self.command.perform(on: executor, notifyWith: notifier)
-//                        .debug("\(self)-write")
-//                        .mapToVoid()
-//                }.debug("t-t")
-//                .subscribe()
-
-            let _ = notifier
-                .notifyObservable
-                .debug("\(self)-trigget")
-                .skipWhile { !$0.hex.starts(with: NewsCommand.prefix) }
-    //            .take(1)
-    //            .flatMap { data -> Observable<Void> in
-    //                print("\(self)-trigger on: \(data.hex)")
-    //                print("\(self)-write: \(self.completeHex.hex)")
-    //                return executor.write(data: self.completeHex)
-    //            }
-                .timeout(.milliseconds(250), other: Observable.error(RxError.timeout), scheduler: MainScheduler.instance)
-                .subscribe(onNext: { _ in
-                    seal.onCompleted()
-                }, onError: { e in
-                    seal.onError(e)
-                })
+            let triggerDisposable = notifier.notifyObservable
+                .takeUntil(self.isEmptyTrigger)
+                .map { _ -> HexCommand? in
+                    if self.body.isEmpty {
+                        return nil
+                    } else {
+                        return self.body.removeFirst()
+                    }
+                }.flatMap { command -> Observable<Void> in
+                    if let command = command {
+                        print("\(self)-write: \(command.hex)")
+                        return command.perform(on: executor, notifyWith: notifier)
+                    } else {
+                        print("\(self)-done")
+                        throw NewsCommandError.done
+                    }
+                }.flatMap { _ -> Observable<Void> in
+                    if self.body.isEmpty {
+                        return self.completionCommand.perform(on: executor, notifyWith: notifier)
+                    } else {
+                        return .just(())
+                    }
+                }.catchError { e -> Observable<Void> in
+                    if case NewsCommandError.done = e {
+                        return self.completionCommand.perform(on: executor, notifyWith: notifier)
+                    } else {
+                        throw e
+                    }
+                }.debug("\(self)-write body").subscribe { e in
+                    if let error = e.error {
+                        seal.onError(error)
+                    } else if e.isCompleted {
+                        seal.onCompleted()
+                    }
+                }
 
             let initialWrite = self.initialCommand.perform(on: executor, notifyWith: notifier)
                 .debug("\(self)-initial write")
-                .subscribe()
+                .subscribe { e in
+                    //NOTE: we need to keep track response, if its errro, return it to upper observable
+                    //and if `body` is empty complete observable
+                    //other wait for response
+                    if let error = e.error {
+                        seal.onError(error)
+                    } else if self.body.isEmpty {
+                        //send completion
+                        seal.onCompleted()
+                    }
+                }
 
             return Disposables.create {
                 initialWrite.dispose()
-//                timerObservable.dispose()
+                triggerDisposable.dispose()
             }
         } 
     }
@@ -100,48 +102,3 @@ public class NewsCommand: Command {
         print("\(self)-deinit")
     }
 }
-
-//        return Observable.create { seal -> Disposable in
-//            print("\(self)-stard")
-//
-////            let notifyObservable = notifier.notifyObservable.debug("\(self)-read").subscribe(onNext: { data in
-////                print("\(self)-read: \(data.hex)")
-////            }, onError: { e in
-////                seal.onError(e)
-////            })
-//
-//            let triggerObservable = notifier
-//                .notifyObservable
-//                .debug("\(self)-trigget")
-//                .skipWhile { !$0.hex.starts(with: GoalCommand.prefix) }
-//                .take(1)
-//                .flatMap { data -> Observable<Void> in
-//                    print("\(self)-trigger on: \(data.hex)")
-//                    print("\(self)-write: \(self.completeHex.hex)")
-//                    return executor.write(data: self.completeHex)
-//                }
-//                .timeout(.milliseconds(250), other: Observable.error(RxError.timeout), scheduler: MainScheduler.instance)
-//                .subscribe(onNext: { _ in
-//                    seal.onCompleted()
-//                }, onError: { e in
-//                    seal.onError(e)
-//                })
-//
-////            print(executor)
-//            print("\(self)-write: \(self.initHex.hex)")
-//            let writeDisposable = executor
-//                .write(data: self.initHex)
-//                .debug("\(self)-write")
-//                .subscribe(onNext: { data in
-//
-//                }, onError: { e in
-//                    seal.onError(e)
-//                })
-//
-//            return Disposables.create {
-//                writeDisposable.dispose()
-//                triggerObservable.dispose()
-//                print("\(self)-dispose")
-//            }
-//        }
-

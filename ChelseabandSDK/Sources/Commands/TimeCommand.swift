@@ -22,6 +22,7 @@ public class TimeCommand: Command {
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
+        //NOTE: maybe replace with returning inner observable? 
         return Observable.create { seal -> Disposable in
             let triggerObservable = notifier
                 .notifyObservable

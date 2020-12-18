@@ -116,12 +116,12 @@ class DeviceCoordinator: Coordinator {
     }
 
     private func sendNews() {
-//        let value = (0...100).map { _ in "0" }.joined()
-//        let command = NewsCommand(value: value, type: .news)
-//
-//        chelseaband.write(command: command).subscribe { e in
-//            print("asasdasd \(e)")
-//        }.disposed(by: disposeBag)
+        let value = "Using this option CocoaPods will assume the given folder to be the root of the Pod and will link the files directly from there in the Pods project."
+        let command = NewsCommand(value: value)
+
+        chelseaband.perform(command: command).debug("NewsCommand-Main").subscribe { e in
+            print("asasdasd \(e)")
+        }.disposed(by: disposeBag)
     }
 
     private func showSettings() {
