@@ -61,6 +61,7 @@ class BatteryCommand: Command {
 
     public init(timeOut: DispatchTimeInterval = .seconds(5)) {
         self.timeOut = timeOut
+        
         if let value = defaults.value(forKey: Keys.lastBatteryValue) as? UInt64 {
             batteryLevel = .init(value: value)
         } else {
@@ -69,27 +70,28 @@ class BatteryCommand: Command {
         print("\(self).init")
     }
 
+    private static func value(from data: Data) -> UInt64? {
+        let commandSize = BatteryCommand.prefix.count
+        if data.hex.starts(with: BatteryCommand.prefix) && data.hex.count >= commandSize + 2 {
+            return data.hex[commandSize ..< commandSize + 2].valueFromHex
+        } else {
+            return nil
+        }
+    }
+
     func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         return Observable.create { seal -> Disposable in
 
             let timerObservable = Observable<Int>.interval(self.timeOut, scheduler: MainScheduler.instance)
-                .flatMap { _ -> Observable<Void> in
-                    return self.command.perform(on: executor, notifyWith: notifier)
-                        .debug("\(self).write")
-                }.subscribe()
+                .flatMap { _ in self.command.perform(on: executor, notifyWith: notifier).debug("\(self).write") }
+                .subscribe()
 
             let batteryLevelDisposable = notifier
                 .notifyObservable
-                .compactMap { data -> UInt64? in
-                    let commandSize = BatteryCommand.prefix.count
-                    if data.hex.starts(with: BatteryCommand.prefix) && data.hex.count >= commandSize + 2 {
-                        return data.hex[commandSize ..< commandSize + 2].valueFromHex
-                    } else {
-                        return nil
-                    }
-                }
+                .compactMap { BatteryCommand.value(from: $0) }
                 .debug("\(self).read")
                 .subscribe(onNext: { value in
+                    print("\(self).read.value: \(value)")
                     self.batteryLevel.onNext(value)
                     self.defaults.set(value, forKey: Keys.lastBatteryValue)
                 })
