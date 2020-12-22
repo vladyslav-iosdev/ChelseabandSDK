@@ -29,13 +29,13 @@ class DeviceCoordinator: Coordinator {
         self.settings = settings
         self.navigationController = navigationController
 
-//        viewController
-//            .settingsButtonObservable
-//            .do(onNext: { [weak self] in
-//                self?.showSettings()
-//            })
-//            .subscribe()
-//            .disposed(by: disposeBag)
+        viewController
+            .settingsButtonObservable
+            .do(onNext: { [weak self] in
+                self?.showSettings()
+            })
+            .subscribe()
+            .disposed(by: disposeBag)
 
         viewController.connectButtonObservable.subscribe { _ in
             chelseaband.connect()
@@ -44,30 +44,30 @@ class DeviceCoordinator: Coordinator {
         viewController.disconnectButtonObservable.subscribe { _ in
             chelseaband.disconnect()
         }.disposed(by: disposeBag)
-//
-//        viewController.sendNewButtonObservable.subscribe { _ in
-//            self.sendNews()
-//        }.disposed(by: disposeBag)
-//
-//        viewController.sendGoalButtonObservable.subscribe { _ in
-//            self.sendGoal()
-//        }.disposed(by: disposeBag)
 
-//        Observable.combineLatest(chelseaband.connectionObservable, Observable.just(chelseaband), Observable.just(settings))
-//            .filter { $0.0.isConnected }
-//            .map{ ($0.1, $0.2) }
-//            .flatMap { val -> Observable<Void> in
-//                let x1 = self.setConnectionDate(settings: val.1)
-//                let x2 = self.syncDeviceSettings(chelseaband: val.0, settings: val.1)
-//
-//                return Observable.combineLatest(x1, x2).mapToVoid()
-//            }
-//            .subscribe()
-//            .disposed(by: disposeBag)
-//
-//        chelseaband.batteryLevelObservable.subscribe { e in
-//            print("battery level: \(e)")
-//        }.disposed(by: disposeBag)
+        viewController.sendNewButtonObservable.subscribe { _ in
+            self.sendNews()
+        }.disposed(by: disposeBag)
+
+        viewController.sendGoalButtonObservable.subscribe { _ in
+            self.sendGoal()
+        }.disposed(by: disposeBag)
+
+        Observable.combineLatest(chelseaband.connectionObservable, Observable.just(chelseaband), Observable.just(settings))
+            .filter { $0.0.isConnected }
+            .map{ ($0.1, $0.2) }
+            .flatMap { val -> Observable<Void> in
+                let x1 = self.setConnectionDate(settings: val.1)
+                let x2 = self.syncDeviceSettings(chelseaband: val.0, settings: val.1)
+
+                return Observable.combineLatest(x1, x2).mapToVoid()
+            }
+            .subscribe()
+            .disposed(by: disposeBag)
+
+        chelseaband.batteryLevelObservable.subscribe { e in
+            print("battery level: \(e)")
+        }.disposed(by: disposeBag)
     }
 
     func start() {

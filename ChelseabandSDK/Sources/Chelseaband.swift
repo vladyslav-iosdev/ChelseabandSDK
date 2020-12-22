@@ -62,6 +62,7 @@ public final class Chelseaband: ChelseabandType {
 
     private func setupChelseaband(device: DeviceType) {
         setupDisposeBag = DisposeBag()
+
         device
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }

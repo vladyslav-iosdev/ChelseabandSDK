@@ -43,13 +43,8 @@ public class NewsCommand: Command {
 
             let triggerDisposable = notifier.notifyObservable
                 .takeUntil(self.isEmptyTrigger)
-                .map { _ -> HexCommand? in
-                    if self.body.isEmpty {
-                        return nil
-                    } else {
-                        return self.body.removeFirst()
-                    }
-                }.flatMap { command -> Observable<Void> in
+                .map { _ in return self.body.isEmpty ? nil : self.body.removeFirst() }
+                .flatMap { command -> Observable<Void> in
                     if let command = command {
                         print("\(self)-write: \(command.hex)")
                         return command.perform(on: executor, notifyWith: notifier)

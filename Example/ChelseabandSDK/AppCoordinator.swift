@@ -42,22 +42,14 @@ class AppCoordinator: Coordinator {
         addCoordinator(coordinator)
 
         coordinator.start()
-
-        let cmd = GoalCommand()
-
-        chelseaband.performSafe(command: cmd, timeOut: .seconds(5))
-            .debug("\(self).initial-command")
-            .subscribe { e in
-
-            }.disposed(by: disposeBag)
     }
 
     func applicationDidEnterBackground(_ application: UIApplication) {
-
+        print("\(self).applicationDidEnterBackground")
     }
 
     func applicationWillEnterForeground(_ application: UIApplication) {
-
+        print("\(self).applicationWillEnterForeground")
     }
 }
 
