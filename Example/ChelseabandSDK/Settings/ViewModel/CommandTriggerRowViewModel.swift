@@ -1,24 +1,25 @@
 //
-//  SoundRowViewModel.swift
+//  AlertRowViewModel.swift
 //  ChelseabandSDK_Example
 //
 //  Created by Vladyslav Shepitko on 03.12.2020.
 //  Copyright © 2020 Sonerim. All rights reserved.
 //
 
+import UIKit
 import RxSwift
-import RxCocoa
-import ChelseabandSDK 
+import ChelseabandSDK
 
-struct SoundRowViewModel {
+struct CommandTriggerRowViewModel: ToggleViewModelType {
+
     let title: String
-    let sound: Sound
-    let image: UIImage
+    let value: Bool
+    let image: UIImage?
     let trigger: CommandTrigger
 
-    init(image: UIImage, trigger: CommandTrigger, sound: Sound) {
+    init(image: UIImage, trigger: CommandTrigger, value: Bool) {
         self.trigger = trigger
-        self.sound = sound
+        self.value = value
         self.title = trigger.title
         self.image = image
     }

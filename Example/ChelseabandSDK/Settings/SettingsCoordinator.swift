@@ -19,15 +19,15 @@ class SettingsCoordinator: Coordinator {
     var coordinators: [Coordinator] = []
 
     private let disposeBag = DisposeBag()
-    private let settings: SettingsServiceType
+    private var settings: SettingsServiceType
     private let chelseaband: ChelseabandType
     private let navigationController: UINavigationController
 
     weak var delegate: SettingsCoordinatorDelegate?
 
     private lazy var viewController: SettingsViewController = {
-        let controller = SettingsViewController(viewModel: .init(settingsService: settings, chelseaband: chelseaband))
-        controller.navigationItem.leftBarButtonItem = .backBarButton(self, action: #selector(dissmiss))
+        let controller = SettingsViewController(viewModel: .init(settingsService: settings))
+        controller.navigationItem.leftBarButtonItem = .backBarButton(self, action: #selector(dismiss))
         return controller
     }()
 
@@ -47,9 +47,9 @@ class SettingsCoordinator: Coordinator {
         viewController.vibrationChangeObservable.subscribe(onNext: { [weak self] value in
             self?.set(vibrate: value)
         }).disposed(by: disposeBag)
-    } 
+    }
 
-    @objc private func dissmiss() {
+    @objc private func dismiss() {
         delegate?.didDissmiss(in: self)
     }
 
@@ -57,90 +57,61 @@ class SettingsCoordinator: Coordinator {
         navigationController.pushViewController(viewController, animated: true)
     }
 
-    private func set(sound: Sound, trigger: SoundTrigger) {
-        let chelseaband = self.chelseaband
+    deinit {
+        print("\(self).deinit")
+    }
 
-        settings
-            .set(sound: sound, trigger: trigger)
-            .flatMap { _ -> Single<Void> in
-                let command = SoundCommand(sound: sound, trigger: trigger)
-                return chelseaband.perform(command: command).asSingle()
-            }
+    private func set(sound: Sound, trigger: CommandTrigger) {
+        let command = SoundCommand(sound: sound, trigger: trigger)
+
+        chelseaband.perform(command: command)
             .subscribe { [weak self] event in
                 guard let strongSelf = self else { return }
 
-                switch event {
-                case .error:
-                    strongSelf.navigationController.showError(message: "Operation failure")
-                case .success:
-                    break
+                if event.error == nil {
+                    strongSelf.settings.set(sound: sound, trigger: trigger)
+                } else {
+                    strongSelf.navigationController.showError(message: "Failure to perform command")
                 }
             }.disposed(by: disposeBag)
     }
 
-    private func set(light value: Bool, trigger: LightTrigger) {
-        settings
-            .set(value: value, trigger: trigger)
-            .flatMap { [weak self] _ -> Single<Void> in
-                guard let strongSelf = self else { return .never() }
-
-                return strongSelf.sendCombinedLightAndVibration(settings: strongSelf.settings, chelseaband: strongSelf.chelseaband)
-            }
-            .subscribe { [weak self] event in
-                guard let strongSelf = self else { return }
-
-                switch event {
-                case .error:
-                    strongSelf.navigationController.showError(message: "Operation failure")
-                case .success:
-                    break
-                }
-            }.disposed(by: disposeBag)
+    private func set(light value: Bool, trigger: CommandTrigger) {
+        settings.set(lightEnabled: value, trigger: trigger)
+        syncDeviceSettings()
     }
 
     private func set(vibrate: Bool) {
-        settings
-            .set(vibrate: vibrate)
-            .flatMap { [weak self] _ -> Single<Void> in
-                guard let strongSelf = self else { return .never() }
-
-                return strongSelf.sendCombinedLightAndVibration(settings: strongSelf.settings, chelseaband: strongSelf.chelseaband)
-            }
-            .subscribe { [weak self] event in
-                guard let strongSelf = self else { return }
-
-                switch event {
-                case .error:
-                    strongSelf.navigationController.showError(message: "Operation failure")
-                case .success:
-                    break
-                }
-            }.disposed(by: disposeBag)
+        settings.set(vibrate: vibrate)
+        syncDeviceSettings()
     }
 
-    private func sendCombinedLightAndVibration(settings: SettingsServiceType, chelseaband: ChelseabandType) -> Single<Void> {
-        let lights = Observable.from(LightTrigger.allCases)
-            .flatMap { Observable.combineLatest(settings.getLight(trigger: $0), Observable<LightTrigger>.just($0)) }
-            .toArray()
-            .asObservable()
+    private func syncDeviceSettings() {
+        let speakerEnabled = settings.sounds.filter{ $0.value != .off }.count == 0
 
-        let vibration = settings.vibrate
-            .map { Vibration.init($0) }
+        let command = HardwareEnablement(led: settings.enabledLights, vibrationEnabled: settings.vibrate, screenEnabled: true, speakerEnabled: speakerEnabled)
+        let hardwareEnablementObservable = chelseaband.perform(command: command)
+            .debug("syncLightsAndVibrationObservable")
 
-        return Observable.combineLatest(lights, vibration)
-            .flatMap { lights, vibration -> Observable<Void> in
-                let lights = lights.filter{ $0.0 }.map{ $0.1 }
-                let command = LightCommand(lights: lights, vibration: vibration)
+        hardwareEnablementObservable.subscribe { [weak self] event in
+            guard let strongSelf = self else { return }
 
-                return chelseaband.perform(command: command)
-            }.asSingle()
+            if event.error == nil {
+                //no-op
+            } else {
+                strongSelf.navigationController.showError(message: "Failure to perform command")
+            }
+        }.disposed(by: disposeBag)
     }
 }
 
 extension UIViewController {
     func showError(message: String) {
-        let controller = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
-        controller.addAction(.init(title: "Ok", style: .default))
+        let controller = UIAlertController(title: "Error",
+                                           message: message,
+                                           preferredStyle: .alert)
+        controller.addAction(.init(title: "OK",
+                                  style: .default))
 
         present(controller, animated: true)
     }

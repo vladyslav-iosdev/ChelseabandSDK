@@ -6,8 +6,9 @@
 //
 
 import RxSwift
-import UIKit
-public enum BatteryLevel: UInt64, CustomStringConvertible {
+import Foundation
+
+public enum BatteryLevel: UInt64 {
     case full
     case middleUp //Rename
     case middle
@@ -27,21 +28,6 @@ public enum BatteryLevel: UInt64, CustomStringConvertible {
             self = .full
         }
     }
-
-    public var description: String {
-        switch self {
-        case .full:
-            return "Full"
-        case .middleUp:
-            return "SS"
-        case .middle:
-            return "Middle"
-        case .low:
-            return "Low"
-        case .empty:
-            return "Empty"
-        }
-    }
 }
 
 class BatteryCommand: Command {
@@ -52,15 +38,15 @@ class BatteryCommand: Command {
 
     public let batteryLevel: BehaviorSubject<UInt64>
 
-    private static let prefix = "00f70101"
+    private static let prefix = "00f7"
+    private static let hex = prefix + "01" + "01"
     private static let suffix = "01"
 
-    private let command = HexCommand(hex: BatteryCommand.prefix + BatteryCommand.suffix)
     private let defaults: UserDefaults = .standard
-    private let timeOut: DispatchTimeInterval
+    private let interval: DispatchTimeInterval
 
-    public init(timeOut: DispatchTimeInterval = .seconds(5)) {
-        self.timeOut = timeOut
+    public init(interval: DispatchTimeInterval = .seconds(5)) {
+        self.interval = interval
         
         if let value = defaults.value(forKey: Keys.lastBatteryValue) as? UInt64 {
             batteryLevel = .init(value: value)
@@ -70,9 +56,9 @@ class BatteryCommand: Command {
         print("\(self).init")
     }
 
-    private static func value(from data: Data) -> UInt64? {
-        let commandSize = BatteryCommand.prefix.count
-        if data.hex.starts(with: BatteryCommand.prefix) && data.hex.count >= commandSize + 2 {
+    private func batteryLevelValue(from data: Data) -> UInt64? {
+        let commandSize = BatteryCommand.hex.count
+        if data.hex.starts(with: BatteryCommand.hex) && data.hex.count >= commandSize + 2 {
             return data.hex[commandSize ..< commandSize + 2].valueFromHex
         } else {
             return nil
@@ -82,13 +68,18 @@ class BatteryCommand: Command {
     func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         return Observable.create { seal -> Disposable in
 
-            let timerObservable = Observable<Int>.interval(self.timeOut, scheduler: MainScheduler.instance)
-                .flatMap { _ in self.command.perform(on: executor, notifyWith: notifier).debug("\(self).write") }
+            let timerObservable = Observable<Int>
+                .interval(self.interval, scheduler: MainScheduler.instance)
+                .flatMap { _ in
+                    BatteryHexCommand(hex: BatteryCommand.hex)
+                        .perform(on: executor, notifyWith: notifier)
+                        .debug("\(self).write")
+                }
                 .subscribe()
 
             let batteryLevelDisposable = notifier
                 .notifyObservable
-                .compactMap { BatteryCommand.value(from: $0) }
+                .compactMap { self.batteryLevelValue(from: $0) }
                 .debug("\(self).read")
                 .subscribe(onNext: { value in
                     print("\(self).read.value: \(value)")
@@ -96,7 +87,8 @@ class BatteryCommand: Command {
                     self.defaults.set(value, forKey: Keys.lastBatteryValue)
                 })
 
-            let initialWrite = self.command.perform(on: executor, notifyWith: notifier)
+            let initialWrite = BatteryHexCommand(hex: BatteryCommand.hex)
+                .perform(on: executor, notifyWith: notifier)
                 .debug("\(self).write.initial")
                 .subscribe()
 
@@ -110,5 +102,35 @@ class BatteryCommand: Command {
 
     deinit {
         print("\(self)-deinit")
+    }
+}
+
+private extension BatteryCommand {
+    class BatteryHexCommand: Command {
+        private let command: HexCommand
+
+        var hex: String {
+            return command.hex
+        }
+
+        init(hex: String) {
+            command = HexCommand(hex: hex)
+        }
+
+        func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
+            let completionObservable = notifier
+                .notifyObservable
+                .completeWhenByteEqualsToOne(hexStartWith: BatteryCommand.prefix)
+                .debug("\(self)-trigget")
+
+            let performanceObservable = command
+                .perform(on: executor, notifyWith: notifier)
+                .debug("\(self)-write")
+
+            return Observable.zip(
+                performanceObservable,
+                completionObservable
+            ).mapToVoid()
+        }
     }
 }

@@ -11,17 +11,24 @@ import RxSwift
 import ChelseabandSDK
 
 protocol SettingsServiceType {
-    var vibrate: Observable<Bool> { get }
-    func set(vibrate newValue: Bool) -> Single<Void>
+    var vibrate: Bool { get }
 
-    func getLight(trigger: LightTrigger) -> Observable<Bool>
-    func set(value: Bool, trigger: LightTrigger) -> Single<Void>
+    func set(vibrate newValue: Bool)
 
-    func getSound(trigger: SoundTrigger) -> Observable<Sound>
-    func set(sound: Sound, trigger: SoundTrigger) -> Single<Void>
+    func getLight(trigger: CommandTrigger) -> Bool
+    func set(lightEnabled: Bool, trigger: CommandTrigger)
+
+    func getSound(trigger: CommandTrigger) -> Sound
+    func set(sound: Sound, trigger: CommandTrigger)
 
     var connectionDate: Observable<Date?> { get }
-    func set(connectionDate: Date) -> Single<Void>
+    func set(connectionDate: Date)
+
+    var isDebugEnabled: Bool { get set }
+
+    var enabledLights: [CommandTrigger] { get }
+
+    var sounds: [(value: Sound, trigger: CommandTrigger)] { get }
 }
 
 class SettingsService: SettingsServiceType {
@@ -31,14 +38,28 @@ class SettingsService: SettingsServiceType {
 
         static let newsLight = "newsLightKey"
         static let goalLight = "goalLightKey"
+        static let gestureLight = "gestureLightKey"
 
         static let newsSound = "newsSoundKey"
         static let goalSound = "goalSoundKey"
         static let gestureSound = "gestureSoundKey"
         static let connectionDate = "connectionDateKey"
+        static let isDebugEnabled = "isDebugEnabledKey"
     }
 
-    private static func key(soundTrigger: SoundTrigger) -> String {
+    var enabledLights: [CommandTrigger] {
+        CommandTrigger.allCases.map { trigger -> (value: Bool, trigger: CommandTrigger) in
+            return (getLight(trigger: trigger), trigger)
+        }.filter{ $0.0 }.map{ $0.1 }
+    }
+
+    var sounds: [(value: Sound, trigger: CommandTrigger)] {
+        CommandTrigger.allCases.map { trigger -> (value: Sound, trigger: CommandTrigger) in
+            return (getSound(trigger: trigger), trigger)
+        }
+    }
+
+    private static func key(soundTrigger: CommandTrigger) -> String {
         switch soundTrigger {
         case .goal:
             return Keys.goalSound
@@ -49,85 +70,71 @@ class SettingsService: SettingsServiceType {
         }
     }
 
-    private static func key(lightTrigger: LightTrigger) -> String {
-        switch lightTrigger {
+    private static func key(trigger: CommandTrigger) -> String {
+        switch trigger {
         case .goal:
             return Keys.goalLight
         case .news:
             return Keys.newsLight
+        case .gesture:
+            return Keys.gestureLight
         }
     }
 
     private let defaults: UserDefaults
 
-    func getLight(trigger: LightTrigger) -> Observable<Bool> {
-        defaults.rx.observe(Bool.self, SettingsService.key(lightTrigger: trigger)).map { value in
-            return value ?? false
-        }.take(1)
-    }
-
-    func set(value: Bool, trigger: LightTrigger) -> Single<Void> {
-        return Single.create { [weak self] seal -> Disposable in
-            self?.defaults.set(value, forKey: SettingsService.key(lightTrigger: trigger))
-
-            seal(.success(()))
-
-            return Disposables.create()
+    var isDebugEnabled: Bool {
+        get {
+            defaults.bool(forKey: Keys.isDebugEnabled)
+        } set {
+            defaults.set(newValue, forKey: Keys.isDebugEnabled)
         }
     }
 
-    func set(connectionDate value: Date) -> Single<Void> {
-        return Single.create { [weak self] seal -> Disposable in
-            self?.defaults.set(value, forKey: Keys.connectionDate)
+    func getLight(trigger: CommandTrigger) -> Bool {
+        defaults.bool(forKey: SettingsService.key(trigger: trigger))
+    }
 
-            seal(.success(()))
+    func set(lightEnabled: Bool, trigger: CommandTrigger) {
+        defaults.set(lightEnabled, forKey: SettingsService.key(trigger: trigger))
+    }
 
-            return Disposables.create()
-        }
+    func set(connectionDate value: Date) {
+        defaults.set(value.timeIntervalSince1970, forKey: Keys.connectionDate)
     }
 
     var connectionDate: Observable<Date?> {
-        defaults.rx.observe(Date.self, Keys.connectionDate)
-    }
-
-    func getSound(trigger: SoundTrigger) -> Observable<Sound> {
-        defaults.rx.observe(String.self, SettingsService.key(soundTrigger: trigger)).map { value in
-            if let val = value {
-                return Sound(rawValue: val) ?? Sound.off
+        defaults.rx.observe(Double.self, Keys.connectionDate).map {
+            if let value = $0 {
+                return Date(timeIntervalSince1970: value)
             } else {
-                return Sound.off
+                return nil
             }
-        }.take(1)
-    }
-
-    func set(sound: Sound, trigger: SoundTrigger) -> Single<Void> {
-        return Single.create { [weak self] seal -> Disposable in
-            self?.defaults.set(sound.rawValue, forKey: SettingsService.key(soundTrigger: trigger))
-
-            seal(.success(()))
-
-            return Disposables.create()
         }
     }
 
-    var vibrate: Observable<Bool> {
-        defaults.rx.observe(Bool.self, Keys.vibrate).map { value in
-            value ?? false
-        }.take(1)
+    func getSound(trigger: CommandTrigger) -> Sound {
+        if let value = defaults.string(forKey: SettingsService.key(soundTrigger: trigger)) {
+            return Sound(rawValue: value) ?? Sound.off
+        } else {
+            return Sound.off
+        }
+    }
+
+    func set(sound: Sound, trigger: CommandTrigger) {
+        defaults.set(sound.rawValue, forKey: SettingsService.key(soundTrigger: trigger))
+    }
+
+    var vibrate: Bool {
+        defaults.bool(forKey: Keys.vibrate)
     }
 
     init(defaults: UserDefaults = .standard) {
         self.defaults = defaults
     }
 
-    func set(vibrate newValue: Bool) -> Single<Void> {
-        return Single.create { [weak self] seal -> Disposable in
-            self?.defaults.set(newValue, forKey: Keys.vibrate)
-
-            seal(.success(()))
-
-            return Disposables.create()
-        }
+    func set(vibrate newValue: Bool) {
+        defaults.set(newValue, forKey: Keys.vibrate)
     }
 
 }

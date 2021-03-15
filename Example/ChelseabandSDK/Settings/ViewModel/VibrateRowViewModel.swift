@@ -9,15 +9,18 @@
 import UIKit
 import RxSwift
 
-struct VibrateRowViewModel: ToggleViewModel {
-    let title: Observable<String>
-    let value: Observable<Bool>
-    let image: Observable<UIImage>
+import UIKit
+import RxSwift
 
-    init(image: UIImage, title: String, value: Observable<Bool>) {
+struct VibrateRowViewModel: ToggleViewModelType {
+    let title: String
+    let value: Bool
+    let image: UIImage?
+
+    init(image: UIImage?, title: String, value: Bool) {
         self.value = value
-        self.title = Observable.just(title)
-        self.image = Observable.just(image)
+        self.title = title
+        self.image = image
     }
-
 }
+

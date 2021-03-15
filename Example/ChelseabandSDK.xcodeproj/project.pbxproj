@@ -34,7 +34,7 @@
 		8764A068258BF330000F2A83 /* OnbordingCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A037258BF330000F2A83 /* OnbordingCoordinator.swift */; };
 		8764A06A258BF330000F2A83 /* SoundRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */; };
 		8764A06B258BF330000F2A83 /* SettingsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03E258BF330000F2A83 /* SettingsViewModel.swift */; };
-		8764A06C258BF330000F2A83 /* AlertRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */; };
+		8764A06C258BF330000F2A83 /* CommandTriggerRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A03F258BF330000F2A83 /* CommandTriggerRowViewModel.swift */; };
 		8764A06D258BF330000F2A83 /* VibrateRowViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */; };
 		8764A06E258BF330000F2A83 /* SettingsCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A041258BF330000F2A83 /* SettingsCoordinator.swift */; };
 		8764A06F258BF330000F2A83 /* AlertType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A043258BF330000F2A83 /* AlertType.swift */; };
@@ -44,6 +44,7 @@
 		8764A073258BF330000F2A83 /* SettingsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A048258BF330000F2A83 /* SettingsService.swift */; };
 		8764A074258BF330000F2A83 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A04A258BF330000F2A83 /* SettingsViewController.swift */; };
 		8764A075258BF330000F2A83 /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8764A04B258BF330000F2A83 /* Configuration.swift */; };
+		87BDF83825FFA8C2007DCD36 /* ToggleViewModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF83725FFA8C2007DCD36 /* ToggleViewModelType.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,7 +79,7 @@
 		8764A037258BF330000F2A83 /* OnbordingCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OnbordingCoordinator.swift; sourceTree = "<group>"; };
 		8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SoundRowViewModel.swift; sourceTree = "<group>"; };
 		8764A03E258BF330000F2A83 /* SettingsViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewModel.swift; sourceTree = "<group>"; };
-		8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertRowViewModel.swift; sourceTree = "<group>"; };
+		8764A03F258BF330000F2A83 /* CommandTriggerRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CommandTriggerRowViewModel.swift; sourceTree = "<group>"; };
 		8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrateRowViewModel.swift; sourceTree = "<group>"; };
 		8764A041258BF330000F2A83 /* SettingsCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsCoordinator.swift; sourceTree = "<group>"; };
 		8764A043258BF330000F2A83 /* AlertType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AlertType.swift; sourceTree = "<group>"; };
@@ -88,6 +89,7 @@
 		8764A048258BF330000F2A83 /* SettingsService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsService.swift; sourceTree = "<group>"; };
 		8764A04A258BF330000F2A83 /* SettingsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		8764A04B258BF330000F2A83 /* Configuration.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
+		87BDF83725FFA8C2007DCD36 /* ToggleViewModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleViewModelType.swift; sourceTree = "<group>"; };
 		A53DB09AFA252BCD3BE62E14 /* Pods-ChelseabandSDK_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Example.debug.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Example/Pods-ChelseabandSDK_Example.debug.xcconfig"; sourceTree = "<group>"; };
 		AB1E420647B434318CD365D8 /* Pods-ChelseabandSDK_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ChelseabandSDK_Tests.debug.xcconfig"; path = "Target Support Files/Pods-ChelseabandSDK_Tests/Pods-ChelseabandSDK_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		B80BBF596A33E5629C7C6309 /* Pods_ChelseabandSDK_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ChelseabandSDK_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -272,8 +274,9 @@
 			children = (
 				8764A03D258BF330000F2A83 /* SoundRowViewModel.swift */,
 				8764A03E258BF330000F2A83 /* SettingsViewModel.swift */,
-				8764A03F258BF330000F2A83 /* AlertRowViewModel.swift */,
+				8764A03F258BF330000F2A83 /* CommandTriggerRowViewModel.swift */,
 				8764A040258BF330000F2A83 /* VibrateRowViewModel.swift */,
+				87BDF83725FFA8C2007DCD36 /* ToggleViewModelType.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -442,11 +445,12 @@
 				8764A04E258BF330000F2A83 /* DeviceConnectionView.swift in Sources */,
 				8764A06A258BF330000F2A83 /* SoundRowViewModel.swift in Sources */,
 				8764A060258BF330000F2A83 /* Array.swift in Sources */,
+				87BDF83825FFA8C2007DCD36 /* ToggleViewModelType.swift in Sources */,
 				8764A058258BF330000F2A83 /* LoadingView.swift in Sources */,
 				8764A06B258BF330000F2A83 /* SettingsViewModel.swift in Sources */,
 				8764A067258BF330000F2A83 /* OnbordingViewController.swift in Sources */,
 				8764A071258BF330000F2A83 /* SoundTableViewCell.swift in Sources */,
-				8764A06C258BF330000F2A83 /* AlertRowViewModel.swift in Sources */,
+				8764A06C258BF330000F2A83 /* CommandTriggerRowViewModel.swift in Sources */,
 				8764A056258BF330000F2A83 /* DropdownPicker.swift in Sources */,
 				8764A064258BF330000F2A83 /* UITableView.swift in Sources */,
 				8764A075258BF330000F2A83 /* Configuration.swift in Sources */,

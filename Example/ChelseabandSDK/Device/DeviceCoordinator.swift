@@ -37,9 +37,9 @@ class DeviceCoordinator: Coordinator {
             .subscribe()
             .disposed(by: disposeBag)
 
-        viewController.connectButtonObservable.subscribe { _ in
-            chelseaband.connect()
-        }.disposed(by: disposeBag)
+//        viewController.connectButtonObservable.subscribe { _ in
+//            chelseaband.connect()
+//        }.disposed(by: disposeBag)
 
         viewController.disconnectButtonObservable.subscribe { _ in
             chelseaband.disconnect()
@@ -55,10 +55,9 @@ class DeviceCoordinator: Coordinator {
 
         Observable.combineLatest(chelseaband.connectionObservable, Observable.just(chelseaband), Observable.just(settings))
             .filter { $0.0.isConnected }
-            .map{ ($0.1, $0.2) }
-            .flatMap { val -> Observable<Void> in
-                let x1 = self.setConnectionDate(settings: val.1)
-                let x2 = self.syncDeviceSettings(chelseaband: val.0, settings: val.1)
+            .flatMap { _ -> Observable<Void> in
+                let x1 = self.setConnectionDate()
+                let x2 = self.syncDeviceSettings()
 
                 return Observable.combineLatest(x1, x2).mapToVoid()
             }
@@ -75,37 +74,34 @@ class DeviceCoordinator: Coordinator {
         navigationController.viewControllers = [viewController]
     }
 
-    private func setConnectionDate(settings: SettingsServiceType) -> Observable<Void> {
-        let now = Date()
-        return settings.set(connectionDate: now).asObservable()
+    private func setConnectionDate(now: Date = .init()) -> Observable<Void> {
+        let settings = self.settings
+
+        return Observable<Void>.create { seal -> Disposable in
+            settings.set(connectionDate: now)
+
+            seal.onNext(())
+            seal.onCompleted()
+
+            return Disposables.create()
+        }
     }
 
-    private func syncDeviceSettings(chelseaband: ChelseabandType, settings: SettingsServiceType) -> Observable<Void> {
-        let syncSoundsObservable = Observable.from(SoundTrigger.allCases)
-            .flatMap {
-                Observable.combineLatest(settings.getSound(trigger: $0), Observable<SoundTrigger>.just($0))
-            }.flatMap { sound, trigger -> Observable<Void> in
+    private func syncDeviceSettings() -> Observable<Void> {
+        let syncSoundsObservable = Observable.of(settings.sounds)
+            .flatMap { Observable.from($0) }
+            .flatMap { sound, trigger -> Observable<Void> in
                 let command = SoundCommand(sound: sound, trigger: trigger)
-                return chelseaband.perform(command: command)
+                return self.chelseaband.perform(command: command)
             }.debug("SoundCommand")
 
-        let lights = Observable.from(LightTrigger.allCases)
-            .flatMap { Observable.combineLatest(settings.getLight(trigger: $0), Observable<LightTrigger>.just($0)) }
-            .toArray()
-            .asObservable()
+        let speakerEnabled = settings.sounds.filter{ $0.value != .off }.count == 0
 
-        let vibration = settings.vibrate
-            .map { Vibration.init($0) }
+        let command = HardwareEnablement(led: settings.enabledLights, vibrationEnabled: settings.vibrate, screenEnabled: true, speakerEnabled: speakerEnabled)
+        let hardwareEnablementObservable = chelseaband.perform(command: command)
+            .debug("syncLightsAndVibrationObservable")
 
-        let syncLightsAndVibrationObservable = Observable.combineLatest(lights, vibration)
-            .flatMap { lights, vibration -> Observable<Void> in
-                let lights = lights.filter{ $0.0 }.map { $0.1 }
-                let command = LightCommand(lights: lights, vibration: vibration)
-
-                return chelseaband.perform(command: command)
-            }.debug("syncLightsAndVibrationObservable")
-
-        return Observable.combineLatest(syncSoundsObservable, syncLightsAndVibrationObservable).mapToVoid()
+        return Observable.combineLatest(syncSoundsObservable, hardwareEnablementObservable).mapToVoid()
     }
 
     private func sendGoal() {
@@ -117,7 +113,7 @@ class DeviceCoordinator: Coordinator {
 
     private func sendNews() {
         let value = "Using this option CocoaPods will assume the given folder to be the root of the Pod and will link the files directly from there in the Pods project."
-        let command = NewsCommand(value: value)
+        let command = MessageCommand(value: value)
 
         chelseaband.perform(command: command).debug("NewsCommand-Main").subscribe { e in
             print("asasdasd \(e)")

@@ -14,11 +14,24 @@ public class GoalCommand: Command {
 
     public init() {
         //no op
-    }
+    } 
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
         let command = HexCommand(hex: GoalCommand.prefix + GoalCommand.suffix)
-        return command.perform(on: executor, notifyWith: notifier).debug("\(self).write")
+
+        let completionObservable = notifier
+            .notifyObservable
+            .completeWhenByteEqualsToOne(hexStartWith: GoalCommand.prefix)
+            .debug("\(self)-trigget")
+
+        let commandObservable = command
+            .perform(on: executor, notifyWith: notifier)
+            .debug("\(self).write")
+
+        return Observable.zip(
+            commandObservable,
+            completionObservable
+        ).mapToVoid()
     }
 
     deinit {

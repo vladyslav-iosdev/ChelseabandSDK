@@ -25,7 +25,7 @@ class ToggleTableViewCell: UITableViewCell {
 
     private lazy var iconImageView: UIImageView = {
         let view = UIImageView()
-        view.backgroundColor = .red
+        view.backgroundColor = .white
         return view
     }()
 
@@ -74,8 +74,9 @@ class ToggleTableViewCell: UITableViewCell {
         disposeBag = DisposeBag()
     }
 
-    func bind(viewModel: ToggleViewModel) {
-        viewModel.title.bind(to: title.rx.text).disposed(by: disposeBag)
-        viewModel.value.bind(to: toggleView.rx.isOn).disposed(by: disposeBag)
+    func bind(viewModel: ToggleViewModelType) {
+        title.text = viewModel.title
+        toggleView.isOn = viewModel.value
+        iconImageView.image = viewModel.image
     }
 }

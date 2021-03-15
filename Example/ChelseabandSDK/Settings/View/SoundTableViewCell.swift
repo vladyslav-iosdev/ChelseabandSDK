@@ -26,7 +26,7 @@ class SoundTableViewCell: UITableViewCell {
 
     private lazy var iconImageView: UIImageView = {
         let view = UIImageView()
-        view.backgroundColor = .red
+        view.backgroundColor = .white
         return view
     }()
 
@@ -77,12 +77,9 @@ class SoundTableViewCell: UITableViewCell {
     }
 
     func bind(viewModel: SoundRowViewModel) {
-        viewModel.title.bind(to: title.rx.text).disposed(by: disposeBag)
-
-        //NOTE: Replace with binders
-        viewModel.sound.debug("b").subscribe(onNext: { sound in
-            self.dropdownPicker.set(value: sound)
-        }).disposed(by: disposeBag)
+        title.text = viewModel.title
+        iconImageView.image = viewModel.image
+        dropdownPicker.set(value: viewModel.sound)
     }
 }
 

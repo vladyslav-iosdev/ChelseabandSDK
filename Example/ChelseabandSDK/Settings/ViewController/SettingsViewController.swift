@@ -45,9 +45,10 @@ class SettingsViewController: UIViewController {
     let disposeBag = DisposeBag()
     private var sections: [SettingsSection] = []
 
-    let soundChangeObservable = PublishSubject<(sound: Sound, trigger: SoundTrigger)>.init()
-    let lightChangeObservable = PublishSubject<(isOn: Bool, trigger: LightTrigger)>.init()
+    let soundChangeObservable = PublishSubject<(sound: Sound, trigger: CommandTrigger)>.init()
+    let lightChangeObservable = PublishSubject<(isOn: Bool, trigger: CommandTrigger)>.init()
     let vibrationChangeObservable = PublishSubject<Bool>.init()
+    let isDebugEnabledObservable = PublishSubject<Bool>.init()
 
     init(viewModel: SettingsViewModel) {
         self.viewModel = viewModel
@@ -72,6 +73,10 @@ class SettingsViewController: UIViewController {
         }).disposed(by: disposeBag)
     }
 
+    func reload() {
+        settingsView.reloadData()
+    }
+
     required init?(coder: NSCoder) {
         return nil
     }
@@ -91,9 +96,10 @@ extension SettingsViewController: UITableViewDataSource {
             return viewModel.count
         case .vibration:
             return 1
+        case .debug(let viewModel):
+            return viewModel.count
         }
     }
-
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         switch sections[indexPath.section] {
@@ -130,12 +136,23 @@ extension SettingsViewController: UITableViewDataSource {
                 .disposed(by: cell.disposeBag)
 
             return cell
+        case .debug://(let viewModels):
+            let cell: ToggleTableViewCell = tableView.dequeueReusableCell(for: indexPath)
+
+//            let viewModel = viewModels[indexPath.row]
+//            cell.bind(viewModel: viewModel)
+
+            cell.isSelectedObservable
+                .subscribe(isDebugEnabledObservable)
+                .disposed(by: cell.disposeBag)
+
+            return cell
         }
     }
 
     func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         switch sections[section] {
-        case .sounds, .vibration:
+        case .sounds, .vibration, .debug:
             return nil
         case .alerts(_, let viewModel):
             let view: SettingsSectionView = tableView.dequeueReusableHeaderFooterView()
@@ -156,12 +173,7 @@ extension SettingsViewController: UITableViewDataSource {
 }
 
 struct SettingsSectionViewModel {
-
     let title: Observable<String>
-
-    init(title: String) {
-        self.title = Observable.just(title)
-    }
 }
 
 class SettingsSectionView: UITableViewHeaderFooterView {

@@ -8,10 +8,10 @@
 import Foundation
 
 public enum Sound: String, CaseIterable {
-    case one = "01"
-    case two = "02"
-    case three = "03"
-    case off = "00"
+    case one
+    case two
+    case three
+    case off
 
     public var title: String {
         switch self {
@@ -23,6 +23,19 @@ public enum Sound: String, CaseIterable {
             return "Vuvuzella horn"
         case .off:
             return "Off"
+        }
+    }
+
+    var hex: String {
+        switch self {
+        case .one:
+            return "01"
+        case .two:
+            return "02"
+        case .three:
+            return "03"
+        case .off:
+            return "00"
         }
     }
 }

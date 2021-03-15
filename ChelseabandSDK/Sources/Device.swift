@@ -5,7 +5,7 @@
 //  Created by Vladyslav Shepitko on 29.11.2020.
 //
 
-import UIKit
+import Foundation
 import CoreBluetooth
 import RxBluetoothKit
 import RxSwift
@@ -76,13 +76,15 @@ public protocol DeviceType {
 
     var readCharacteristicObservable: Observable<Characteristic> { get }
 
+    var peripheralObservable: Observable<ScannedPeripheral> { get }
+
     var scanningTimeout: DispatchTimeInterval { get set }
 
     var scanningRetry: DispatchTimeInterval { get set }
 
     func connect() -> Observable<Void>
 
-    func write(data: Data, readTimeout timeout: DispatchTimeInterval) -> Observable<Void>
+    func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
 }
 
 private enum DeviceError: Error {
@@ -127,6 +129,10 @@ public final class Device: DeviceType {
         readCharacteristic.compactMap { $0 }
     }
 
+    public var peripheralObservable: Observable<ScannedPeripheral> {
+        peripheral.compactMap { $0 }
+    }
+
     public var scanningTimeout: DispatchTimeInterval = .seconds(5)
     public var scanningRetry: DispatchTimeInterval = .seconds(5)
 
@@ -135,6 +141,7 @@ public final class Device: DeviceType {
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -163,6 +170,8 @@ public final class Device: DeviceType {
                             })
                             .materialize()
                             .subscribe(onNext: { event in
+                                strongSelf.peripheral.onNext(peripheral)
+
                                 switch event {
                                 case .completed:
                                     seal.onCompleted()
@@ -172,9 +181,13 @@ public final class Device: DeviceType {
                                     let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
                                     let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
 
-                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
+                                    let allCharacteristic = strongSelf.discoverCharacteristics(service)
+
+                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic, allCharacteristic)
                                         .debug("\(strongSelf).final-setup")
                                         .subscribe(onNext: { pair in
+                                            print(pair.2)
+
                                             strongSelf.writeCharacteristic.on(.next(pair.0))
                                             strongSelf.readCharacteristic.on(.next(pair.1))
                                         }, onError: { error in
@@ -204,7 +217,7 @@ public final class Device: DeviceType {
                 }
             }
         }
-    }
+    } 
 
     private func discoverCharacteristics(_ service: Service, id: ID) -> Observable<Characteristic> {
         Observable.just(service)
@@ -212,6 +225,16 @@ public final class Device: DeviceType {
             .flatMap { $0 }
             .flatMap { Observable.from($0) }
             .debug("\(self).discoverCharacteristics: \(id)")
+    }
+
+    private func discoverCharacteristics(_ service: Service) -> Observable<[Characteristic]> {
+        Observable.just(service)
+            .compactMap { $0.discoverCharacteristics(nil) }
+            .flatMap { $0 }
+            .flatMap { Observable.from($0) }
+            .toArray()
+            .asObservable()
+            .debug("\(self).discoverCharacteristics")
     }
 
     private func startScanning(manager: CentralManager, service: ID) -> Observable<ScannedPeripheral> {
@@ -239,7 +262,7 @@ public final class Device: DeviceType {
             .debug("\(self).connect")
     }
 
-    public func write(data: Data, readTimeout timeout: DispatchTimeInterval) -> Observable<Void> {
+    public func write(data: Data, timeout: DispatchTimeInterval = .seconds(5)) -> Observable<Void> {
         return .deferred { [weak self] in
             guard let strongSelf = self else {
                 return .error(BluetoothError.destroyed)
@@ -253,6 +276,7 @@ public final class Device: DeviceType {
                         throw DeviceError.writeCharacteristicMissing
                     }
             }
+            .timeout(timeout, scheduler: MainScheduler.instance)
             .mapToVoid()
             .take(1)
             .debug("\(strongSelf).write")
