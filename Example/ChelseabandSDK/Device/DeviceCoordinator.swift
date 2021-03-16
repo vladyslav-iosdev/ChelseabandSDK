@@ -37,9 +37,9 @@ class DeviceCoordinator: Coordinator {
             .subscribe()
             .disposed(by: disposeBag)
 
-//        viewController.connectButtonObservable.subscribe { _ in
-//            chelseaband.connect()
-//        }.disposed(by: disposeBag)
+        viewController.connectButtonObservable.subscribe { _ in
+            chelseaband.connect()
+        }.disposed(by: disposeBag)
 
         viewController.disconnectButtonObservable.subscribe { _ in
             chelseaband.disconnect()
@@ -51,6 +51,10 @@ class DeviceCoordinator: Coordinator {
 
         viewController.sendGoalButtonObservable.subscribe { _ in
             self.sendGoal()
+        }.disposed(by: disposeBag)
+
+        viewController.sendQButtonObservable.subscribe { _ in
+            self.sendQ()
         }.disposed(by: disposeBag)
 
         Observable.combineLatest(chelseaband.connectionObservable, Observable.just(chelseaband), Observable.just(settings))
@@ -106,6 +110,17 @@ class DeviceCoordinator: Coordinator {
 
     private func sendGoal() {
         let cmd = GoalCommand()
+        chelseaband.perform(command: cmd).subscribe { e in
+            print(e)
+        }.disposed(by: disposeBag)
+    }
+
+    private func sendQ() {
+        let cmd = VotingCommand()
+        cmd.votingObservable.debug("\(cmd).response").subscribe(onNext: { response in
+            print("\(cmd) \(response)")
+        }).disposed(by: disposeBag)
+
         chelseaband.perform(command: cmd).subscribe { e in
             print(e)
         }.disposed(by: disposeBag)

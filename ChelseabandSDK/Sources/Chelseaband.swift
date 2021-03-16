@@ -72,8 +72,10 @@ public final class Chelseaband: ChelseabandType {
                 guard let strongSelf = self else { return }
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
-            }, onError: { error in
+            }, onError: { [weak self] error in
+                guard let strongSelf = self else { return }
 
+                strongSelf.disconnect()
             })
     }
 
@@ -87,12 +89,6 @@ public final class Chelseaband: ChelseabandType {
             .catchError { _ in .never() } //NOTE: update this to avoid sending never when error
             .subscribe(readCharacteristicSubject)
             .disposed(by: disposeBag)
-
-//        device
-//            .peripheralObservable.map { ch -> Void in
-//                ch.peripheral.identifier
-//            }.subscribe()
-//            .disposed(by: disposeBag)
 
         let batteryCommand = BatteryCommand()
         batteryCommand.batteryLevel
@@ -111,7 +107,11 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
 
         let accelerometerCommand = AccelerometerCommand()
-        accelerometerCommand.axisObservable
+        accelerometerCommand.axisObservable.subscribe (onNext: { axis in
+            print("asdasdasd")
+        }).disposed(by: disposeBag)
+
+        perform(command: accelerometerCommand)
             .subscribe()
             .disposed(by: disposeBag)
     }

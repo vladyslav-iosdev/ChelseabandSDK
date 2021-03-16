@@ -25,11 +25,11 @@ class AppCoordinator: Coordinator {
     init(window: UIWindow) {
         self.window = window
 
-//        device.bluetoothHasConnected.subscribe(onNext: { [weak self] _ in
-//            guard let strongSelf = self else { return }
-//
-//            strongSelf.chelseaband.connect()
-//        }).disposed(by: disposeBag)
+        device.bluetoothHasConnected.subscribe(onNext: { [weak self] _ in
+            guard let strongSelf = self else { return }
+
+            strongSelf.chelseaband.connect()
+        }).disposed(by: disposeBag)
     }
 
     func start() {

@@ -18,6 +18,11 @@ class DeviceConnectionView: UIView {
         return view
     }()
 
+    private let cancelConnectionButton: UIButton = {
+        let view = UIButton()
+        return view
+    }()
+
     private let bluetoothIconView: UIImageView = {
         let view = UIImageView()
 
@@ -83,6 +88,7 @@ class DeviceConnectionView: UIView {
 
         stackView.addArrangedSubview(onlineIndicator)
         stackView.addArrangedSubview(loadingIndicator)
+        stackView.addArrangedSubview(cancelConnectionButton)
 
         addSubview(stackView)
 
@@ -117,16 +123,21 @@ class DeviceConnectionView: UIView {
             .drive(statusLabel.rx.text)
             .disposed(by: disposeBag)
 
+        output.cancelConnectionTextObservable
+            .drive(cancelConnectionButton.rx.text)
+            .disposed(by: disposeBag)
+
         output.statusObservable.drive(onNext: { state in
             switch state {
             case .disconnected, .connected:
                 self.onlineIndicator.isHidden = false
 
+                self.cancelConnectionButton.isHidden = true
                 self.loadingIndicator.isHidden = true
                 self.loadingIndicator.stopAnimating()
             case .connecting, .scanning:
                 self.onlineIndicator.isHidden = true
-
+                self.cancelConnectionButton.isHidden = false
                 self.loadingIndicator.isHidden = false
                 self.loadingIndicator.startAnimating()
             }

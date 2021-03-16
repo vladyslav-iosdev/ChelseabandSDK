@@ -10,7 +10,7 @@ import Foundation
 
 public class ScreenCommand: Command {
 
-    private static let prefix: String = "00F6"
+    private static let prefix: String = "00f6"
     private static let commandLength: String = "01"
 
     private let command: HexCommand

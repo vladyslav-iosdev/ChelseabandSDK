@@ -11,14 +11,13 @@ public class GoalCommand: Command {
 
     public static let prefix: String = "00a2"
     public static let suffix: String = "000200"
-
+    private let command = HexCommand(hex: GoalCommand.prefix + GoalCommand.suffix)
+    
     public init() {
         //no op
     } 
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        let command = HexCommand(hex: GoalCommand.prefix + GoalCommand.suffix)
-
         let completionObservable = notifier
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: GoalCommand.prefix)

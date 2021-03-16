@@ -17,17 +17,13 @@ enum NewsCommandError: Error {
 }
 
 public class MessageCommand: Command {
-    private static let prefix = "00a10101"
-    private static let suffix = "01"
     private var body: [MessagePartCommand]
 
-    private lazy var isEmptyTrigger = Observable.of(body).filter{ $0.isEmpty }
-
-    public init(value: String) {
+    public init(value: String, messagePartPrefix: String = GoalCommand.prefix) {
         //NOTE: converted string into its hex, deviced by 16 cheracters in chunk
         let values = value.hex.components(length: 16)
         body = values.map { part -> MessagePartCommand in
-            return MessagePartCommand(value: part)
+            return MessagePartCommand(value: part, commandPrefix: messagePartPrefix)
         }
     }
 

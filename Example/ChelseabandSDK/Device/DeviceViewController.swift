@@ -32,6 +32,11 @@ class DeviceViewController: UIViewController {
         return deviceView.sendGoalButton.rx.tap.asObservable()
     }
 
+    var sendQButtonObservable: Observable<Void> {
+        return deviceView.sendQButton.rx.tap.asObservable()
+    }
+
+
     var settingsButtonObservable: Observable<Void> {
         return moreBarButton.rx.tap.asObservable()
     }
@@ -84,10 +89,6 @@ class DeviceViewController: UIViewController {
         _ = deviceView
             .connectionView
             .bind(viewModel: output.connectionViewModel)
-
-//        connectDriver.debug("con").drive(onNext: { _ in
-//
-//        }).disposed(by: disposeBag)
     }
 }
 
@@ -148,6 +149,14 @@ extension DeviceViewController {
             return button
         }()
 
+        lazy var sendQButton: UIButton = {
+            let button = UIButton(type: .system)
+            button.setTitle("Send Q", for: .normal)
+            button.setTitleColor(.black, for: .normal)
+
+            return button
+        }()
+
         private lazy var containerView: UIView = {
             let view = UIView()
             view.backgroundColor = .white
@@ -165,7 +174,7 @@ extension DeviceViewController {
         }
 
         private func configureLayout() {
-            let stackView = [connectButton, disconnectButton, sendButton, sendGoalButton].asStackView(axis: .horizontal, distribution: .equalSpacing, spacing: 10)
+            let stackView = [connectButton, disconnectButton, sendButton, sendGoalButton, sendQButton].asStackView(axis: .horizontal, distribution: .equalSpacing, spacing: 10)
 
             let containerStackView = [
                 connectionView,

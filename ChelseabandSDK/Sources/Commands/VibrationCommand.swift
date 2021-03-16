@@ -10,7 +10,7 @@ import Foundation
 
 public class VibrationCommand: Command {
 
-    private static let prefix: String = "00F3"
+    private static let prefix: String = "00f3"
     private let command: HexCommand
 
     public init(trigger: CommandTrigger, enabled: Bool) {

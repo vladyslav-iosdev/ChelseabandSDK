@@ -65,7 +65,7 @@ public extension String {
             Int($0, radix: 16)
         }.reduce(0, { $0 ^ $1 })
 
-        return String(format: "%02x", xor)
+        return String(format: "%02X", xor)
     }
 
     func components(length: Int) -> [String] {

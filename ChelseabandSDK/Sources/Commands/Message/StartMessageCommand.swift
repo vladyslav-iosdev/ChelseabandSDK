@@ -8,7 +8,7 @@
 import RxSwift
 
 class StartMessageCommand: Command {
-    static let prefix = "00A1"
+    static let prefix = "00a1"
     static let suffix = "01"
     private let command: HexCommand
 

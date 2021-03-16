@@ -184,10 +184,7 @@ public final class Device: DeviceType {
                                     let allCharacteristic = strongSelf.discoverCharacteristics(service)
 
                                     characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic, allCharacteristic)
-                                        .debug("\(strongSelf).final-setup")
                                         .subscribe(onNext: { pair in
-                                            print(pair.2)
-
                                             strongSelf.writeCharacteristic.on(.next(pair.0))
                                             strongSelf.readCharacteristic.on(.next(pair.1))
                                         }, onError: { error in

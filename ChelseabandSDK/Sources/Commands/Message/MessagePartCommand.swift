@@ -8,7 +8,6 @@
 import RxSwift
 
 class MessagePartCommand: Command {
-    private static let prefix = "00A3"
     private let command: HexCommand
     private static let determinesThatMessageIsNewsHex = "01"
 
@@ -16,9 +15,9 @@ class MessagePartCommand: Command {
         return command.hex
     }
 
-    init(value part: String) {
+    init(value part: String, commandPrefix: String = GoalCommand.prefix) {
         let lengthHex = (part.count / 2).hex
-        let hex = (GoalCommand.prefix + lengthHex + MessagePartCommand.determinesThatMessageIsNewsHex + part + part.xor).uppercased()
+        let hex = (commandPrefix + lengthHex + MessagePartCommand.determinesThatMessageIsNewsHex + part + part.xor).uppercased()
         command = HexCommand(hex: hex)
     }
 

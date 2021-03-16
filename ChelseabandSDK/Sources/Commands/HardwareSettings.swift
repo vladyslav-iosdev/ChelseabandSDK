@@ -9,7 +9,7 @@ import Foundation
 import RxSwift
 
 public class HardwareEnablement: Command {
-    private static let prefix: String = "00FB"
+    private static let prefix: String = "00fb"
     private static let commandLength: String = "04"
 
     private let command: HexCommand

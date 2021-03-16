@@ -20,7 +20,7 @@ extension Date {
 
 extension Int64 {
     var hex: String {
-        return String(format: "%02X", self)
+        return String(format: "%02x", self)
     }
 }
 
@@ -28,15 +28,16 @@ public class TimeCommand: Command {
 
     private static let trigger = "00fb0101"
     //NOTE: 8 for old device and 12 for a new device version
-    private static let delaySystemTime: Int64 = 946656000000 + Date.hoursToMiliseconds(hours: 8)
+    private static let delaySystemTime: Int64 = 946656000000 + Date.hoursToMiliseconds(hours: 12)
+    private static let trigger2 = "0088"
 
-    private static var hex: String {
+    private var hex: String {
         let timeZoneOffset: Int64 = Int64(TimeZone.current.secondsFromGMT() * 1000)
 
         let timeValue = ((Date().millisecondsSince1970 + timeZoneOffset) - TimeCommand.delaySystemTime) / 1000
-        let time: String = timeValue.hex
+        let timeHex = timeValue.data.hex
 
-        return "008808\(time)00000000" + time.xor
+        return TimeCommand.trigger2 + "08" + timeHex + timeHex.xor
     }
 
     init() {
@@ -44,15 +45,23 @@ public class TimeCommand: Command {
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        notifier
+        let completionObservable = notifier
+            .notifyObservable
+            .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger2)
+
+        let initialCommandObservable = notifier
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger)
-            .debug("\(self)-trigget")
             .flatMap { data -> Observable<Void> in
-                let command = HexCommand(hex: TimeCommand.hex)
-                print("\(self)-write: \(command.hex)")
-                return command.perform(on: executor, notifyWith: notifier)
+                HexCommand(hex: self.hex)
+                    .perform(on: executor, notifyWith: notifier)
             }
+
+        return Observable.zip(
+            completionObservable,
+            initialCommandObservable
+        )
+        .mapToVoid()
     }
 
     deinit {

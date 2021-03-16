@@ -67,6 +67,7 @@ class DeviceConnectionViewModel: ViewModelType {
         let connectionIconTintColorObservable: Driver<UIColor>
         let connectionStateTextObservable: Driver<String>
         let statusObservable: Driver<Device.State>
+        let cancelConnectionTextObservable: Driver<String>
     }
 
     private let status: Observable<Device.State>
@@ -105,7 +106,8 @@ class DeviceConnectionViewModel: ViewModelType {
             connectionIconObservable: connectionIconObservable,
             connectionIconTintColorObservable: connectionIconTintColorObservable,
             connectionStateTextObservable: connectionStateTextObservable,
-            statusObservable: status.asDriver(onErrorJustReturn: .disconnected)
+            statusObservable: status.asDriver(onErrorJustReturn: .disconnected),
+            cancelConnectionTextObservable: .just("Cancel")
         )
     }
 }

@@ -42,6 +42,6 @@ public extension Data {
 
 public extension Int {
     var hex: String {
-        return String(format:"%02X", self)
+        return String(format:"%02x", self)
     }
 }

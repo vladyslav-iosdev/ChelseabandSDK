@@ -9,7 +9,7 @@ import RxSwift
 import Foundation
 
 public class LEDCommand: Command {
-    private static let prefix: String = "00F4"
+    private static let prefix: String = "00f4"
     private let command: HexCommand
 
     public init(trigger: CommandTrigger, enabled: Bool) {
@@ -19,17 +19,21 @@ public class LEDCommand: Command {
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-//        let completionObservable = notifier
-//            .notifyObservable
-//            .completeWhenByteEqualsToOne(hexStartWith: LEDCommand.prefix)
-//            .debug("\(self)-trigget")
-//
-//        return Observable.zip(
-//            command.perform(on: executor, notifyWith: notifier),
-//            completionObservable
-//        ).mapToVoid()
+        let completionObservable = notifier
+            .notifyObservable
+            .completeWhenByteEqualsToOne(hexStartWith: LEDCommand.prefix)
+            .debug("\(self)-trigget")
 
-        return command.perform(on: executor, notifyWith: notifier).debug("\(self)-write")
+        let performanceObservable = command
+            .perform(on: executor, notifyWith: notifier)
+            .debug("\(self)-write")
+
+        return Observable.zip(
+            performanceObservable,
+            completionObservable
+        ).mapToVoid()
+
+//        return command.perform(on: executor, notifyWith: notifier).debug("\(self)-write")
     }
 
     deinit {
