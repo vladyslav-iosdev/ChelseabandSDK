@@ -108,7 +108,7 @@ public final class Chelseaband: ChelseabandType {
 
         let accelerometerCommand = AccelerometerCommand()
         accelerometerCommand.axisObservable.subscribe (onNext: { axis in
-            print("asdasdasd")
+            //no-op
         }).disposed(by: disposeBag)
 
         perform(command: accelerometerCommand)

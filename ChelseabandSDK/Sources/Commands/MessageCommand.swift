@@ -46,12 +46,12 @@ public class MessageCommand: Command {
             .ignoreElements()
             .asObservable()
 
-        let initialWrite = StartMessageCommand().perform(on: executor, notifyWith: notifier)
+        let performanceObservable = StartMessageCommand().perform(on: executor, notifyWith: notifier)
             .ignoreElements()
             .asObservable()
 
         return Observable.zip(
-            initialWrite,
+            performanceObservable,
             triggerDisposable
         )
         .mapToVoid()

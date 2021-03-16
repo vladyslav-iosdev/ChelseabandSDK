@@ -44,7 +44,7 @@ public class VotingCommand: Command {
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {
-        let votingDisposable = notifier
+        let completionObservable = notifier
             .notifyObservable
             .filter { $0.hex.starts(with: VotingCommand.prefix) }
             .skip(2) //NOTE: during voting we receive command with header `VotingCommand.prefix` 3 times, and on 3 time it contains reponse from user
@@ -56,13 +56,13 @@ public class VotingCommand: Command {
             })
             .take(1) //NOTE: complete observable
 
-        let initialWrite = messageCommand
+        let performanceObservable = messageCommand
             .perform(on: executor, notifyWith: notifier)
             .debug("\(messageCommand)")
 
         return Observable.zip(
-            initialWrite,
-            votingDisposable
+            performanceObservable,
+            completionObservable
         )
         .mapToVoid()
     }

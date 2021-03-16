@@ -31,9 +31,7 @@ public class LEDCommand: Command {
         return Observable.zip(
             performanceObservable,
             completionObservable
-        ).mapToVoid()
-
-//        return command.perform(on: executor, notifyWith: notifier).debug("\(self)-write")
+        ).mapToVoid() 
     }
 
     deinit {

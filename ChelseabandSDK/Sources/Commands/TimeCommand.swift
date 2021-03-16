@@ -49,7 +49,7 @@ public class TimeCommand: Command {
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger2)
 
-        let initialCommandObservable = notifier
+        let performanceObservable = notifier
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger)
             .flatMap { data -> Observable<Void> in
@@ -59,7 +59,7 @@ public class TimeCommand: Command {
 
         return Observable.zip(
             completionObservable,
-            initialCommandObservable
+            performanceObservable
         )
         .mapToVoid()
     }

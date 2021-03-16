@@ -23,12 +23,12 @@ public class GoalCommand: Command {
             .completeWhenByteEqualsToOne(hexStartWith: GoalCommand.prefix)
             .debug("\(self)-trigget")
 
-        let commandObservable = command
+        let performanceObservable = command
             .perform(on: executor, notifyWith: notifier)
             .debug("\(self).write")
 
         return Observable.zip(
-            commandObservable,
+            performanceObservable,
             completionObservable
         ).mapToVoid()
     }
