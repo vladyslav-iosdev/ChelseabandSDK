@@ -319,6 +319,10 @@
 		C1C2B61E08DAD3B59BA5D82964D39C3C /* ConstraintRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45798F9BD7F1C7FA794326CBAFCC899A /* ConstraintRelation.swift */; };
 		C2514AA77E819396A712CCABB3F82275 /* ShareReplayScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF3D31C876181E313108E71CF33883E /* ShareReplayScope.swift */; };
 		C2706A9A1108AFF2A6F15B8BDB3C1077 /* RxBluetoothKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB992A49DE637C2422A80FC51A1D67F /* RxBluetoothKit-dummy.m */; };
+		C5547F762601F22B0084825B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F752601F22B0084825B /* UserDefaults.swift */; };
+		C5547F7A2601FCF20084825B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F782601FCF20084825B /* API.swift */; };
+		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
+		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
@@ -860,6 +864,10 @@
 		C496F68817871C6D5DEB79616AA2A0A6 /* PeripheralManager+RestoredState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PeripheralManager+RestoredState.swift"; path = "Source/PeripheralManager+RestoredState.swift"; sourceTree = "<group>"; };
 		C4D81DF009DF035445295A9EA89242D0 /* BluetoothState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BluetoothState.swift; path = Source/BluetoothState.swift; sourceTree = "<group>"; };
 		C4FA61EABD426012A7DE0E370FED5C6E /* Deferred.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deferred.swift; path = RxSwift/Observables/Deferred.swift; sourceTree = "<group>"; };
+		C5547F752601F22B0084825B /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
+		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1416,6 +1424,7 @@
 				87BDF82D25FF9DE1007DCD36 /* Observable.swift */,
 				2B6ACED49385C7102F07B51E9CE5BC00 /* Array.swift */,
 				AF02C58CB216881107009A2831A0FE1D /* String.swift */,
+				C5547F752601F22B0084825B /* UserDefaults.swift */,
 			);
 			name = Extensions;
 			path = ChelseabandSDK/Sources/Extensions;
@@ -1537,6 +1546,17 @@
 			path = RxBluetoothKit;
 			sourceTree = "<group>";
 		};
+		C5547F772601FCF20084825B /* Statistics */ = {
+			isa = PBXGroup;
+			children = (
+				C5547F792601FCF20084825B /* StatisticsProtocol.swift */,
+				C5547F782601FCF20084825B /* API.swift */,
+				C5547F7E260214A40084825B /* LocationManagerTracker.swift */,
+			);
+			name = Statistics;
+			path = ChelseabandSDK/Sources/Statistics;
+			sourceTree = "<group>";
+		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
@@ -1635,6 +1655,7 @@
 				60ED621770F8AB869B6615D3A031EE91 /* Configuration.swift */,
 				B13D729595F41E37AF515F9FD5BBDBBC /* Device.swift */,
 				1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */,
+				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
 				6B99CDF6654516DC72E5CE9DCE1EA471 /* Extensions */,
 				F3CCDCFA1C2A09BE43FCC0CD31A2457B /* Pod */,
@@ -2055,11 +2076,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5547F762601F22B0084825B /* UserDefaults.swift in Sources */,
 				87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
 				F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */,
 				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
+				C5547F7A2601FCF20084825B /* API.swift in Sources */,
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
 				87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */,
@@ -2076,9 +2099,11 @@
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
 				87BDF81825FF9DC2007DCD36 /* VotingCommand.swift in Sources */,
 				87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */,
+				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
+				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
 				87C2F4E14A31CC17E0FD3EC935D2881A /* TimeCommand.swift in Sources */,
 			);

@@ -29,6 +29,8 @@ public protocol ChelseabandType {
     func perform(command: Command) -> Observable<Void>
 
     func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
+    
+    func setFMCToken(_ token: String)
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -54,9 +56,32 @@ public final class Chelseaband: ChelseabandType {
     private let device: DeviceType
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
+    private var fmcToken = PublishSubject<String>()
+    private let locationTracker: LocationTracker
 
     required public init(device: DeviceType) {
         self.device = device
+        
+        locationTracker = LocationManagerTracker()
+        locationTracker.startObserving()
+        locationTracker.location
+            .subscribe(onNext: {
+                API().sendLocation(latitude: $0.latitude, longitude: $0.longitude)
+            })
+            .disposed(by: disposeBag)
+        
+        fmcToken
+            .subscribe(onNext: {
+                API().register(fmcToken: $0)
+            })
+            .disposed(by: disposeBag)
+        
+        connectionObservable
+            .filter { $0 == .connected || $0 == .disconnected}
+            .subscribe(onNext: {
+                API().sendBand(status: $0.isConnected)
+            })
+            .disposed(by: disposeBag)
     }
 
     public func connect() {
@@ -142,6 +167,10 @@ public final class Chelseaband: ChelseabandType {
     public func disconnect() {
         connectionDisposable?.dispose()
         connectionDisposable = .none
+    }
+    
+    public func setFMCToken(_ token: String) {
+        fmcToken.onNext(token)
     }
 }
 
