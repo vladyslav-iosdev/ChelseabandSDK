@@ -69,24 +69,60 @@ chelseaband.bluetoothHasConnected.subscribe(onNext: { [weak self] _ in
 }).disposed(by: disposeBag)
 ```
 
-Call `dissconnect` method to disconnect from the device.
+Call `disconnect` method to disconnect from the device.
 
 ```
 chelseaband.disconnect()
 ```
+Very important thing need to be performed when provider get connected to the device is to syncronize settings with the device.  
+```
+chelseaband.connectionObservable
+    .filter { $0.isConnected }
+    .flatMap { _ -> Observable<Void> in
+        return Observable.combineLatest(
+            self.syncDeviceSettings()
+        ).mapToVoid()
+    }
+    .subscribe()
+    .disposed(by: disposeBag) 
+```
+
+Sync device settings include performing two commands, syncronize Sounds settings and hardware enablement.
+```
+func syncDeviceSettings() -> Observable<Void> {
+    let syncSoundsObservable = Observable.of(settings.sounds)
+        .flatMap { Observable.from($0) }
+        .flatMap { sound, trigger -> Observable<Void> in
+            let command = SoundCommand(sound: sound, trigger: trigger)
+            return self.chelseaband.perform(command: command)
+        }
+
+    let speakerEnabled = settings.sounds.filter{ $0.value != .off }.count == 0
+
+    let command = HardwareEnablement(led: settings.enabledLights, vibrationEnabled: settings.vibrate, screenEnabled: true, speakerEnabled: speakerEnabled)
+    let hardwareEnablementObservable = chelseaband.perform(command: command)
+
+    return Observable.combineLatest(syncSoundsObservable, hardwareEnablementObservable).mapToVoid()
+} 
+```
 
 `chelseaband` provides several banch of commands for bluetooth device (commands scope can be finded in `ChelseabandSDK/Commands` foldel):
 
-- TimeCommand
-- GoalCommand
-- LEDCommand
-- BatteryCommand
-- MessageCommand
-- VibrationCommand
-- ScreenCommand
-- VotingCommand
-- AccelerometerCommand
-- HardwareEnablement
+- TimeCommand - performs time syncronization with device. Notice! This command get calles automatically when provider get connected to ble device.
+- GoalCommand - sends Goal command to the device.
+- BatteryCommand - performs fetching battery electric charge percentage, get called every 5 seconds `by default`.   This command get calles automatically when provider get connected to ble device.  
+- MessageCommand - sends text message to the device.
+- VotingCommand - performs send start voting on the device. Command accepts:
+    - `message: String` - voting message string.
+To get response from command subscribe to `votingObservable`  from `VotingCommand`. `votingObservable` opdates on users accepts or declines voting alert. Returns type `VotingResult`.
+```public enum VotingResult {
+    case approve
+    case refuse
+    case ignore
+}
+```
+
+- HardwareEnablement - 
 
 
 ## Author

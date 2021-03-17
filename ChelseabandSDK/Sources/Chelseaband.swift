@@ -31,11 +31,6 @@ public protocol ChelseabandType {
     func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
 }
 
-public enum ConnectionFailure: String {
-    case unauthorized
-    case poweredOff
-}
-
 public final class Chelseaband: ChelseabandType {
 
     public var batteryLevelObservable: Observable<UInt64> {

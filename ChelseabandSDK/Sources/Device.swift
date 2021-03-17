@@ -181,9 +181,7 @@ public final class Device: DeviceType {
                                     let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
                                     let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
 
-                                    let allCharacteristic = strongSelf.discoverCharacteristics(service)
-
-                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic, allCharacteristic)
+                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
                                         .subscribe(onNext: { pair in
                                             strongSelf.writeCharacteristic.on(.next(pair.0))
                                             strongSelf.readCharacteristic.on(.next(pair.1))
