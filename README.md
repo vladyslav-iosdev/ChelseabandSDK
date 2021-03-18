@@ -74,7 +74,7 @@ Call `disconnect` method to disconnect from the device.
 ```
 chelseaband.disconnect()
 ```
-Very important thing need to be performed when provider get connected to the device is to syncronize settings with the device.  
+Very important thing that need to be performed when provider get connected to the device is to syncronize settings with the device.  
 ```
 chelseaband.connectionObservable
     .filter { $0.isConnected }

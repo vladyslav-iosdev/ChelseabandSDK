@@ -35,9 +35,9 @@ public class TimeCommand: Command {
         let timeZoneOffset: Int64 = Int64(TimeZone.current.secondsFromGMT() * 1000)
 
         let timeValue = ((Date().millisecondsSince1970 + timeZoneOffset) - TimeCommand.delaySystemTime) / 1000
-        let timeHex = timeValue.data.hex
+        let timeHex = timeValue.hex
 
-        return TimeCommand.trigger2 + "08" + timeHex + timeHex.xor
+        return TimeCommand.trigger2 + "08" + timeHex + "00000000" + timeHex.xor
     }
 
     init() {
@@ -48,20 +48,24 @@ public class TimeCommand: Command {
         let completionObservable = notifier
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger2)
+            .debug("\(self).trigger-2")
 
         let performanceObservable = notifier
             .notifyObservable
+            .do(onNext: { print("\(self).data: \($0.hex)")})
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger)
-            .flatMap { data -> Observable<Void> in
+            .delay(.seconds(2), scheduler: MainScheduler.instance)
+            .debug("\(self).trigger")
+            .flatMap { _ in
                 HexCommand(hex: self.hex)
                     .perform(on: executor, notifyWith: notifier)
+                    .debug("\(self).write")
             }
 
         return Observable.zip(
             completionObservable,
             performanceObservable
-        )
-        .mapToVoid()
+        ).mapToVoid()
     }
 
     deinit {

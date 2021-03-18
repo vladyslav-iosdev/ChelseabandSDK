@@ -45,7 +45,7 @@ class BatteryCommand: Command {
     private let defaults: UserDefaults = .standard
     private let interval: DispatchTimeInterval
 
-    public init(interval: DispatchTimeInterval = .seconds(5)) {
+    public init(interval: DispatchTimeInterval = .seconds(15)) {
         self.interval = interval
         
         if let value = defaults.value(forKey: Keys.lastBatteryValue) as? UInt64 {
@@ -108,10 +108,6 @@ class BatteryCommand: Command {
 private extension BatteryCommand {
     class BatteryHexCommand: Command {
         private let command: HexCommand
-
-        var hex: String {
-            return command.hex
-        }
 
         init(hex: String) {
             command = HexCommand(hex: hex)
