@@ -58,7 +58,6 @@ public final class Chelseaband: ChelseabandType {
     private let device: DeviceType
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
-    private var fmcToken = PublishSubject<String>()
     private let locationTracker: LocationTracker
 
     required public init(device: DeviceType) {
@@ -72,14 +71,8 @@ public final class Chelseaband: ChelseabandType {
             })
             .disposed(by: disposeBag)
         
-        fmcToken
-            .subscribe(onNext: {
-                API().register(fmcToken: $0)
-            })
-            .disposed(by: disposeBag)
-        
         connectionObservable
-            .filter { $0 == .connected || $0 == .disconnected}
+            .filter { $0 == .connected || $0 == .disconnected }
             .subscribe(onNext: {
                 API().sendBand(status: $0.isConnected)
             })
@@ -112,6 +105,13 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(readCharacteristicSubject)
             .disposed(by: disposeBag)
 
+        synchonizeBattery()
+        synchonizeDeviceTime()
+        synchonizeAccelerometer()
+        registerMACAddress()
+    }
+
+    private func synchonizeBattery() {
         let batteryCommand = BatteryCommand()
         batteryCommand.batteryLevel
             .debug("\(self).read-BatteryCommand")
@@ -121,37 +121,42 @@ public final class Chelseaband: ChelseabandType {
         perform(command: batteryCommand)
             .subscribe()
             .disposed(by: disposeBag)
+    }
 
-        let timeCommand = TimeCommand()
-
-        perform(command: timeCommand)
-            .subscribe()
-            .disposed(by: disposeBag)
-
+    private func synchonizeAccelerometer() {
         let accelerometerCommand = AccelerometerCommand()
-        accelerometerCommand.axisObservable.subscribe (onNext: { axis in
+        accelerometerCommand.axisObservable.subscribe(onNext: { axis in
             //no-op
         }).disposed(by: disposeBag)
 
         perform(command: accelerometerCommand)
             .subscribe()
             .disposed(by: disposeBag)
+    }
 
+    private func synchonizeDeviceTime() {
+        let timeCommand = TimeCommand()
+
+        perform(command: timeCommand)
+            .subscribe()
+            .disposed(by: disposeBag)
+    }
+
+    private func registerMACAddress() {
         let macAddressCommand = MACAddressCommand()
-        macAddressCommand.MACAddressObservable.subscribe (onNext: { MACAddress in
-            print(MACAddress)
+        macAddressCommand.MACAddressObservable.subscribe(onNext: { MACAddress in
+            API().register(bandMacAddress: MACAddress)
         }).disposed(by: disposeBag)
 
         perform(command: macAddressCommand)
             .subscribe()
             .disposed(by: disposeBag)
-
     }
 
     public func sendVotingCommand(message: String) -> Observable<VotingResult> {
         let cmd = VotingCommand(value: message)
         cmd.votingObservable.subscribe(onNext: { response in
-            //NOTE: Send API call
+            API().sendVotingResponse(response)
         }).disposed(by: disposeBag)
 
         let command = performSafe(command: cmd, timeOut: .seconds(5))
@@ -185,7 +190,7 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func setFMCToken(_ token: String) {
-        fmcToken.onNext(token)
+        API().register(fmcToken: token)
     }
 }
 
