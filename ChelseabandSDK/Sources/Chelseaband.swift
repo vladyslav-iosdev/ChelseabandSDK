@@ -109,6 +109,15 @@ public final class Chelseaband: ChelseabandType {
         perform(command: accelerometerCommand)
             .subscribe()
             .disposed(by: disposeBag)
+
+        let macAddressCommand = MACAddressCommand()
+        macAddressCommand.MACAddressObservable.subscribe (onNext: { MACAddress in
+            print(MACAddress)
+        }).disposed(by: disposeBag)
+
+        perform(command: macAddressCommand)
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     public func perform(command: Command) -> Observable<Void> {
