@@ -56,6 +56,10 @@ final class API: Statistics {
     }
     
     // MARK: - Public functions
+    func sendVotingResponse(_ response: VotingResult) {
+        //
+    }
+
     func register(fmcToken token: String) {
         UserDefaults.standard.save(token: token)
         sendRequest(Modules.fanbands(.fmc).path,
