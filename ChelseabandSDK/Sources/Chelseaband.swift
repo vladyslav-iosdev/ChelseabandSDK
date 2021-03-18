@@ -29,8 +29,10 @@ public protocol ChelseabandType {
     func perform(command: Command) -> Observable<Void>
 
     func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
-    
+
     func setFMCToken(_ token: String)
+
+    func sendVotingCommand(message: String) -> Observable<VotingResult>
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -143,6 +145,19 @@ public final class Chelseaband: ChelseabandType {
         perform(command: macAddressCommand)
             .subscribe()
             .disposed(by: disposeBag)
+
+    }
+
+    public func sendVotingCommand(message: String) -> Observable<VotingResult> {
+        let cmd = VotingCommand(value: message)
+        cmd.votingObservable.subscribe(onNext: { response in
+            //NOTE: Send API call
+        }).disposed(by: disposeBag)
+
+        let command = performSafe(command: cmd, timeOut: .seconds(5))
+        return Observable.zip(command, cmd.votingObservable).map { (_, response) -> VotingResult in
+            return response
+        }
     }
 
     public func perform(command: Command) -> Observable<Void> {
