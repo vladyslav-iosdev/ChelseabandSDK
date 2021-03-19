@@ -47,7 +47,7 @@ public class VotingCommand: Command {
         let completionObservable = notifier
             .notifyObservable
             .filter { $0.hex.starts(with: VotingCommand.prefix) }
-            .skip(2) //NOTE: during voting we receive command with header `VotingCommand.prefix` 3 times, and on 3 time it contains reponse from user
+            .skip(1) //NOTE: during voting we receive command with header `VotingCommand.prefix` 2 times, and on 2 time it contains reponse from user
             .do(onNext: { data in
                 let result = VotingResult(byte: data.bytes[3])
 
@@ -58,7 +58,6 @@ public class VotingCommand: Command {
 
         let performanceObservable = messageCommand
             .perform(on: executor, notifyWith: notifier)
-            .debug("\(messageCommand)")
 
         return Observable.zip(
             performanceObservable,

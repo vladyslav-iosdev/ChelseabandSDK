@@ -155,6 +155,7 @@ public final class Device: DeviceType {
                     .subscribe(onNext: { peripheral in
                         connectionDisposable = strongSelf.connect(periferal: peripheral, service: configuration.service)
                             .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
+                                strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
                                 strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
                             })
                             .materialize()

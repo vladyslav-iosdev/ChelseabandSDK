@@ -9,6 +9,7 @@ import Foundation
 import RxSwift 
 import RxBluetoothKit
 import CoreBluetooth
+import CoreLocation
 
 public protocol ChelseabandType {
     
@@ -73,7 +74,6 @@ public final class Chelseaband: ChelseabandType {
     public func connect() {
         connectionDisposable = device
             .connect()
-            .debug("\(self).main")
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
 
@@ -101,19 +101,9 @@ public final class Chelseaband: ChelseabandType {
             .filter { $0 == .connected || $0 == .disconnected }
     }
 
-    //NOTE: we need to refactor sending connection state, because when we disconnect device we trying to reconnect to in and we don't get disconnected state
     private func observeForConnectionStatusChange() {
-//        fcmTokenObservable
-//            .debug("connect: token")
-//            .withLatestFrom(connectedOrDisconnectedObservable.debug("connect: state"))
-//            .debug("connect: write")
-//            .subscribe(onNext: { state in
-////                API().sendBand(status: state.isConnected)
-//            }).disposed(by: disposeBag)
-
-        Observable.combineLatest(fcmTokenObservable.debug("connect: token"), connectedOrDisconnectedObservable.debug("connect: state"))
+        Observable.combineLatest(fcmTokenObservable, connectedOrDisconnectedObservable)
             .map { $0.1 }
-            .debug("connect: write")
             .subscribe(onNext: {
                 API().sendBand(status: $0.isConnected)
             }).disposed(by: disposeBag)
@@ -128,7 +118,12 @@ public final class Chelseaband: ChelseabandType {
 
     private func observeLocationChange() {
         Observable.combineLatest(fcmTokenObservable, locationTracker.location)
-            .map{ $0.1 }
+            .map { $0.1 }
+            .flatMap { location -> Observable<CLLocationCoordinate2D> in
+                self.connectionObservable
+                    .filter { $0.isConnected }
+                    .map{ _ in location }
+            }
             .subscribe(onNext: {
                 API().sendLocation(latitude: $0.latitude, longitude: $0.longitude)
             }).disposed(by: disposeBag)
@@ -154,7 +149,6 @@ public final class Chelseaband: ChelseabandType {
     private func synchonizeBattery() {
         let batteryCommand = BatteryCommand()
         batteryCommand.batteryLevel
-            .debug("\(self).read-BatteryCommand")
             .subscribe(batteryLevelSubject)
             .disposed(by: disposeBag)
 
@@ -197,13 +191,13 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
-        let cmd = VotingCommand(value: message)
-        cmd.votingObservable.subscribe(onNext: { response in
+        let command0 = VotingCommand(value: message)
+        command0.votingObservable.subscribe(onNext: { response in
             API().sendVotingResponse(response, id)
         }).disposed(by: disposeBag)
 
-        let command = performSafe(command: cmd, timeOut: .seconds(5))
-        return Observable.zip(command, cmd.votingObservable).map { (_, response) -> VotingResult in
+        let command1 = performSafe(command: command0, timeOut: .seconds(5))
+        return Observable.zip(command1, command0.votingObservable).map { (_, response) -> VotingResult in
             return response
         }
     }
@@ -220,11 +214,9 @@ public final class Chelseaband: ChelseabandType {
             .skipWhile { !$0.isConnected }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
-            .debug("\(self).performSafe.trigger")
             .flatMap { _ -> Observable<Void> in
                 self.perform(command: command)
             }
-            .debug("\(self).performSafe.perform")
     }
 
     public func disconnect() {
@@ -257,7 +249,7 @@ extension Chelseaband: CommandExecutor {
     }
 
     public func write(data: Data) -> Observable<Void> {
-        device.write(data: data, timeout: .seconds(5)).debug("\(self).write")
+        device.write(data: data, timeout: .seconds(5))
     }
 }
 

@@ -53,7 +53,6 @@ class BatteryCommand: Command {
         } else {
             batteryLevel = .init(value: 0)
         }
-        print("\(self).init")
     }
 
     private func batteryLevelValue(from data: Data) -> UInt64? {
@@ -73,23 +72,19 @@ class BatteryCommand: Command {
                 .flatMap { _ in
                     BatteryHexCommand(hex: BatteryCommand.hex)
                         .perform(on: executor, notifyWith: notifier)
-                        .debug("\(self).write")
                 }
                 .subscribe()
 
             let batteryLevelDisposable = notifier
                 .notifyObservable
                 .compactMap { self.batteryLevelValue(from: $0) }
-                .debug("\(self).read")
                 .subscribe(onNext: { value in
-                    print("\(self).read.value: \(value)")
                     self.batteryLevel.onNext(value)
                     self.defaults.set(value, forKey: Keys.lastBatteryValue)
                 })
 
             let initialWrite = BatteryHexCommand(hex: BatteryCommand.hex)
                 .perform(on: executor, notifyWith: notifier)
-                .debug("\(self).write.initial")
                 .subscribe()
 
             return Disposables.create {
@@ -117,12 +112,10 @@ private extension BatteryCommand {
             let completionObservable = notifier
                 .notifyObservable
                 .completeWhenByteEqualsToOne(hexStartWith: BatteryCommand.prefix)
-                .debug("\(self)-trigget")
 
             let performanceObservable = command
                 .perform(on: executor, notifyWith: notifier)
-                .debug("\(self)-write")
-
+                
             return Observable.zip(
                 performanceObservable,
                 completionObservable
