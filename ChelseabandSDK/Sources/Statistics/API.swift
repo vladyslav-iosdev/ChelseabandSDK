@@ -28,6 +28,7 @@ final class API: Statistics {
         private var baseURL: String {return "https://hawks-dev.api.experiwear.com/"}
         
         case fanbands(_ endpoint: FanbandsEndpoint)
+        case notifications(_ endpoint: NotificationsEndpoint)
         
         enum FanbandsEndpoint: String {
             case fmc
@@ -36,11 +37,27 @@ final class API: Statistics {
             case inArea = "in-area"
         }
         
+        enum NotificationsEndpoint {
+            case react(String)
+            case answer(String)
+            
+            var rawValue: String {
+                switch self {
+                case .react(let id):
+                    return "\(id)/react"
+                case .answer(let id):
+                    return "\(id)/answer"
+                }
+            }
+        }
+        
         var path: String {
             var endpointURL: String!
             
             switch self {
             case .fanbands(let endpoint):
+                endpointURL = endpoint.rawValue
+            case .notifications(let endpoint):
                 endpointURL = endpoint.rawValue
             }
             
@@ -51,15 +68,13 @@ final class API: Statistics {
             switch self {
             case .fanbands(_):
                 return "fanbands/"
+            case .notifications(_):
+                return "notifications/"
             }
         }
     }
     
     // MARK: - Public functions
-    func sendVotingResponse(_ response: VotingResult) {
-        //
-    }
-
     func register(fmcToken token: String) {
         UserDefaults.standard.save(token: token)
         sendRequest(Modules.fanbands(.fmc).path,
@@ -86,6 +101,17 @@ final class API: Statistics {
                                  "lng": longitude])
     }
     
+    func sendVotingResponse(_ response: VotingResult, _ id: String) {
+        sendRequest(Modules.notifications(.answer(id)).path,
+                    method: .patch,
+                    jsonParams: ["answer": "\(response.rawValue)"])
+    }
+    
+    func sendReaction(_ id: String) {
+        sendRequest(Modules.notifications(.react(id)).path,
+                    method: .patch)
+    }
+    
     // MARK: - Private functions
     @discardableResult
     private func sendRequest(_ url: String, method: Method,
@@ -93,7 +119,7 @@ final class API: Statistics {
             
         let url = URL(string: url)!
         let session = urlSession
-        var request = HeaderHelper.generateURLRequest(path: url)
+        var request = HeaderHelper().generateURLRequest(path: url)
         request.httpMethod = method.rawValue
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
@@ -107,10 +133,10 @@ final class API: Statistics {
                     let jsonData = data,
                     let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
             else {
-                print("❌ ERROR send api call \(String(describing: response))")
+                print("❌", url, response)
                 return
             }
-            print(json)
+            print("✅", url, json)
         })
         task.resume()
         return task
@@ -119,10 +145,10 @@ final class API: Statistics {
 
 extension API {
     struct HeaderHelper {
-        private static let appKey = "ypIgNGcq203LYa1I4bnxXHV8Iz2lZf113uNag9QX56A9C07aEVWNsazmHVG3"
-        private static let token = UserDefaults.standard.getToken()
+        private let appKey = "ypIgNGcq203LYa1I4bnxXHV8Iz2lZf113uNag9QX56A9C07aEVWNsazmHVG3"
+        private let token = UserDefaults.standard.getToken()
     
-        static func generateURLRequest(path: URL) -> URLRequest {
+        func generateURLRequest(path: URL) -> URLRequest {
             var request = URLRequest(url: path)
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
             request.setValue(token, forHTTPHeaderField: "experiwear-fmc")
