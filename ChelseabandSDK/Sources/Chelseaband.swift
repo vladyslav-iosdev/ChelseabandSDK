@@ -61,24 +61,13 @@ public final class Chelseaband: ChelseabandType {
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
     private let locationTracker: LocationTracker
+    private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
 
     required public init(device: DeviceType) {
         self.device = device
         
         locationTracker = LocationManagerTracker()
         locationTracker.startObserving()
-        locationTracker.location
-            .subscribe(onNext: {
-                API().sendLocation(latitude: $0.latitude, longitude: $0.longitude)
-            })
-            .disposed(by: disposeBag)
-        
-        connectionObservable
-            .filter { $0 == .connected || $0 == .disconnected }
-            .subscribe(onNext: {
-                API().sendBand(status: $0.isConnected)
-            })
-            .disposed(by: disposeBag)
     }
 
     public func connect() {
@@ -89,11 +78,60 @@ public final class Chelseaband: ChelseabandType {
                 guard let strongSelf = self else { return }
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
+                strongSelf.observeForConnectionStatusChange()
+                strongSelf.observeForFCMTokenChange()
+                strongSelf.observeLocationChange()
+                strongSelf.observeMACAddress()
+
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
 
                 strongSelf.disconnect()
             })
+    }
+
+    private var fcmTokenObservable: Observable<String> {
+        tokenBehaviourSubject
+            .compactMap{ $0 }
+    }
+
+    private var connectedOrDisconnectedObservable: Observable<Device.State> {
+        connectionObservable
+            .skip(1)
+            .filter { $0 == .connected || $0 == .disconnected }
+    }
+
+    //NOTE: we need to refactor sending connection state, because when we disconnect device we trying to reconnect to in and we don't get disconnected state
+    private func observeForConnectionStatusChange() {
+//        fcmTokenObservable
+//            .debug("connect: token")
+//            .withLatestFrom(connectedOrDisconnectedObservable.debug("connect: state"))
+//            .debug("connect: write")
+//            .subscribe(onNext: { state in
+////                API().sendBand(status: state.isConnected)
+//            }).disposed(by: disposeBag)
+
+        Observable.combineLatest(fcmTokenObservable.debug("connect: token"), connectedOrDisconnectedObservable.debug("connect: state"))
+            .map { $0.1 }
+            .debug("connect: write")
+            .subscribe(onNext: {
+                API().sendBand(status: $0.isConnected)
+            }).disposed(by: disposeBag)
+    }
+
+    private func observeForFCMTokenChange() {
+        fcmTokenObservable
+            .subscribe(onNext: { token in
+                API().register(fmcToken: token)
+            }).disposed(by: disposeBag)
+    }
+
+    private func observeLocationChange() {
+        Observable.combineLatest(fcmTokenObservable, locationTracker.location)
+            .map{ $0.1 }
+            .subscribe(onNext: {
+                API().sendLocation(latitude: $0.latitude, longitude: $0.longitude)
+            }).disposed(by: disposeBag)
     }
 
     private func setupChelseaband(device: DeviceType) {
@@ -109,8 +147,8 @@ public final class Chelseaband: ChelseabandType {
 
         synchonizeBattery()
         synchonizeDeviceTime()
+
         synchonizeAccelerometer()
-        registerMACAddress()
     }
 
     private func synchonizeBattery() {
@@ -144,15 +182,18 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
 
-    private func registerMACAddress() {
+    private func observeMACAddress() {
         let macAddressCommand = MACAddressCommand()
-        macAddressCommand.MACAddressObservable.subscribe(onNext: { MACAddress in
-            API().register(bandMacAddress: MACAddress)
-        }).disposed(by: disposeBag)
 
-        perform(command: macAddressCommand)
-            .subscribe()
-            .disposed(by: disposeBag)
+        fcmTokenObservable
+            .withLatestFrom(macAddressCommand.MACAddressObservable)
+            .subscribe(onNext: { MACAddress in
+                API().register(bandMacAddress: MACAddress)
+            }).disposed(by: disposeBag)
+
+        perform(command: macAddressCommand).subscribe(onNext: { _ in
+
+        }).disposed(by: disposeBag)
     }
 
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
@@ -190,9 +231,9 @@ public final class Chelseaband: ChelseabandType {
         connectionDisposable?.dispose()
         connectionDisposable = .none
     }
-    
+
     public func setFMCToken(_ token: String) {
-        API().register(fmcToken: token)
+        tokenBehaviourSubject.onNext(token)
     }
     
     public func sendReaction(id: String) {
