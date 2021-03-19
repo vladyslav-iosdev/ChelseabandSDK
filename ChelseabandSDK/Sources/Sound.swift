@@ -13,19 +13,6 @@ public enum Sound: String, CaseIterable {
     case three
     case off
 
-    public var title: String {
-        switch self {
-        case .one:
-            return "Gool"
-        case .two:
-            return "Ole Ole Ole"
-        case .three:
-            return "Vuvuzella horn"
-        case .off:
-            return "Off"
-        }
-    }
-
     var hex: String {
         switch self {
         case .one:

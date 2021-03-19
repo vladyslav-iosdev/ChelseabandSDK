@@ -12,17 +12,6 @@ public enum CommandTrigger: String, CaseIterable {
     case news
     case gesture
 
-    public var title: String {
-        switch self {
-        case .goal:
-            return "Goal Alerts"
-        case .news:
-            return "News Alerts"
-        case .gesture:
-            return "Gesture"
-        }
-    }
-
     var hex: String {
         switch self {
         case .goal:

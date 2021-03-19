@@ -25,17 +25,6 @@ public extension Device {
                 return false
             }
         }
-
-        public var title: String? {
-            switch self {
-            case .disconnected, .connected:
-                return nil
-            case .connecting:
-                return "Connecting"
-            case .scanning:
-                return "Scanning"
-            }
-        }
     }
 } 
 

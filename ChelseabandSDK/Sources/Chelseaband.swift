@@ -32,7 +32,9 @@ public protocol ChelseabandType {
 
     func setFMCToken(_ token: String)
 
-    func sendVotingCommand(message: String) -> Observable<VotingResult>
+    func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
+    
+    func sendReaction(id: String)
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -153,10 +155,10 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
 
-    public func sendVotingCommand(message: String) -> Observable<VotingResult> {
+    public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
         let cmd = VotingCommand(value: message)
         cmd.votingObservable.subscribe(onNext: { response in
-            API().sendVotingResponse(response)
+            API().sendVotingResponse(response, id)
         }).disposed(by: disposeBag)
 
         let command = performSafe(command: cmd, timeOut: .seconds(5))
@@ -191,6 +193,10 @@ public final class Chelseaband: ChelseabandType {
     
     public func setFMCToken(_ token: String) {
         API().register(fmcToken: token)
+    }
+    
+    public func sendReaction(id: String) {
+        API().sendReaction(id)
     }
 }
 

@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public enum VotingResult {
+public enum VotingResult: Int {
     case approve
     case refuse
     case ignore
