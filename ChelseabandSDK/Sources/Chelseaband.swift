@@ -159,8 +159,8 @@ public final class Chelseaband: ChelseabandType {
 
     private func synchonizeAccelerometer() {
         let accelerometerCommand = AccelerometerCommand()
-        accelerometerCommand.axisObservable.subscribe(onNext: { axis in
-            //no-op
+        accelerometerCommand.axisObservable.subscribe(onNext: { values in
+            API().sendAccelerometer(values)
         }).disposed(by: disposeBag)
 
         perform(command: accelerometerCommand)

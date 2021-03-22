@@ -100,6 +100,10 @@ final class API: Statistics {
                     jsonParams: ["lat": latitude,
                                  "lng": longitude])
     }
+
+    func sendAccelerometer(_ values: [Double]) {
+        //no-op
+    }
     
     func sendVotingResponse(_ response: VotingResult, _ id: String) {
         sendRequest(Modules.notifications(.answer(id)).path,
