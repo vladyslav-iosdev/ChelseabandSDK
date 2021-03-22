@@ -101,7 +101,7 @@ final class API: Statistics {
                                  "lng": longitude])
     }
 
-    func sendAccelerometer(_ values: [Double]) {
+    func sendAccelerometer(_ data: (values: [[Double]], isActive: Bool)) {
         //no-op
     }
     

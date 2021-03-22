@@ -27,8 +27,7 @@ extension Int64 {
 public class TimeCommand: Command {
 
     private static let trigger = "00fb0101"
-    //NOTE: 8 for old device and 12 for a new device version
-    private static let delaySystemTime: Int64 = 946656000000 + Date.hoursToMiliseconds(hours: 12)
+    private static let delaySystemTime: Int64 = 946684800000
     private static let trigger2 = "0088"
 
     private var hex: String {
@@ -48,18 +47,13 @@ public class TimeCommand: Command {
         let completionObservable = notifier
             .notifyObservable
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger2)
-            .debug("\(self).trigger-2")
 
         let performanceObservable = notifier
             .notifyObservable
-            .do(onNext: { print("\(self).data: \($0.hex)")})
             .completeWhenByteEqualsToOne(hexStartWith: TimeCommand.trigger)
-            .delay(.seconds(2), scheduler: MainScheduler.instance)
-            .debug("\(self).trigger")
             .flatMap { _ in
                 HexCommand(hex: self.hex)
                     .perform(on: executor, notifyWith: notifier)
-                    .debug("\(self).write")
             }
 
         return Observable.zip(
