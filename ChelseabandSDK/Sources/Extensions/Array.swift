@@ -29,6 +29,23 @@ public extension Array {
     }
 }
 
+extension Collection {
+    func chunked(by n: Int) -> [SubSequence] {
+        var startIndex = self.startIndex
+        let count = self.count
+
+        return (0..<count/n).map { _ in
+            var endIndex = index(startIndex, offsetBy: n, limitedBy: self.endIndex) ?? self.endIndex
+            if count % n > 0, distance(from: self.startIndex, to: startIndex) > (count / n) {
+                endIndex = self.endIndex
+            }
+
+            defer { startIndex = endIndex }
+            return self[startIndex..<endIndex]
+        }
+    }
+}
+
 public extension Data {
 
     var bytes: [UInt8] {
