@@ -13,6 +13,7 @@ import RxSwift
 protocol LocationTracker {
     var location: PublishSubject<CLLocationCoordinate2D> {get set}
     func startObserving()
+    func stopObserving()
 }
 
 final class LocationManagerTracker: NSObject, LocationTracker {
@@ -27,6 +28,10 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     func startObserving() {
         locationManager.requestAlwaysAuthorization()
         startObservLocation()
+    }
+    
+    func stopObserving() {
+        locationManager.stopUpdatingLocation()
     }
     
     // MARK: Private Functions

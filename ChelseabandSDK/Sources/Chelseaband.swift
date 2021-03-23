@@ -61,6 +61,7 @@ public final class Chelseaband: ChelseabandType {
     private let device: DeviceType
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
+    private var longLifeDisposeBag = DisposeBag()
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
 
@@ -68,7 +69,7 @@ public final class Chelseaband: ChelseabandType {
         self.device = device
         
         locationTracker = LocationManagerTracker()
-        locationTracker.startObserving()
+        observeForFCMTokenChange()
     }
 
     public func connect() {
@@ -78,11 +79,11 @@ public final class Chelseaband: ChelseabandType {
                 guard let strongSelf = self else { return }
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
+                strongSelf.locationTracker.startObserving()
                 strongSelf.observeForConnectionStatusChange()
-                strongSelf.observeForFCMTokenChange()
                 strongSelf.observeLocationChange()
                 strongSelf.observeMACAddress()
-
+                
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
 
@@ -113,7 +114,7 @@ public final class Chelseaband: ChelseabandType {
         fcmTokenObservable
             .subscribe(onNext: { token in
                 API().register(fmcToken: token)
-            }).disposed(by: disposeBag)
+            }).disposed(by: longLifeDisposeBag)
     }
 
     private func observeLocationChange() {
@@ -131,7 +132,8 @@ public final class Chelseaband: ChelseabandType {
 
     private func setupChelseaband(device: DeviceType) {
         disposeBag = DisposeBag()
-
+        locationTracker.stopObserving()
+        
         device
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
