@@ -67,11 +67,13 @@ public protocol DeviceType {
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
-    var scanningTimeout: DispatchTimeInterval { get set }
-
     var scanningRetry: DispatchTimeInterval { get set }
 
-    func connect() -> Observable<Void>
+    func connect(peripheral: Peripheral) -> Observable<Void>
+
+    func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
+
+    func stopScanForPeripherals()
 
     func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
 }
@@ -122,7 +124,6 @@ public final class Device: DeviceType {
         peripheral.compactMap { $0 }
     }
 
-    public var scanningTimeout: DispatchTimeInterval = .seconds(5)
     public var scanningRetry: DispatchTimeInterval = .seconds(5)
 
     private let configuration: Configuration
@@ -136,11 +137,9 @@ public final class Device: DeviceType {
         self.configuration = configuration
     }
 
-    public func connect() -> Observable<Void> {
-        return connect(manager: manager, configuration: configuration)
-    }
+    public func connect(peripheral: Peripheral) -> Observable<Void> {
+        let configuration = self.configuration
 
-    private func connect(manager: CentralManager, configuration: Configuration) -> Observable<Void> {
         return .deferred {
             return Observable<Void>.create { [weak self] seal in
                 guard let strongSelf = self else {
@@ -150,45 +149,40 @@ public final class Device: DeviceType {
 
                 var connectionDisposable: Disposable?
                 var characteristicsDisposable: Disposable?
-                
-                let scanningDisposable = strongSelf.startScanning(manager: manager, service: configuration.service)
-                    .subscribe(onNext: { peripheral in
-                        connectionDisposable = strongSelf.connect(periferal: peripheral, service: configuration.service)
-                            .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
-                                strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
-                                strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
-                            })
-                            .materialize()
-                            .subscribe(onNext: { event in
-                                strongSelf.peripheral.onNext(peripheral)
 
-                                switch event {
-                                case .completed:
-                                    seal.onCompleted()
-                                case .error(let error):
+                connectionDisposable = strongSelf.connect(periferal: peripheral, service: configuration.service)
+                    .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
+                        strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
+                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
+                    })
+                    .materialize()
+                    .subscribe(onNext: { event in
+                        strongSelf.peripheral.onNext(peripheral)
+
+                        switch event {
+                        case .completed:
+                            seal.onCompleted()
+                        case .error(let error):
+                            seal.onError(error)
+                        case .next(let service):
+                            let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
+                            let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
+
+                            characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
+                                .subscribe(onNext: { pair in
+                                    strongSelf.writeCharacteristic.on(.next(pair.0))
+                                    strongSelf.readCharacteristic.on(.next(pair.1))
+                                }, onError: { error in
+                                    strongSelf.writeCharacteristic.on(.next(nil))
+                                    strongSelf.readCharacteristic.on(.next(nil))
+
                                     seal.onError(error)
-                                case .next(let service):
-                                    let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
-                                    let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
+                                }, onCompleted: {
+                                    seal.onNext(())
 
-                                    characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
-                                        .subscribe(onNext: { pair in
-                                            strongSelf.writeCharacteristic.on(.next(pair.0))
-                                            strongSelf.readCharacteristic.on(.next(pair.1))
-                                        }, onError: { error in
-                                            strongSelf.writeCharacteristic.on(.next(nil))
-                                            strongSelf.readCharacteristic.on(.next(nil))
-
-                                            seal.onError(error)
-                                        }, onCompleted: {
-                                            seal.onNext(())
-
-                                            strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
-                                        })
-                                }
-                            }, onError: { error in
-                                seal.onError(error)
-                            })
+                                    strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
+                                })
+                        }
                     }, onError: { error in
                         seal.onError(error)
                     })
@@ -196,13 +190,30 @@ public final class Device: DeviceType {
                 return Disposables.create {
                     strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
 
-                    scanningDisposable.dispose()
                     connectionDisposable?.dispose()
                     characteristicsDisposable?.dispose()
                 }
             }
         }
-    } 
+    }
+
+    public func startScanForPeripherals() -> Observable<[ScannedPeripheral]> {
+        return .deferred {
+            return self.manager.scanForPeripherals(withServices: [self.configuration.service])
+                .retryWithDelay(timeInterval: self.scanningRetry, maxAttempts: 3)
+                .scan(NSMutableSet(), accumulator: { set, peripheral -> NSMutableSet in
+                    set.add(peripheral)
+
+                    return set
+                })
+                .compactMap { $0.allObjects as? [Peripheral] }
+                .asObservable()
+        }
+    }
+
+    public func stopScanForPeripherals() {
+        manager.manager.stopScan()
+    }
 
     private func discoverCharacteristics(_ service: Service, id: ID) -> Observable<Characteristic> {
         Observable.just(service)
@@ -221,20 +232,6 @@ public final class Device: DeviceType {
             .asObservable()
             .debug("\(self).discoverCharacteristics")
     }
-
-    private func startScanning(manager: CentralManager, service: ID) -> Observable<ScannedPeripheral> {
-        return Observable.just(manager)
-            .filter { !$0.manager.isScanning }
-            .do(onNext: { [weak self] _ in
-                self?.connectionBehaviourSubject.onNext(.scanning)
-            })
-            .flatMap { $0.scanForPeripherals(withServices: [service]) }
-            .take(1)
-            .timeout(scanningTimeout, scheduler: MainScheduler.instance)
-            .retryWithDelay(timeInterval: scanningRetry, maxAttempts: 3)
-            .debug("\(self).scanning")
-    }
-
 
     private func connect(periferal: ScannedPeripheral, service: ID, retry: DispatchTimeInterval = .seconds(5)) -> Observable<Service> {
         return Observable.of(periferal)

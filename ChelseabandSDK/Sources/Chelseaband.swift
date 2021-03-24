@@ -11,6 +11,9 @@ import RxBluetoothKit
 import CoreBluetooth
 import CoreLocation
 
+public typealias Peripheral = ScannedPeripheral
+public typealias BluetoothState = RxBluetoothKit.BluetoothState
+
 public protocol ChelseabandType {
     
     var connectionObservable: Observable<Device.State> { get }
@@ -21,9 +24,15 @@ public protocol ChelseabandType {
 
     var bluetoothState: Observable<BluetoothState> { get }
 
+    var lastConnectedPeripheralUUID: String? { get set }
+
     init(device: DeviceType)
     
-    func connect()
+    func connect(peripheral: Peripheral)
+
+    func isConnected(peripheral: Peripheral) -> Bool
+
+    func isLastConnected(peripheral: Peripheral) -> Bool
 
     func disconnect()
 
@@ -36,6 +45,10 @@ public protocol ChelseabandType {
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
     
     func sendReaction(id: String)
+
+    func startScanForPeripherals() -> Observable<[Peripheral]>
+
+    func stopScanForPeripherals()
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -56,6 +69,15 @@ public final class Chelseaband: ChelseabandType {
         return device.bluetoothState
     }
 
+    public var lastConnectedPeripheralUUID: String? {
+        get {
+            UserDefaults.standard.lastConnectedPeripheralUUID
+        }
+        set {
+            UserDefaults.standard.lastConnectedPeripheralUUID = newValue
+        }
+    }
+
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt64> = .init(value: 0)
     private let device: DeviceType
@@ -71,12 +93,19 @@ public final class Chelseaband: ChelseabandType {
         locationTracker = LocationManagerTracker()
         observeForFCMTokenChange()
     }
+    private var connectedPeripheral: Peripheral?
 
-    public func connect() {
+    public func isConnected(peripheral: Peripheral) -> Bool {
+        return connectedPeripheral?.rssi == peripheral.rssi
+    }
+
+    public func connect(peripheral: Peripheral) {
         connectionDisposable = device
-            .connect()
+            .connect(peripheral: peripheral)
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
+                strongSelf.connectedPeripheral = peripheral
+                strongSelf.lastConnectedPeripheralUUID = peripheral.peripheral.identifier.uuidString
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
                 strongSelf.locationTracker.startObserving()
@@ -89,6 +118,10 @@ public final class Chelseaband: ChelseabandType {
 
                 strongSelf.disconnect()
             })
+    }
+
+    public func isLastConnected(peripheral: Peripheral) -> Bool {
+        lastConnectedPeripheralUUID == peripheral.peripheral.identifier.uuidString
     }
 
     private var fcmTokenObservable: Observable<String> {
@@ -118,7 +151,8 @@ public final class Chelseaband: ChelseabandType {
     }
 
     private func observeLocationChange() {
-        Observable.combineLatest(fcmTokenObservable, locationTracker.location)
+        //NOTE: throttle to avoid to many requests to server
+        Observable.combineLatest(fcmTokenObservable, locationTracker.location.throttle(.seconds(60), scheduler: MainScheduler.instance))
             .map { $0.1 }
             .flatMap { location -> Observable<CLLocationCoordinate2D> in
                 self.connectionObservable
@@ -224,6 +258,8 @@ public final class Chelseaband: ChelseabandType {
     public func disconnect() {
         connectionDisposable?.dispose()
         connectionDisposable = .none
+        connectedPeripheral = .none
+        lastConnectedPeripheralUUID = .none
     }
 
     public func setFMCToken(_ token: String) {
@@ -232,6 +268,16 @@ public final class Chelseaband: ChelseabandType {
     
     public func sendReaction(id: String) {
         API().sendReaction(id)
+    }
+
+    public func startScanForPeripherals() -> Observable<[Peripheral]> {
+        device
+            .startScanForPeripherals()
+            .share(replay: 1)
+    }
+
+    public func stopScanForPeripherals() {
+        device.stopScanForPeripherals()
     }
 }
 
@@ -255,3 +301,22 @@ extension Chelseaband: CommandExecutor {
     }
 }
 
+private extension UserDefaults {
+
+    private enum Keys {
+        static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
+    }
+
+    var lastConnectedPeripheralUUID: String? {
+        get {
+            return value(forKey: Keys.lastConnectedPeripheralUUID) as? String
+        }
+        set {
+            if let value = newValue {
+                setValue(value, forKey: Keys.lastConnectedPeripheralUUID)
+            } else {
+                removeObject(forKey: Keys.lastConnectedPeripheralUUID)
+            }
+        }
+    }
+}
