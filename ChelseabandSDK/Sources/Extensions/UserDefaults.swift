@@ -9,22 +9,35 @@ import Foundation
 
 extension UserDefaults {
     // MARK: - Keys
-    private enum Key: String {
-        case pushToken
+    private enum Keys {
+        static let pushToken: String = "pushTokenKey"
+        static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
     }
-    
-    // MARK: Syntax sugar
-    func removeToken() {
-        removeObject(forKey: Key.pushToken.rawValue)
-        synchronize()
+
+    var pushToken: String? {
+        get {
+            return value(forKey: Keys.pushToken) as? String
+        }
+
+        set {
+            if let value = newValue {
+                setValue(value, forKey: Keys.pushToken)
+            } else {
+                removeObject(forKey: Keys.pushToken)
+            }
+        }
     }
-    
-    func save(token: String) {
-        set(token, forKey: Key.pushToken.rawValue)
-        synchronize()
-    }
-    
-    func getToken() -> String? {
-        object(forKey: Key.pushToken.rawValue) as? String
+
+    var lastConnectedPeripheralUUID: String? {
+        get {
+            return value(forKey: Keys.lastConnectedPeripheralUUID) as? String
+        }
+        set {
+            if let value = newValue {
+                setValue(value, forKey: Keys.lastConnectedPeripheralUUID)
+            } else {
+                removeObject(forKey: Keys.lastConnectedPeripheralUUID)
+            }
+        }
     }
 }
