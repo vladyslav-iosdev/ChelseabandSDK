@@ -76,7 +76,7 @@ final class API: Statistics {
     
     // MARK: - Public functions
     func register(fmcToken token: String) {
-        UserDefaults.standard.save(token: token)
+        UserDefaults.standard.pushToken = token
         sendRequest(Modules.fanbands(.fmc).path,
                     method: .post,
                     jsonParams: ["fmc": token])
@@ -150,7 +150,7 @@ final class API: Statistics {
 extension API {
     struct HeaderHelper {
         private let appKey = "ypIgNGcq203LYa1I4bnxXHV8Iz2lZf113uNag9QX56A9C07aEVWNsazmHVG3"
-        private let token = UserDefaults.standard.getToken()
+        private let token = UserDefaults.standard.pushToken
     
         func generateURLRequest(path: URL) -> URLRequest {
             var request = URLRequest(url: path)

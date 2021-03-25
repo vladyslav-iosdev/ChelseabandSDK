@@ -300,23 +300,3 @@ extension Chelseaband: CommandExecutor {
         device.write(data: data, timeout: .seconds(5))
     }
 }
-
-private extension UserDefaults {
-
-    private enum Keys {
-        static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
-    }
-
-    var lastConnectedPeripheralUUID: String? {
-        get {
-            return value(forKey: Keys.lastConnectedPeripheralUUID) as? String
-        }
-        set {
-            if let value = newValue {
-                setValue(value, forKey: Keys.lastConnectedPeripheralUUID)
-            } else {
-                removeObject(forKey: Keys.lastConnectedPeripheralUUID)
-            }
-        }
-    }
-}
