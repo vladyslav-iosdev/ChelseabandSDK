@@ -64,6 +64,7 @@ public final class Chelseaband: ChelseabandType {
     private var longLifeDisposeBag = DisposeBag()
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
+    private let voteIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
 
     required public init(device: DeviceType) {
         self.device = device
@@ -93,6 +94,11 @@ public final class Chelseaband: ChelseabandType {
 
     private var fcmTokenObservable: Observable<String> {
         tokenBehaviourSubject
+            .compactMap{ $0 }
+    }
+    
+    private var voteIdObservable: Observable<String> {
+        voteIdBehaviourSubject
             .compactMap{ $0 }
     }
 
@@ -161,8 +167,9 @@ public final class Chelseaband: ChelseabandType {
 
     private func synchonizeAccelerometer() {
         let accelerometerCommand = AccelerometerCommand()
-        accelerometerCommand.axisObservable.subscribe(onNext: { values in
-            API().sendAccelerometer(values)
+        Observable.combineLatest(voteIdObservable, accelerometerCommand.axisObservable)
+            .subscribe(onNext: { values in
+                API().sendAccelerometer(values.1.values, forId: values.0)
         }).disposed(by: disposeBag)
 
         perform(command: accelerometerCommand)
@@ -193,6 +200,7 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
+        voteIdBehaviourSubject.onNext(id)
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
             API().sendVotingResponse(response, id)

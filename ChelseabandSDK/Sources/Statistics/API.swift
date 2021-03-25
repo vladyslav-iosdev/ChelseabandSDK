@@ -29,6 +29,7 @@ final class API: Statistics {
         
         case fanbands(_ endpoint: FanbandsEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
+        case accelerometer(_ endpoint: AccelerometerEndpoint)
         
         enum FanbandsEndpoint: String {
             case fmc
@@ -51,6 +52,10 @@ final class API: Statistics {
             }
         }
         
+        enum AccelerometerEndpoint: String {
+            case none = ""
+        }
+        
         var path: String {
             var endpointURL: String!
             
@@ -58,6 +63,8 @@ final class API: Statistics {
             case .fanbands(let endpoint):
                 endpointURL = endpoint.rawValue
             case .notifications(let endpoint):
+                endpointURL = endpoint.rawValue
+            case .accelerometer(let endpoint):
                 endpointURL = endpoint.rawValue
             }
             
@@ -70,6 +77,8 @@ final class API: Statistics {
                 return "fanbands/"
             case .notifications(_):
                 return "notifications/"
+            case .accelerometer(_):
+                return "accelerometer/"
             }
         }
     }
@@ -101,8 +110,15 @@ final class API: Statistics {
                                  "lng": longitude])
     }
 
-    func sendAccelerometer(_ data: (values: [[Double]], isActive: Bool)) {
-        //no-op
+    func sendAccelerometer(_ data: [[Double]], forId id: String) {
+        let json: [String: Any] = [
+            "date": "\(Date())",
+            "notificationId": id,
+            "frame": ["data": data]
+        ]
+        sendRequest(Modules.accelerometer(.none).path,
+                    method: .post,
+                    jsonParams: json)
     }
     
     func sendVotingResponse(_ response: VotingResult, _ id: String) {
