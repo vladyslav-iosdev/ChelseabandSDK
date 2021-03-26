@@ -43,6 +43,10 @@ public protocol ChelseabandType {
     func setFMCToken(_ token: String)
 
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
+
+    func sendMessageCommand(message: String, id: String) -> Observable<Void>
+
+    func sendGoalCommand(id: String) -> Observable<Void>
     
     func sendReaction(id: String)
 
@@ -86,7 +90,7 @@ public final class Chelseaband: ChelseabandType {
     private var longLifeDisposeBag = DisposeBag()
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
-    private let voteIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
+    private let commandIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
 
     required public init(device: DeviceType) {
         self.device = device
@@ -130,8 +134,8 @@ public final class Chelseaband: ChelseabandType {
             .compactMap{ $0 }
     }
     
-    private var voteIdObservable: Observable<String> {
-        voteIdBehaviourSubject
+    private var commandIdObservable: Observable<String> {
+        commandIdBehaviourSubject
             .compactMap{ $0 }
     }
 
@@ -201,7 +205,8 @@ public final class Chelseaband: ChelseabandType {
 
     private func synchonizeAccelerometer() {
         let accelerometerCommand = AccelerometerCommand()
-        Observable.combineLatest(voteIdObservable, accelerometerCommand.axisObservable)
+        Observable.combineLatest(commandIdObservable, accelerometerCommand.axisObservable)
+            .filter{ !$0.1.values.isEmpty }
             .subscribe(onNext: { values in
                 API().sendAccelerometer(values.1.values, forId: values.0)
         }).disposed(by: disposeBag)
@@ -233,8 +238,23 @@ public final class Chelseaband: ChelseabandType {
         }).disposed(by: disposeBag)
     }
 
+    public func sendMessageCommand(message: String, id: String) -> Observable<Void> {
+        commandIdBehaviourSubject.onNext(id)
+
+        let command0 = MessageCommand(value: message)
+
+        return performSafe(command: command0, timeOut: .seconds(5))
+    }
+
+    public func sendGoalCommand(id: String) -> Observable<Void> {
+        commandIdBehaviourSubject.onNext(id)
+        
+        return performSafe(command: GoalCommand(), timeOut: .seconds(5))
+    }
+
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
-        voteIdBehaviourSubject.onNext(id)
+        commandIdBehaviourSubject.onNext(id)
+
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
             API().sendVotingResponse(response, id)
