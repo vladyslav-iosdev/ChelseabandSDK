@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'ChelseabandSDK'
-  s.version          = '1.0.5'
+  s.version          = '1.0.6'
   s.summary          = 'Band library'
   s.description      = <<-DESC
 ChelseabandSDK is a Bluetooth library that makes interaction with band BLE devices much more pleasant. It's backed by RxSwift and CoreBluetooth and it provides nice API, for both Central and Peripheral modes. All to work with and make your code more readable, reliable and easier to maintain.
