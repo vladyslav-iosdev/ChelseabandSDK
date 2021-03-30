@@ -110,10 +110,14 @@ func syncDeviceSettings() -> Observable<Void> {
 
 - TimeCommand - performs time syncronization with device. Notice! This command get calles automatically when provider get connected to ble device.
 - GoalCommand - sends Goal command to the device.
+    - `id: String` - goal id.
 - BatteryCommand - performs fetching battery electric charge percentage, get called every 5 seconds `by default`.   This command get calles automatically when provider get connected to ble device.  
 - MessageCommand - sends text message to the device.
+    - `message: String` - message string.
+    - `id: String` - message id.
 - VotingCommand - performs send start voting on the device. Command accepts:
     - `message: String` - voting message string.
+    - `id: String` - voting id.
 To get response from command subscribe to `votingObservable`  from `VotingCommand`. `votingObservable` opdates on users accepts or declines voting alert. Returns type `VotingResult`.
 ```public enum VotingResult {
     case approve
@@ -124,6 +128,43 @@ To get response from command subscribe to `votingObservable`  from `VotingComman
 
 - HardwareEnablement - 
 
+### SDK Statistics And Push Notifications
+
+Push Notifications
+
+If you want to get push notifications in application you should call `setFMCToken(_ token: String)`, `token` - it's Firebase Cloud Message token, which you should register and subscribe on topic - "allDevices". 
+
+All Notification Types
+```
+enum NotificationType: String {
+    case news = "1"
+    case goal = "2"
+    case vote = "3"
+    case promo = "4"
+}
+```
+
+Statistics
+
+SDK collect next data:
+All data below collect in shadow mode:
+- Band mac address - to match users with current band device.
+- Band status - online/offline.
+- In area - tracking device location to check is user near stadium or not (in application should be added `NSLocationAlwaysAndWhenInUseUsageDescription` and `NSLocationWhenInUseUsageDescription` keys in Info.plist).
+- Vote answer - collect users answer on voting.
+- Accelerometer data - to check user emotions.
+Data below wich should be implemented in the application:
+- Firebase cloud message token - should call `setFMCToken(_ token: String)` for register token in system.
+- Send reaction - when device get new notification with `type == 1` - it's news with title, body and sometimes with images which should be displayd for user in application, after displaying user this news you should call `sendReaction(id: String)` and send id of the notification.
+
+### Common functions and variables
+`var bluetoothState: Observable<BluetoothState>`
+`var lastConnectedPeripheralUUID: String?`
+`func connect(peripheral: Peripheral)`
+`func isConnected(peripheral: Peripheral) -> Bool`
+`func isLastConnected(peripheral: Peripheral) -> Bool`
+`func startScanForPeripherals() -> Observable<[Peripheral]>`
+`func stopScanForPeripherals()`
 
 ## Author
 
