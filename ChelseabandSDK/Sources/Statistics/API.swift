@@ -124,7 +124,7 @@ final class API: Statistics {
     func sendVotingResponse(_ response: VotingResult, _ id: String) {
         sendRequest(Modules.notifications(.answer(id)).path,
                     method: .patch,
-                    jsonParams: ["answer": "\(response.rawValue)"])
+                    jsonParams: ["answer": "\(response.apiBridgeValue)"])
     }
     
     func sendReaction(_ id: String) {
@@ -173,6 +173,19 @@ extension API {
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
             request.setValue(token, forHTTPHeaderField: "experiwear-fmc")
             return request
+        }
+    }
+}
+
+private extension VotingResult {
+    var apiBridgeValue: Int {
+        switch self {
+        case .approve:
+            return 1
+        case .refuse:
+            return 0
+        case .ignore:
+            return 2
         }
     }
 }
