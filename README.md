@@ -158,13 +158,13 @@ Data below wich should be implemented in the application:
 - Send reaction - when device get new notification with `type == 1` - it's news with title, body and sometimes with images which should be displayd for user in application, after displaying user this news you should call `sendReaction(id: String)` and send id of the notification.
 
 ### Common functions and variables
-`var bluetoothState: Observable<BluetoothState>`
-`var lastConnectedPeripheralUUID: String?`
-`func connect(peripheral: Peripheral)`
-`func isConnected(peripheral: Peripheral) -> Bool`
-`func isLastConnected(peripheral: Peripheral) -> Bool`
-`func startScanForPeripherals() -> Observable<[Peripheral]>`
-`func stopScanForPeripherals()`
+-  `var bluetoothState: Observable<BluetoothState>` - wrapper under CBManagerState
+-  `var lastConnectedPeripheralUUID: String?`
+-  `func connect(peripheral: Peripheral)`
+-  `func isConnected(peripheral: Peripheral) -> Bool`
+-  `func isLastConnected(peripheral: Peripheral) -> Bool`
+-  `func startScanForPeripherals() -> Observable<[Peripheral]>`
+-  `func stopScanForPeripherals()`
 
 ## Author
 
