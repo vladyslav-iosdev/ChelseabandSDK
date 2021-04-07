@@ -101,7 +101,7 @@ public final class Chelseaband: ChelseabandType {
     private var connectedPeripheral: Peripheral?
 
     public func isConnected(peripheral: Peripheral) -> Bool {
-        return connectedPeripheral?.rssi == peripheral.rssi
+        return connectedPeripheral?.identifier == peripheral.identifier
     }
 
     public func connect(peripheral: Peripheral) {

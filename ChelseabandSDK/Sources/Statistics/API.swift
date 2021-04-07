@@ -25,7 +25,7 @@ final class API: Statistics {
     }
     
     private enum Modules {
-        private var baseURL: String {return "https://hawks-dev.api.experiwear.com/"}
+        private var baseURL: String {return "https://hawks.api.experiwear.com/"}
         
         case fanbands(_ endpoint: FanbandsEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
@@ -165,7 +165,7 @@ final class API: Statistics {
 
 extension API {
     struct HeaderHelper {
-        private let appKey = "ypIgNGcq203LYa1I4bnxXHV8Iz2lZf113uNag9QX56A9C07aEVWNsazmHVG3"
+        private let appKey = ""
         private let token = UserDefaults.standard.pushToken
     
         func generateURLRequest(path: URL) -> URLRequest {
