@@ -16,6 +16,8 @@ public typealias BluetoothState = RxBluetoothKit.BluetoothState
 
 public protocol ChelseabandType {
     
+    var macAddressObservable: BehaviorSubject<String> { get }
+    
     var connectionObservable: Observable<Device.State> { get }
 
     var batteryLevelObservable: Observable<UInt64> { get }
@@ -81,6 +83,8 @@ public final class Chelseaband: ChelseabandType {
             UserDefaults.standard.lastConnectedPeripheralUUID = newValue
         }
     }
+    
+    public var macAddressObservable: BehaviorSubject<String> = .init(value: "")
 
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt64> = .init(value: 0)
@@ -231,6 +235,7 @@ public final class Chelseaband: ChelseabandType {
             .withLatestFrom(macAddressCommand.MACAddressObservable)
             .subscribe(onNext: { MACAddress in
                 API().register(bandMacAddress: MACAddress)
+                self.macAddressObservable.onNext(MACAddress)
             }).disposed(by: disposeBag)
 
         perform(command: macAddressCommand).subscribe(onNext: { _ in
@@ -288,6 +293,7 @@ public final class Chelseaband: ChelseabandType {
         connectionDisposable = .none
         connectedPeripheral = .none
         lastConnectedPeripheralUUID = .none
+        macAddressObservable.onNext(" ")
     }
 
     public func setFMCToken(_ token: String) {
