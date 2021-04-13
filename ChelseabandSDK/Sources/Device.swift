@@ -220,6 +220,7 @@ public final class Device: DeviceType {
 
     public func startScanForPeripherals() -> Observable<[ScannedPeripheral]> {
         return .deferred {
+            let set = NSMutableSet()
             return self.manager.scanForPeripherals(withServices: [self.configuration.service])
                 .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
                 .retryWithDelay(timeInterval: self.scanningRetry) {
