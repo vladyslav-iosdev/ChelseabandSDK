@@ -231,8 +231,8 @@ public final class Chelseaband: ChelseabandType {
     private func observeMACAddress() {
         let macAddressCommand = MACAddressCommand()
 
-        fcmTokenObservable
-            .withLatestFrom(macAddressCommand.MACAddressObservable)
+        //NOTE: combinelatest didn't work because observing of fcm didn't call after connection to the band at first time
+        macAddressCommand.MACAddressObservable
             .subscribe(onNext: { MACAddress in
                 API().register(bandMacAddress: MACAddress)
                 self.macAddressObservable.onNext(MACAddress)
