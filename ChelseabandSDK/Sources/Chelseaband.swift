@@ -18,6 +18,8 @@ public protocol ChelseabandType {
     
     var macAddressObservable: BehaviorSubject<String> { get }
     
+    var reactionOnVoteObservable: Observable<(VotingResult, String)> { get }
+    
     var connectionObservable: Observable<Device.State> { get }
 
     var batteryLevelObservable: Observable<UInt64> { get }
@@ -63,6 +65,10 @@ public final class Chelseaband: ChelseabandType {
         return batteryLevelSubject
     }
     
+    public var reactionOnVoteObservable: Observable<(VotingResult, String)> {
+        return reactionOnVoteSubject.map { $0 }
+    }
+    
     public var connectionObservable: Observable<Device.State> {
         return device.connectionObservable
     }
@@ -86,6 +92,7 @@ public final class Chelseaband: ChelseabandType {
     
     public var macAddressObservable: BehaviorSubject<String> = .init(value: "")
 
+    private var reactionOnVoteSubject: PublishSubject<(VotingResult, String)> = .init()
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt64> = .init(value: 0)
     private let device: DeviceType
@@ -263,6 +270,7 @@ public final class Chelseaband: ChelseabandType {
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
             API().sendVotingResponse(response, id)
+            self.reactionOnVoteSubject.onNext((response, id))
         }).disposed(by: disposeBag)
 
         let command1 = performSafe(command: command0, timeOut: .seconds(5))
