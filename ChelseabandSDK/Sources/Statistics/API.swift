@@ -25,7 +25,7 @@ final class API: Statistics {
     }
     
     private enum Modules {
-        private var baseURL: String {return "https://hawks.api.experiwear.com/"}
+        private var baseURL: String { UserDefaults.standard.apiBaseEndpoint }
         
         case fanbands(_ endpoint: FanbandsEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
@@ -135,9 +135,9 @@ final class API: Statistics {
     // MARK: - Private functions
     @discardableResult
     private func sendRequest(_ url: String, method: Method,
-                             jsonParams: [String : Any]? = nil) -> URLSessionDataTask {
+                             jsonParams: [String : Any]? = nil) {
             
-        let url = URL(string: url)!
+        guard let url = URL(string: url) else { return }
         let session = urlSession
         var request = HeaderHelper().generateURLRequest(path: url)
         request.httpMethod = method.rawValue
@@ -159,13 +159,12 @@ final class API: Statistics {
             print("✅", url, json)
         })
         task.resume()
-        return task
     }
 }
 
 extension API {
     struct HeaderHelper {
-        private let appKey = ""
+        private let appKey = UserDefaults.standard.apiKey
         private let token = UserDefaults.standard.pushToken
     
         func generateURLRequest(path: URL) -> URLRequest {

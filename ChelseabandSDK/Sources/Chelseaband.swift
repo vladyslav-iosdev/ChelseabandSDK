@@ -30,7 +30,7 @@ public protocol ChelseabandType {
 
     var lastConnectedPeripheralUUID: String? { get set }
 
-    init(device: DeviceType)
+    init(device: DeviceType, apiBaseEndpoint: String, apiKey: String)
     
     func connect(peripheral: Peripheral)
 
@@ -103,8 +103,10 @@ public final class Chelseaband: ChelseabandType {
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
     private let commandIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
 
-    required public init(device: DeviceType) {
+    required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
         self.device = device
+        UserDefaults.standard.apiBaseEndpoint = apiBaseEndpoint
+        UserDefaults.standard.apiKey = apiKey
         
         locationTracker = LocationManagerTracker()
         observeForFCMTokenChange()
