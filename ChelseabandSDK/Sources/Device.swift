@@ -81,6 +81,8 @@ public protocol DeviceType {
 
     /// Fire only when bluetooth get turned on
     var bluetoothHasConnected: Observable<Void> { get }
+    
+    var bluetoothIsSearching: Observable<Bool> { get }
 
     var connectionObservable: Observable<Device.State> { get }
 
@@ -132,6 +134,10 @@ public final class Device: DeviceType {
             .filter { $0 }
             .mapToVoid()
     }
+    
+    public var bluetoothIsSearching: Observable<Bool> {
+        bluetoothIsSearchingSubject
+    }
 
     public var connectionObservable: Observable<Device.State> {
         connectionBehaviourSubject
@@ -150,6 +156,7 @@ public final class Device: DeviceType {
     private let configuration: Configuration
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
+    private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
@@ -222,6 +229,8 @@ public final class Device: DeviceType {
         return .deferred {
             let set = NSMutableSet()
             return self.manager.scanForPeripherals(withServices: [self.configuration.service])
+                .do(onSubscribed: { self.bluetoothIsSearchingSubject.onNext(true) },
+                    onDispose: { self.bluetoothIsSearchingSubject.onNext(false) })
                 .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
                 .retryWithDelay(timeInterval: self.scanningRetry) {
                     set.removeAllObjects()

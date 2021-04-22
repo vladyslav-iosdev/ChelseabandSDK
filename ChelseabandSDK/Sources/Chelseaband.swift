@@ -26,6 +26,8 @@ public protocol ChelseabandType {
 
     var bluetoothHasConnected: Observable<Void> { get }
 
+    var isSearching: Observable<Bool> { get }
+    
     var bluetoothState: Observable<BluetoothState> { get }
 
     var lastConnectedPeripheralUUID: String? { get set }
@@ -77,6 +79,10 @@ public final class Chelseaband: ChelseabandType {
         return device.bluetoothHasConnected
     }
 
+    public var isSearching: Observable<Bool> {
+        return device.bluetoothIsSearching
+    }
+    
     public var bluetoothState: Observable<BluetoothState> {
         return device.bluetoothState
     }
