@@ -8,21 +8,26 @@
 import RxSwift
 import Foundation
 
+public struct AccelerometerData {
+    let values: [[Double]]
+    let isActive: Bool
+}
+
 public class AccelerometerCommand: Command {
 
     private static let prefix: String = "00f8"
 
-    public var axisObservable: Observable<(values: [[Double]], isActive: Bool)> {
+    public var axisObservable: Observable<AccelerometerData> {
         return axisPublishSubject.asObservable()
     }
 
-    private var axisPublishSubject: PublishSubject<(values: [[Double]], isActive: Bool)>
+    private var axisPublishSubject: BehaviorSubject<AccelerometerData>
 
     public init() {
-        axisPublishSubject = PublishSubject<(values: [[Double]], isActive: Bool)>()
+        axisPublishSubject = BehaviorSubject<AccelerometerData>(value: .init(values: [], isActive: false))
     }
 
-    private static func value(from data: Data) -> (values: [[Double]], isActive: Bool) {
+    private static func value(from data: Data) -> AccelerometerData {
         let valuesHex = data[3 ..< data.count - 2].hex
         let hexValues = valuesHex.chunked(by: 2).map { String($0).valueFromHex }
         let values = hexValues.chunked(by: 6).compactMap {
@@ -32,7 +37,7 @@ public class AccelerometerCommand: Command {
         }
         let isActive = data[data.count - 2 ..< data.count].hex.valueFromHex == 1
 
-        return (values, isActive)
+        return .init(values: values, isActive: isActive)
     }
 
     public func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void> {

@@ -45,6 +45,27 @@ public extension ObservableType {
             }.delay(timeInterval, scheduler: MainScheduler.instance)
         }
     }
+    
+    func retryWithDelay(timeInterval: RxTimeInterval, onError: @escaping () -> Void = { }) -> Observable<Element> {
+        return retryWhen { error in
+            error
+                .do(onNext: { error in
+                    onError()
+                })
+                .scan(0) { attempts, error in
+                    if let value = error as? RxError {
+                        switch value {
+                        case .timeout:
+                            attempts + 1
+                        default:
+                            throw error
+                        }
+                    }
+                    
+                    return attempts + 1
+            }.delay(timeInterval, scheduler: MainScheduler.instance)
+        }
+    }
 
     func mapToVoid() -> Observable<Void> {
         map { _ in }
@@ -60,6 +81,8 @@ public protocol DeviceType {
 
     /// Fire only when bluetooth get turned on
     var bluetoothHasConnected: Observable<Void> { get }
+    
+    var bluetoothIsSearching: Observable<Bool> { get }
 
     var connectionObservable: Observable<Device.State> { get }
 
@@ -111,6 +134,10 @@ public final class Device: DeviceType {
             .filter { $0 }
             .mapToVoid()
     }
+    
+    public var bluetoothIsSearching: Observable<Bool> {
+        bluetoothIsSearchingSubject
+    }
 
     public var connectionObservable: Observable<Device.State> {
         connectionBehaviourSubject
@@ -129,6 +156,7 @@ public final class Device: DeviceType {
     private let configuration: Configuration
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
+    private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
@@ -199,10 +227,26 @@ public final class Device: DeviceType {
 
     public func startScanForPeripherals() -> Observable<[ScannedPeripheral]> {
         return .deferred {
+            let set = NSMutableSet()
             return self.manager.scanForPeripherals(withServices: [self.configuration.service])
-                .retryWithDelay(timeInterval: self.scanningRetry, maxAttempts: 3)
-                .scan(NSMutableSet(), accumulator: { set, peripheral -> NSMutableSet in
-                    set.add(peripheral)
+                .do(onSubscribed: { self.bluetoothIsSearchingSubject.onNext(true) },
+                    onDispose: { self.bluetoothIsSearchingSubject.onNext(false) })
+                .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
+                .retryWithDelay(timeInterval: self.scanningRetry) {
+                    set.removeAllObjects()
+                    //NOTE: if you make reconnect to device in delay time peripheral wouln't added to set
+                    if  let value = try? self.peripheral.value(),
+                        value.peripheral.isConnected {
+                        set.add(value)
+                    }
+                }
+                .scan(set, accumulator: { set, peripheral -> NSMutableSet in
+                    if !set.contains(where: {
+                        ($0 as? Peripheral)?.peripheral.identifier == peripheral.peripheral.identifier
+                    })
+                    {
+                        set.add(peripheral)
+                    }
 
                     return set
                 })
