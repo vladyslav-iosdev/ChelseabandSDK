@@ -40,7 +40,7 @@ public protocol ChelseabandType {
 
     func isLastConnected(peripheral: Peripheral) -> Bool
 
-    func disconnect()
+    func disconnect(forgotLastPeripheral: Bool)
 
     func perform(command: Command) -> Observable<Void>
 
@@ -140,7 +140,7 @@ public final class Chelseaband: ChelseabandType {
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
 
-                strongSelf.disconnect()
+                strongSelf.disconnect(forgotLastPeripheral: false)
             })
     }
 
@@ -304,11 +304,13 @@ public final class Chelseaband: ChelseabandType {
             }
     }
 
-    public func disconnect() {
+    public func disconnect(forgotLastPeripheral: Bool) {
         connectionDisposable?.dispose()
         connectionDisposable = .none
         connectedPeripheral = .none
-        lastConnectedPeripheralUUID = .none
+        if forgotLastPeripheral {
+            lastConnectedPeripheralUUID = .none
+        }
         macAddressObservable.onNext(" ")
     }
 
