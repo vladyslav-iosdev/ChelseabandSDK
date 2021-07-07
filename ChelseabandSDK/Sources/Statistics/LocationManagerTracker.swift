@@ -10,7 +10,12 @@ import MapKit
 import CoreLocation
 import RxSwift
 
-protocol LocationTracker {
+public protocol LocationManager: AnyObject {
+    var locationStatusSubject: BehaviorSubject<CLAuthorizationStatus> { get }
+    func makeRequestForUseLocationPermission()
+}
+
+protocol LocationTracker: LocationManager {
     var location: PublishSubject<CLLocationCoordinate2D> {get set}
     func startObserving()
     func stopObserving()
@@ -18,13 +23,36 @@ protocol LocationTracker {
 
 final class LocationManagerTracker: NSObject, LocationTracker {
     // MARK: Constants
-    private let locationManager = CLLocationManager()
-    private let disposeBag = DisposeBag()
+    public let locationStatusSubject: BehaviorSubject<CLAuthorizationStatus>
+    private let locationManager: CLLocationManager
+    private let disposeBag: DisposeBag
     
     // MARK: Variables
     var location = PublishSubject<CLLocationCoordinate2D>()
     
+    override init() {
+        locationManager = CLLocationManager()
+        locationManager.allowsBackgroundLocationUpdates = true
+        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        disposeBag = DisposeBag()
+        
+        if #available(iOS 14.0, *) {
+            locationStatusSubject = .init(value: locationManager.authorizationStatus)
+        } else {
+            locationStatusSubject = .init(value: CLLocationManager.authorizationStatus())
+        }
+        
+        super.init()
+        
+        locationManager.delegate = self
+    }
+    
     // MARK: Public Functions
+    public func makeRequestForUseLocationPermission() {
+        locationManager.requestAlwaysAuthorization()
+    }
+    
+    // MARK: Internal Functions
     func startObserving() {
         locationManager.requestAlwaysAuthorization()
         startObservLocation()
@@ -37,9 +65,6 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     // MARK: Private Functions
     private func startObservLocation() {
         if CLLocationManager.locationServicesEnabled() {
-            locationManager.allowsBackgroundLocationUpdates = true
-            locationManager.delegate = self
-            locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
             locationManager.startUpdatingLocation()
         }
     }
@@ -52,7 +77,12 @@ extension LocationManagerTracker: CLLocationManagerDelegate {
         location.onNext(locValue)
     }
     
-    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+    func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
+        if #available(iOS 14.0, *) {
+            locationStatusSubject.onNext(manager.authorizationStatus)
+        } else {
+            locationStatusSubject.onNext(CLLocationManager.authorizationStatus())
+        }
         startObservLocation()
     }
 }

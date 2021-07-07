@@ -31,6 +31,8 @@ public protocol ChelseabandType {
     var bluetoothState: Observable<BluetoothState> { get }
 
     var lastConnectedPeripheralUUID: String? { get set }
+    
+    var locationManager: LocationManager { get }
 
     init(device: DeviceType, apiBaseEndpoint: String, apiKey: String)
     
@@ -94,6 +96,10 @@ public final class Chelseaband: ChelseabandType {
         set {
             UserDefaults.standard.lastConnectedPeripheralUUID = newValue
         }
+    }
+    
+    public var locationManager: LocationManager {
+        locationTracker
     }
     
     public var macAddressObservable: BehaviorSubject<String> = .init(value: "")
