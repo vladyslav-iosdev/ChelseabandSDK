@@ -211,20 +211,18 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(readCharacteristicSubject)
             .disposed(by: disposeBag)
 
-        synchonizeBattery()
+        synchronizeBattery()
         synchonizeDeviceTime()
 
         synchonizeAccelerometer()
     }
 
-    private func synchonizeBattery() {
-        let batteryCommand = BatteryCommand()
-        batteryCommand.batteryLevel
-            .subscribe(batteryLevelSubject)
-            .disposed(by: disposeBag)
-
-        perform(command: batteryCommand)
-            .subscribe()
+    private func synchronizeBattery() {
+        device.batteryCharacteristicObservable
+            .flatMap { $0.observeValueUpdateAndSetNotification() }
+            .compactMap{ $0.characteristic.value }
+            .compactMap{ $0.uint64 }
+            .bind(to: batteryLevelSubject)
             .disposed(by: disposeBag)
     }
 

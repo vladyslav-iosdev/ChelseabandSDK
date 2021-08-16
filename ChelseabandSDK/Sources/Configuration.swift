@@ -8,8 +8,17 @@
 import Foundation
 
 public protocol Configuration {
-    var service: ID { get }
-    var writeCharacteristic: ID { get }
-    var readCharacteristic: ID { get }
+    var batteryService: ID { get }
+    var batteryCharacteristic: ID { get }
+    
+    var deviceInfoService: ID { get }
+    var deviceInfoCharacteristic: ID { get }
+    
+    var advertisementServices: [ID] { get }
+    var servicesForDiscovering: [ID] { get }
+    /**
+        If one of this characteristic will not found device will be immediately disconnected
+     */
+    var mandatoryCharacteristicIDForWork: [String] { get }
 }
 

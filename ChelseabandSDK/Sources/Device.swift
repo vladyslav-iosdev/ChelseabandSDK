@@ -9,6 +9,7 @@ import Foundation
 import CoreBluetooth
 import RxBluetoothKit
 import RxSwift
+import RxCocoa
 
 public extension Device {
     enum State {
@@ -87,6 +88,8 @@ public protocol DeviceType {
     var connectionObservable: Observable<Device.State> { get }
 
     var readCharacteristicObservable: Observable<Characteristic> { get }
+    
+    var batteryCharacteristicObservable: Observable<Characteristic> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
@@ -146,6 +149,10 @@ public final class Device: DeviceType {
     public var readCharacteristicObservable: Observable<Characteristic> {
         readCharacteristic.compactMap { $0 }
     }
+    
+    public var batteryCharacteristicObservable: Observable<Characteristic> {
+        batteryCharacteristic.compactMap { $0 }
+    }
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -159,6 +166,7 @@ public final class Device: DeviceType {
     private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var batteryCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
@@ -177,8 +185,9 @@ public final class Device: DeviceType {
 
                 var connectionDisposable: Disposable?
                 var characteristicsDisposable: Disposable?
+                var characteristicsDictionary: [String: Observable<Characteristic>] = [:]
 
-                connectionDisposable = strongSelf.connect(periferal: peripheral, service: configuration.service)
+                connectionDisposable = strongSelf.connect(peripheral: peripheral, services: configuration.servicesForDiscovering)
                     .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
                         strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
@@ -193,23 +202,45 @@ public final class Device: DeviceType {
                         case .error(let error):
                             seal.onError(error)
                         case .next(let service):
-                            let writeCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.writeCharacteristic)
-                            let readCharacteristic = strongSelf.discoverCharacteristics(service, id: configuration.readCharacteristic)
+                            switch service.uuid {
+                            case configuration.batteryService:
+                                characteristicsDictionary[configuration.batteryCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.batteryCharacteristic)
+                            case configuration.deviceInfoService:
+                                characteristicsDictionary[configuration.deviceInfoCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.deviceInfoCharacteristic)
+                            default:
+                                break
+                            }
+                            
+                            let allSatisfy = configuration.mandatoryCharacteristicIDForWork.allSatisfy({ mandatoryKey in
+                                characteristicsDictionary.contains { $0.key == mandatoryKey }
+                            })
+                            
+                            if allSatisfy {
+                                let characteristicsObservable = characteristicsDictionary.map { $0.value }
+                                let characteristicsDisposable = Observable.combineLatest(characteristicsObservable)
+                                    .subscribe(onNext: { characteristics in
+                                        characteristics.forEach { characteristic in
+                                            switch characteristic.uuid {
+                                            case configuration.batteryCharacteristic:
+                                                strongSelf.batteryCharacteristic.on(.next(characteristic))
+                                            case configuration.deviceInfoCharacteristic:
+                                                break
+                                            default:
+                                                break
+                                            }
+                                        }
+                                    }, onError: { error in
+                                        strongSelf.batteryCharacteristic.on(.next(nil))
 
-                            characteristicsDisposable = Observable.combineLatest(writeCharacteristic, readCharacteristic)
-                                .subscribe(onNext: { pair in
-                                    strongSelf.writeCharacteristic.on(.next(pair.0))
-                                    strongSelf.readCharacteristic.on(.next(pair.1))
-                                }, onError: { error in
-                                    strongSelf.writeCharacteristic.on(.next(nil))
-                                    strongSelf.readCharacteristic.on(.next(nil))
+                                        seal.onError(error)
+                                    }, onCompleted: {
+                                        seal.onNext(())
 
-                                    seal.onError(error)
-                                }, onCompleted: {
-                                    seal.onNext(())
-
-                                    strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
-                                })
+                                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
+                                    })
+                            } else {
+                                // TODO: here start timer if after some time allSatisfy will not fire send error and broke connection
+                            }
                         }
                     }, onError: { error in
                         seal.onError(error)
@@ -228,7 +259,7 @@ public final class Device: DeviceType {
     public func startScanForPeripherals() -> Observable<[ScannedPeripheral]> {
         return .deferred {
             let set = NSMutableSet()
-            return self.manager.scanForPeripherals(withServices: [self.configuration.service])
+            return self.manager.scanForPeripherals(withServices: self.configuration.advertisementServices)
                 .do(onSubscribed: { self.bluetoothIsSearchingSubject.onNext(true) },
                     onDispose: { self.bluetoothIsSearchingSubject.onNext(false) })
                 .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
@@ -277,13 +308,13 @@ public final class Device: DeviceType {
             .debug("\(self).discoverCharacteristics")
     }
 
-    private func connect(periferal: ScannedPeripheral, service: ID, retry: DispatchTimeInterval = .seconds(5)) -> Observable<Service> {
-        return Observable.of(periferal)
+    private func connect(peripheral: ScannedPeripheral, services: [ID], retry: DispatchTimeInterval = .seconds(5)) -> Observable<Service> {
+        return Observable.of(peripheral)
             .do(onNext: { [weak self] _ in
                 self?.connectionBehaviourSubject.onNext(.connecting)
             })
             .flatMap { $0.peripheral.establishConnection() }
-            .flatMap { $0.discoverServices([service]) }
+            .flatMap { $0.discoverServices(services) }
             .flatMap { Observable.from($0) }
             .debug("\(self).connect")
     }
