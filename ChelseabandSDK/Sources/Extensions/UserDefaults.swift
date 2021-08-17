@@ -14,6 +14,7 @@ extension UserDefaults {
         static let apiKey: String = "apiKey"
         static let pushToken: String = "pushTokenKey"
         static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
+        static let firmwareVersion: String = "firmwareVersion"
     }
     
     var apiBaseEndpoint: String {
@@ -49,7 +50,13 @@ extension UserDefaults {
                 setValue(value, forKey: Keys.lastConnectedPeripheralUUID)
             } else {
                 removeObject(forKey: Keys.lastConnectedPeripheralUUID)
+                removeObject(forKey: Keys.firmwareVersion)
             }
         }
+    }
+    
+    var firmwareVersion: String? {
+        get { value(forKey: Keys.firmwareVersion) as? String }
+        set { setValue(newValue, forKey: Keys.firmwareVersion) }
     }
 }

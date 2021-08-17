@@ -164,7 +164,7 @@ public final class Device: DeviceType {
         firmwareVersionCharacteristic.compactMap { $0 }
     }
     
-    public var firmwareVersionSubject: BehaviorSubject<String?> = .init(value: nil)
+    public var firmwareVersionSubject: BehaviorSubject<String?> = .init(value: UserDefaults.standard.firmwareVersion)
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -196,7 +196,10 @@ public final class Device: DeviceType {
                 characteristic.readValue()
                     .asObservable()
                     .map { $0.value != nil ? String(decoding: $0.value!, as: UTF8.self) : nil }
-                    .bind(to: strongSelf.firmwareVersionSubject)
+                    .subscribe(onNext: {
+                        strongSelf.firmwareVersionSubject.on(.next($0))
+                        UserDefaults.standard.firmwareVersion = $0
+                    })
                     .disposed(by: strongSelf.disposeBag)
             })
             .disposed(by: disposeBag)
