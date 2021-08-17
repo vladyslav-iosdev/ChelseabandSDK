@@ -12,7 +12,7 @@ public protocol Configuration {
     var batteryCharacteristic: ID { get }
     
     var deviceInfoService: ID { get }
-    var deviceInfoCharacteristic: ID { get }
+    var firmwareVersionCharacteristic: ID { get }
     
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }

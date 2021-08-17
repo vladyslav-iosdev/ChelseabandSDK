@@ -90,11 +90,17 @@ public protocol DeviceType {
     var readCharacteristicObservable: Observable<Characteristic> { get }
     
     var batteryCharacteristicObservable: Observable<Characteristic> { get }
+    
+    var firmwareVersionCharacteristicObservable: Observable<Characteristic> { get }
+    
+    var firmwareVersionSubject: BehaviorSubject<String?> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
     var scanningRetry: DispatchTimeInterval { get set }
-
+    
+    func updateDeviceInfo()
+    
     func connect(peripheral: Peripheral) -> Observable<Void>
 
     func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
@@ -153,6 +159,12 @@ public final class Device: DeviceType {
     public var batteryCharacteristicObservable: Observable<Characteristic> {
         batteryCharacteristic.compactMap { $0 }
     }
+    
+    public var firmwareVersionCharacteristicObservable: Observable<Characteristic> {
+        firmwareVersionCharacteristic.compactMap { $0 }
+    }
+    
+    public var firmwareVersionSubject: BehaviorSubject<String?> = .init(value: nil)
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -167,10 +179,27 @@ public final class Device: DeviceType {
     private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var batteryCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var firmwareVersionCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
         self.configuration = configuration
+    }
+    
+    public func updateDeviceInfo() {
+        firmwareVersionCharacteristic
+            .compactMap{ $0 }
+            .takeUntil(Observable<Int>.timer(.seconds(15), scheduler: MainScheduler.instance))
+            .take(1)
+            .subscribe(onNext: { [weak self] characteristic in
+                guard let strongSelf = self else { return }
+                characteristic.readValue()
+                    .asObservable()
+                    .map { $0.value != nil ? String(decoding: $0.value!, as: UTF8.self) : nil }
+                    .bind(to: strongSelf.firmwareVersionSubject)
+                    .disposed(by: strongSelf.disposeBag)
+            })
+            .disposed(by: disposeBag)
     }
 
     public func connect(peripheral: Peripheral) -> Observable<Void> {
@@ -206,7 +235,7 @@ public final class Device: DeviceType {
                             case configuration.batteryService:
                                 characteristicsDictionary[configuration.batteryCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.batteryCharacteristic)
                             case configuration.deviceInfoService:
-                                characteristicsDictionary[configuration.deviceInfoCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.deviceInfoCharacteristic)
+                                characteristicsDictionary[configuration.firmwareVersionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.firmwareVersionCharacteristic)
                             default:
                                 break
                             }
@@ -223,17 +252,19 @@ public final class Device: DeviceType {
                                             switch characteristic.uuid {
                                             case configuration.batteryCharacteristic:
                                                 strongSelf.batteryCharacteristic.on(.next(characteristic))
-                                            case configuration.deviceInfoCharacteristic:
-                                                break
+                                            case configuration.firmwareVersionCharacteristic:
+                                                strongSelf.firmwareVersionCharacteristic.on(.next(characteristic))
                                             default:
                                                 break
                                             }
                                         }
                                     }, onError: { error in
                                         strongSelf.batteryCharacteristic.on(.next(nil))
+                                        strongSelf.firmwareVersionCharacteristic.on(.next(nil))
 
                                         seal.onError(error)
                                     }, onCompleted: {
+                                        strongSelf.updateDeviceInfo()
                                         seal.onNext(())
 
                                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
