@@ -23,6 +23,8 @@ public protocol ChelseabandType {
     var connectionObservable: Observable<Device.State> { get }
 
     var batteryLevelObservable: Observable<UInt64> { get }
+    
+    var firmwareVersionObservable: Observable<String?> { get }
 
     var bluetoothHasConnected: Observable<Void> { get }
 
@@ -67,6 +69,10 @@ public final class Chelseaband: ChelseabandType {
 
     public var batteryLevelObservable: Observable<UInt64> {
         return batteryLevelSubject
+    }
+    
+    public var firmwareVersionObservable: Observable<String?> {
+        device.firmwareVersionSubject
     }
     
     public var reactionOnVoteObservable: Observable<(VotingResult, String)> {
