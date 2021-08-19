@@ -94,12 +94,16 @@ public protocol DeviceType {
     var firmwareVersionCharacteristicObservable: Observable<Characteristic> { get }
     
     var firmwareVersionSubject: BehaviorSubject<String?> { get }
+    
+    var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> { get }
+    
+    var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
     var scanningRetry: DispatchTimeInterval { get set }
     
-    func updateDeviceInfo()
+    func updateDeviceInfo(timeOut: RxSwift.RxTimeInterval)
     
     func connect(peripheral: Peripheral) -> Observable<Void>
 
@@ -165,6 +169,10 @@ public final class Device: DeviceType {
     }
     
     public var firmwareVersionSubject: BehaviorSubject<String?> = .init(value: UserDefaults.standard.firmwareVersion)
+    
+    public var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> = .init(value: 23) //NOTE: 23 it's default value from dialog tutorial
+    
+    public var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> = .init(value: 20) //NOTE: 20 it's default value from dialog tutorial
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -180,16 +188,18 @@ public final class Device: DeviceType {
     private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var batteryCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var firmwareVersionCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaMtuCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
         self.configuration = configuration
     }
     
-    public func updateDeviceInfo() {
+    public func updateDeviceInfo(timeOut: RxSwift.RxTimeInterval = .seconds(5)) {
         firmwareVersionCharacteristic
             .compactMap{ $0 }
-            .takeUntil(Observable<Int>.timer(.seconds(15), scheduler: MainScheduler.instance))
+            .timeout(timeOut, scheduler: MainScheduler.instance)
             .take(1)
             .subscribe(onNext: { [weak self] characteristic in
                 guard let strongSelf = self else { return }
@@ -200,6 +210,60 @@ public final class Device: DeviceType {
                         strongSelf.firmwareVersionSubject.on(.next($0))
                         UserDefaults.standard.firmwareVersion = $0
                     })
+                    .disposed(by: strongSelf.disposeBag)
+            })
+            .disposed(by: disposeBag)
+    }
+    
+    private func updateSuotaParameters(timeOut: RxSwift.RxTimeInterval = .seconds(5)) {
+        suotaPatchDataCharSizeCharacteristic
+            .compactMap{ $0 }
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .take(1)
+            .subscribe(onNext: { [weak self] characteristic in
+                guard let strongSelf = self else { return }
+                characteristic.readValue()
+                    .asObservable()
+                    .compactMap { $0.value }
+                    .map { data -> UInt16? in
+                        if data.indices.contains(1) {
+                            let higherBit = UInt16(data[1])
+                            let lowerBit = UInt16(data[0])
+                            return (higherBit << 8) | lowerBit
+                        } else if data.indices.contains(0) {
+                            return UInt16(data[0])
+                        } else {
+                            return nil
+                        }
+                    }
+                    .compactMap { $0 }
+                    .bind(to: strongSelf.suotaPatchDataSizeSubject)
+                    .disposed(by: strongSelf.disposeBag)
+            })
+            .disposed(by: disposeBag)
+       
+        suotaMtuCharSizeCharacteristic
+            .compactMap{ $0 }
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .take(1)
+            .subscribe(onNext: { [weak self] characteristic in
+                guard let strongSelf = self else { return }
+                characteristic.readValue()
+                    .asObservable()
+                    .compactMap { $0.value }
+                    .map { data -> UInt16? in
+                        if data.indices.contains(1) {
+                            let higherBit = UInt16(data[1])
+                            let lowerBit = UInt16(data[0])
+                            return (higherBit << 8) | lowerBit
+                        } else if data.indices.contains(0) {
+                            return UInt16(data[0])
+                        } else {
+                            return nil
+                        }
+                    }
+                    .compactMap { $0 }
+                    .bind(to: strongSelf.suotaMtuCharSizeSubject)
                     .disposed(by: strongSelf.disposeBag)
             })
             .disposed(by: disposeBag)
@@ -239,6 +303,9 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.batteryCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.batteryCharacteristic)
                             case configuration.deviceInfoService:
                                 characteristicsDictionary[configuration.firmwareVersionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.firmwareVersionCharacteristic)
+                            case configuration.suotaService:
+                                characteristicsDictionary[configuration.suotaPatchDataCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharSizeCharacteristic)
+                                characteristicsDictionary[configuration.suotaMtuCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMtuCharSizeCharacteristic)
                             default:
                                 break
                             }
@@ -257,6 +324,10 @@ public final class Device: DeviceType {
                                                 strongSelf.batteryCharacteristic.on(.next(characteristic))
                                             case configuration.firmwareVersionCharacteristic:
                                                 strongSelf.firmwareVersionCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaPatchDataCharSizeCharacteristic:
+                                                strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaMtuCharSizeCharacteristic:
+                                                strongSelf.suotaMtuCharSizeCharacteristic.on(.next(characteristic))
                                             default:
                                                 break
                                             }
@@ -264,10 +335,13 @@ public final class Device: DeviceType {
                                     }, onError: { error in
                                         strongSelf.batteryCharacteristic.on(.next(nil))
                                         strongSelf.firmwareVersionCharacteristic.on(.next(nil))
+                                        strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(nil))
+                                        strongSelf.suotaMtuCharSizeCharacteristic.on(.next(nil))
 
                                         seal.onError(error)
                                     }, onCompleted: {
                                         strongSelf.updateDeviceInfo()
+                                        strongSelf.updateSuotaParameters()
                                         seal.onNext(())
 
                                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)

@@ -14,6 +14,10 @@ public protocol Configuration {
     var deviceInfoService: ID { get }
     var firmwareVersionCharacteristic: ID { get }
     
+    var suotaService: ID { get }
+    var suotaPatchDataCharSizeCharacteristic: ID { get }
+    var suotaMtuCharSizeCharacteristic: ID { get }
+    
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }
     /**
