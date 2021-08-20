@@ -21,7 +21,6 @@ public protocol Configuration {
     var suotaGpioMapCharacteristic: ID { get }
     var suotaPatchLenCharacteristic: ID { get }
     var suotaPatchDataCharacteristic: ID { get }
-    var suotaMemInfoCharacteristic: ID { get }
     var suotaServStatusCharacteristic: ID { get }
     
     var advertisementServices: [ID] { get }
