@@ -98,6 +98,10 @@ public protocol DeviceType {
     var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> { get }
     
     var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
+    
+    var suotaMemInfoCharacteristicObservable: Observable<Characteristic> { get }
+    
+    var suotaServStatusCharacteristicObservable: Observable<Characteristic> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
@@ -173,6 +177,14 @@ public final class Device: DeviceType {
     public var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> = .init(value: 23) //NOTE: 23 it's default value from dialog tutorial
     
     public var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> = .init(value: 20) //NOTE: 20 it's default value from dialog tutorial
+    
+    public var suotaMemInfoCharacteristicObservable: Observable<Characteristic> {
+        suotaMemInfoCharacteristic.compactMap { $0 }
+    }
+    
+    public var suotaServStatusCharacteristicObservable: Observable<Characteristic> {
+        suotaServStatusCharacteristic.compactMap { $0 }
+    }
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -190,6 +202,12 @@ public final class Device: DeviceType {
     private var firmwareVersionCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaMtuCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaMemDevCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaGpioMapCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaPatchLenCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaPatchDataCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaMemInfoCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
+    private var suotaServStatusCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
@@ -306,6 +324,12 @@ public final class Device: DeviceType {
                             case configuration.suotaService:
                                 characteristicsDictionary[configuration.suotaPatchDataCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharSizeCharacteristic)
                                 characteristicsDictionary[configuration.suotaMtuCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMtuCharSizeCharacteristic)
+                                characteristicsDictionary[configuration.suotaMemDevCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMemDevCharacteristic)
+                                characteristicsDictionary[configuration.suotaGpioMapCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaGpioMapCharacteristic)
+                                characteristicsDictionary[configuration.suotaPatchLenCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchLenCharacteristic)
+                                characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
+                                characteristicsDictionary[configuration.suotaMemInfoCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMemInfoCharacteristic)
+                                characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
                             default:
                                 break
                             }
@@ -328,6 +352,18 @@ public final class Device: DeviceType {
                                                 strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(characteristic))
                                             case configuration.suotaMtuCharSizeCharacteristic:
                                                 strongSelf.suotaMtuCharSizeCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaMemDevCharacteristic:
+                                                strongSelf.suotaMemDevCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaGpioMapCharacteristic:
+                                                strongSelf.suotaGpioMapCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaPatchLenCharacteristic:
+                                                strongSelf.suotaPatchLenCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaPatchDataCharacteristic:
+                                                strongSelf.suotaPatchDataCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaMemInfoCharacteristic:
+                                                strongSelf.suotaMemInfoCharacteristic.on(.next(characteristic))
+                                            case configuration.suotaServStatusCharacteristic:
+                                                strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             default:
                                                 break
                                             }
@@ -337,6 +373,12 @@ public final class Device: DeviceType {
                                         strongSelf.firmwareVersionCharacteristic.on(.next(nil))
                                         strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(nil))
                                         strongSelf.suotaMtuCharSizeCharacteristic.on(.next(nil))
+                                        strongSelf.suotaMemDevCharacteristic.on(.next(nil))
+                                        strongSelf.suotaGpioMapCharacteristic.on(.next(nil))
+                                        strongSelf.suotaPatchLenCharacteristic.on(.next(nil))
+                                        strongSelf.suotaPatchDataCharacteristic.on(.next(nil))
+                                        strongSelf.suotaMemInfoCharacteristic.on(.next(nil))
+                                        strongSelf.suotaServStatusCharacteristic.on(.next(nil))
 
                                         seal.onError(error)
                                     }, onCompleted: {
