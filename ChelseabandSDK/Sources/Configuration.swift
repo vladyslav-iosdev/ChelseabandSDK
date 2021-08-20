@@ -22,7 +22,6 @@ public protocol Configuration {
     var suotaPatchLenCharacteristic: ID { get }
     var suotaPatchDataCharacteristic: ID { get }
     var suotaMemInfoCharacteristic: ID { get }
-    var suotaServStatusCharacteristic: ID { get }
     
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }

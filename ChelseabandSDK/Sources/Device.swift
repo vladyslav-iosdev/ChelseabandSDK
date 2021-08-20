@@ -100,8 +100,6 @@ public protocol DeviceType {
     var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
     
     var suotaMemInfoCharacteristicObservable: Observable<Characteristic> { get }
-    
-    var suotaServStatusCharacteristicObservable: Observable<Characteristic> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
@@ -181,10 +179,6 @@ public final class Device: DeviceType {
     public var suotaMemInfoCharacteristicObservable: Observable<Characteristic> {
         suotaMemInfoCharacteristic.compactMap { $0 }
     }
-    
-    public var suotaServStatusCharacteristicObservable: Observable<Characteristic> {
-        suotaServStatusCharacteristic.compactMap { $0 }
-    }
 
     public var peripheralObservable: Observable<ScannedPeripheral> {
         peripheral.compactMap { $0 }
@@ -207,7 +201,6 @@ public final class Device: DeviceType {
     private var suotaPatchLenCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaPatchDataCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaMemInfoCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaServStatusCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
 
     public init(configuration: Configuration) {
@@ -329,7 +322,6 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.suotaPatchLenCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchLenCharacteristic)
                                 characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
                                 characteristicsDictionary[configuration.suotaMemInfoCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMemInfoCharacteristic)
-                                characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
                             default:
                                 break
                             }
@@ -362,8 +354,6 @@ public final class Device: DeviceType {
                                                 strongSelf.suotaPatchDataCharacteristic.on(.next(characteristic))
                                             case configuration.suotaMemInfoCharacteristic:
                                                 strongSelf.suotaMemInfoCharacteristic.on(.next(characteristic))
-                                            case configuration.suotaServStatusCharacteristic:
-                                                strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             default:
                                                 break
                                             }
@@ -378,7 +368,6 @@ public final class Device: DeviceType {
                                         strongSelf.suotaPatchLenCharacteristic.on(.next(nil))
                                         strongSelf.suotaPatchDataCharacteristic.on(.next(nil))
                                         strongSelf.suotaMemInfoCharacteristic.on(.next(nil))
-                                        strongSelf.suotaServStatusCharacteristic.on(.next(nil))
 
                                         seal.onError(error)
                                     }, onCompleted: {
