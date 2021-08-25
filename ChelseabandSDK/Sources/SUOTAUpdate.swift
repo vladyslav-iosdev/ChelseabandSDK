@@ -153,7 +153,7 @@ final class SUOTAUpdate: SUOTAUpdateType {
             let currChunkSize = bytesRemaining >= chunkSize ? chunkSize : bytesRemaining
             
             let progress = Double(blockStartByte + chunkStartByte + currChunkSize) / Double(dataLength)
-            percentOfUploadingSubject.on(.next(progress))
+            percentOfUploadingSubject.on(.next(progress * 100))
             print("SUOTA Update progress: \(progress)")
 
             var bytes = [UInt8](repeating: 0, count: currChunkSize)
