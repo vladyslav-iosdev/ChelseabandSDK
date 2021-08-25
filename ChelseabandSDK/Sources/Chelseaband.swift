@@ -63,6 +63,8 @@ public protocol ChelseabandType {
     func startScanForPeripherals() -> Observable<[Peripheral]>
 
     func stopScanForPeripherals()
+    
+    func updateFirmware() -> Observable<Double>
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -120,6 +122,7 @@ public final class Chelseaband: ChelseabandType {
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
     private let commandIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
+    private var suotaUpdate: SUOTAUpdateType? = nil
 
     required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
         self.device = device
@@ -295,6 +298,27 @@ public final class Chelseaband: ChelseabandType {
         return Observable.zip(command1, command0.votingObservable).map { (_, response) -> VotingResult in
             return response
         }
+    }
+    
+    public func updateFirmware() -> Observable<Double> {
+        if let suota = suotaUpdate {
+            return suota.percentOfUploadingObservable
+        }
+        
+        //TODO: remove contentsOfFile logic
+        let suota = SUOTAUpdate(updateDevice: device,
+                                withData: NSData(contentsOfFile: Bundle.main.path(forResource: "fanband", ofType: "img")!)! as Data)
+        
+        suota.percentOfUploadingObservable
+            .subscribe(onError: { [weak self] _ in
+                self?.suotaUpdate = nil
+            }, onCompleted: { [weak self] in
+                self?.suotaUpdate = nil
+            })
+            .disposed(by: disposeBag)
+        
+        suotaUpdate = suota
+        return suota.percentOfUploadingObservable
     }
 
     public func perform(command: Command) -> Observable<Void> {

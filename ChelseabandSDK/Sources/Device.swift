@@ -76,7 +76,23 @@ public extension ObservableType {
 public typealias ID = CBUUID
 public typealias ConnectedPeripheral = Peripheral
 
-public protocol DeviceType {
+public protocol UpdateDeviceViaSuotaType {
+    var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> { get }
+    
+    var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
+    
+    var suotaServStatusCharacteristicObservable: Observable<Characteristic> { get }
+    
+    func writeInMemDev(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func writeInGpioMap(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func writeInPatchLen(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func writeInPatchData(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
+}
+
+public protocol DeviceType: UpdateDeviceViaSuotaType {
 
     var bluetoothState: Observable<BluetoothState> { get }
 
@@ -94,12 +110,6 @@ public protocol DeviceType {
     var firmwareVersionCharacteristicObservable: Observable<Characteristic> { get }
     
     var firmwareVersionSubject: BehaviorSubject<String?> { get }
-    
-    var suotaMtuCharSizeSubject: BehaviorSubject<UInt16> { get }
-    
-    var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
-    
-    var suotaServStatusCharacteristicObservable: Observable<Characteristic> { get }
 
     var peripheralObservable: Observable<ScannedPeripheral> { get }
 
@@ -476,6 +486,60 @@ public final class Device: DeviceType {
             .mapToVoid()
             .take(1)
             .debug("\(strongSelf).write")
+        }
+    }
+    
+    public func writeInMemDev(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
+        return write(in: suotaMemDevCharacteristic, data: data, withTimeOut: timeout)
+    }
+    
+    public func writeInGpioMap(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
+        return write(in: suotaGpioMapCharacteristic, data: data, withTimeOut: timeout)
+    }
+    
+    public func writeInPatchLen(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
+        return write(in: suotaPatchLenCharacteristic, data: data, withTimeOut: timeout)
+    }
+    
+    public func writeInPatchData(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.suotaPatchDataCharacteristic
+                .flatMap { characteristic -> Observable<Characteristic> in
+                    if let value = characteristic {
+                        return value.writeValue(data, type: .withoutResponse).asObservable()
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+                }
+                .timeout(timeout, scheduler: MainScheduler.instance)
+                .mapToVoid()
+                .take(1)
+                .debug("\(strongSelf).write")
+        }
+    }
+    
+    private func write(in characteristic: BehaviorSubject<Characteristic?>, data: Data, withTimeOut timeout: DispatchTimeInterval) -> Observable<Void> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return characteristic
+                .flatMap { characteristic -> Observable<Characteristic> in
+                    if let value = characteristic {
+                        return value.writeValue(data, type: .withResponse).asObservable()
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+                }
+                .timeout(timeout, scheduler: MainScheduler.instance)
+                .mapToVoid()
+                .take(1)
+                .debug("\(strongSelf).write")
         }
     }
 }
