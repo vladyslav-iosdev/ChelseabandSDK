@@ -16,6 +16,7 @@ protocol SUOTAUpdateType {
 public enum SUOTAUpdateError: Error {
     case noValueForPatchOrMtuSize
     case wrongExpectedValue
+    case writeError
 }
 
 final class SUOTAUpdate: SUOTAUpdateType {
@@ -92,7 +93,12 @@ final class SUOTAUpdate: SUOTAUpdateType {
         let memDev: UInt32 = (memoryType << 24) | memoryBank
         
         device.writeInMemDev(data: memDev.data, timeout: timeout)
-            .subscribe(onNext: {})
+            .subscribe(
+                onNext: {},
+                onError: { [weak self] _ in
+                    self?.percentOfUploadingSubject.on(.error(SUOTAUpdateError.writeError))
+                }
+            )
             .disposed(by: disposeBag)
     }
     
@@ -105,7 +111,12 @@ final class SUOTAUpdate: SUOTAUpdateType {
         let memInfo = (spiMISOGPIO << 24) | (spiMOSIGPIO << 16) | (spiCSGPIO << 8) | spiSCKGPIO
         step = .third
         device.writeInGpioMap(data: memInfo.data, timeout: timeout)
-            .subscribe(onNext: { [weak self] in self?.doStep() })
+            .subscribe(
+                onNext: { [weak self] in self?.doStep() },
+                onError: { [weak self] _ in
+                    self?.percentOfUploadingSubject.on(.error(SUOTAUpdateError.writeError))
+                }
+            )
             .disposed(by: disposeBag)
     }
     
@@ -136,7 +147,12 @@ final class SUOTAUpdate: SUOTAUpdateType {
         step = .fifth
         let blockSize = UInt16(self.blockSize)
         device.writeInPatchLen(data: blockSize.data, timeout: timeout)
-            .subscribe(onNext: { [weak self] in self?.doStep() })
+            .subscribe(
+                onNext: { [weak self] in self?.doStep() },
+                onError: { [weak self] _ in
+                    self?.percentOfUploadingSubject.on(.error(SUOTAUpdateError.writeError))
+                }
+            )
             .disposed(by: disposeBag)
     }
     
@@ -176,7 +192,12 @@ final class SUOTAUpdate: SUOTAUpdateType {
             }
             
             device.writeInPatchData(data: Data(bytes), timeout: timeout)
-                .subscribe(onNext: {})
+                .subscribe(
+                    onNext: {},
+                    onError: { [weak self] _ in
+                        self?.percentOfUploadingSubject.on(.error(SUOTAUpdateError.writeError))
+                    }
+                )
                 .disposed(by: disposeBag)
         }
     }
@@ -187,7 +208,12 @@ final class SUOTAUpdate: SUOTAUpdateType {
         expectedValue = 0x02
         let suotaEnd: UInt32 = 0xFE000000
         device.writeInMemDev(data: suotaEnd.data, timeout: timeout)
-            .subscribe(onNext: {})
+            .subscribe(
+                onNext: {},
+                onError: { [weak self] _ in
+                    self?.percentOfUploadingSubject.on(.error(SUOTAUpdateError.writeError))
+                }
+            )
             .disposed(by: disposeBag)
     }
     
@@ -195,7 +221,7 @@ final class SUOTAUpdate: SUOTAUpdateType {
         step = .eight
         let suotaReboot: UInt32 = 0xFD000000
         device.writeInMemDev(data: suotaReboot.data, timeout: timeout)
-            .subscribe{ [weak self] in self?.doStep() }
+            .subscribe { [weak self] in self?.doStep() }
             .disposed(by: disposeBag)
     }
     
