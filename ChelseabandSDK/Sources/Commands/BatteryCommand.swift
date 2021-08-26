@@ -8,14 +8,14 @@
 import RxSwift
 import Foundation
 
-public enum BatteryLevel: UInt64 {
+public enum BatteryLevel: UInt8 {
     case full
     case middleUp //Rename
     case middle
     case low
     case empty
 
-    public init(value: UInt64) {
+    public init(value: UInt8) {
         if value <= 10 {
             self = .empty
         } else if value <= 25 {

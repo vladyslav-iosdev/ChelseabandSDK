@@ -22,7 +22,7 @@ public protocol ChelseabandType {
     
     var connectionObservable: Observable<Device.State> { get }
 
-    var batteryLevelObservable: Observable<UInt64> { get }
+    var batteryLevelObservable: Observable<UInt8> { get }
     
     var firmwareVersionObservable: Observable<String?> { get }
 
@@ -69,7 +69,7 @@ public protocol ChelseabandType {
 
 public final class Chelseaband: ChelseabandType {
 
-    public var batteryLevelObservable: Observable<UInt64> {
+    public var batteryLevelObservable: Observable<UInt8> {
         return batteryLevelSubject
     }
     
@@ -114,7 +114,7 @@ public final class Chelseaband: ChelseabandType {
 
     private var reactionOnVoteSubject: PublishSubject<(VotingResult, String)> = .init()
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
-    private var batteryLevelSubject: BehaviorSubject<UInt64> = .init(value: 0)
+    private var batteryLevelSubject: BehaviorSubject<UInt8> = .init(value: 0)
     private let device: DeviceType
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
@@ -230,7 +230,7 @@ public final class Chelseaband: ChelseabandType {
         device.batteryCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
             .compactMap{ $0.characteristic.value }
-            .compactMap{ $0.uint64 }
+            .compactMap{ $0.uint8 }
             .bind(to: batteryLevelSubject)
             .disposed(by: disposeBag)
     }
