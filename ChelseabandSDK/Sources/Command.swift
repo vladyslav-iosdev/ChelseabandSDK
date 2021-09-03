@@ -12,10 +12,20 @@ public protocol CommandExecutor {
     var isConnected: Observable<Bool> { get }
 
     func write(data: Data) -> Observable<Void>
+    func write(command: WritableCommand) -> Observable<Void>
 }
 
 public protocol CommandNotifier {
     var notifyObservable: Observable<Data> { get }
+}
+
+public protocol WritableCommand {
+    var uuidForWrite: ID { get }
+    var dataForSend: Data { get }
+}
+
+public protocol CommandNew: WritableCommand {
+    func perform(on executor: CommandExecutor) -> Observable<Void>
 }
 
 public protocol Command {

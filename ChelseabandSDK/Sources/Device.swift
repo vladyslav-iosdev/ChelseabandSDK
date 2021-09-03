@@ -124,6 +124,8 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func stopScanForPeripherals()
 
     func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
 }
 
 private enum DeviceError: Error {
@@ -212,6 +214,7 @@ public final class Device: DeviceType {
     private var suotaPatchDataCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaServStatusCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
+    private var fanbandCharacteristicsForWrite = [Observable<Characteristic>]()
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -368,9 +371,9 @@ public final class Device: DeviceType {
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             case configuration.vibrationCharacteristic:
-                                                break
+                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
-                                                break
+                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             default:
                                                 break
                                             }
@@ -493,6 +496,53 @@ public final class Device: DeviceType {
             .mapToVoid()
             .take(1)
             .debug("\(strongSelf).write")
+        }
+    }
+    
+    public func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.findCharacteristicForWrite(command: command)
+                .flatMap { characteristic -> Observable<Characteristic> in
+                    if let value = characteristic {
+                        return value.writeValue(command.dataForSend,
+                                                type: .withResponse).asObservable()
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+            }
+            .timeout(timeout, scheduler: MainScheduler.instance)
+            .mapToVoid()
+            .take(1)
+            .debug("\(strongSelf).write")
+        }
+    }
+    
+    private func findCharacteristicForWrite(command: WritableCommand) -> Observable<Characteristic?> {
+        return .deferred {
+            return Observable<Characteristic?>.create { [weak self] seal in
+                guard let strongSelf = self else {
+                    seal.onError(BluetoothError.destroyed)
+                    return Disposables.create()
+                }
+                
+                let characteristicsDisposable = Observable.combineLatest(strongSelf.fanbandCharacteristicsForWrite)
+                    .subscribe(
+                        onNext: { characteristics in
+                            let characteristicForWrite = characteristics.first { $0.uuid == command.uuidForWrite }
+                            seal.onNext(characteristicForWrite)
+                        },
+                        onError: { seal.onError($0) },
+                        onCompleted: { seal.onCompleted() }
+                    )
+                
+                return Disposables.create {
+                    characteristicsDisposable.dispose()
+                }
+            }
         }
     }
     

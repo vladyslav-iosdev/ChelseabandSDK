@@ -46,9 +46,14 @@ public protocol ChelseabandType {
 
     func disconnect(forgotLastPeripheral: Bool)
 
+    // TODO: remove in future unused function perform
     func perform(command: Command) -> Observable<Void>
 
     func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
+    
+    func perform(command: CommandNew) -> Observable<Void>
+
+    func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
 
     func setFMCToken(_ token: String)
 
@@ -327,8 +332,25 @@ public final class Chelseaband: ChelseabandType {
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
+    
+    public func perform(command: CommandNew) -> Observable<Void> {
+        command
+            .perform(on: self)
+            .observeOn(MainScheduler.instance)
+            .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
+    }
 
     public func performSafe(command: Command, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+        connectionObservable
+            .skipWhile { !$0.isConnected }
+            .take(1)
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .flatMap { _ -> Observable<Void> in
+                self.perform(command: command)
+            }
+    }
+    
+    public func performSafe(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .take(1)
@@ -384,5 +406,9 @@ extension Chelseaband: CommandExecutor {
 
     public func write(data: Data) -> Observable<Void> {
         device.write(data: data, timeout: .seconds(5))
+    }
+    
+    public func write(command: WritableCommand) -> Observable<Void> {
+        device.write(command: command, timeout: .seconds(5))
     }
 }
