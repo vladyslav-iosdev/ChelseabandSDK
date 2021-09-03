@@ -332,6 +332,9 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.suotaPatchLenCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchLenCharacteristic)
                                 characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
                                 characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
+                            case configuration.fanbandService:
+                                characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
+                                characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
                             default:
                                 break
                             }
@@ -364,6 +367,10 @@ public final class Device: DeviceType {
                                                 strongSelf.suotaPatchDataCharacteristic.on(.next(characteristic))
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
+                                            case configuration.vibrationCharacteristic:
+                                                break
+                                            case configuration.ledCharacteristic:
+                                                break
                                             default:
                                                 break
                                             }

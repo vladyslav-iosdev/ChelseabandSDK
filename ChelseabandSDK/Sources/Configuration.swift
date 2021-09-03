@@ -23,6 +23,10 @@ public protocol Configuration {
     var suotaPatchDataCharacteristic: ID { get }
     var suotaServStatusCharacteristic: ID { get }
     
+    var fanbandService: ID { get }
+    var ledCharacteristic: ID { get }
+    var vibrationCharacteristic: ID { get }
+    
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }
     /**
