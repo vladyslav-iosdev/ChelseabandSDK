@@ -266,24 +266,3 @@ final class SUOTAUpdate: SUOTAUpdateType {
         print("deinit \(self)")
     }
 }
-
-fileprivate extension UInt32 {
-    var data: Data {
-        var int = self
-        return Data(bytes: &int, count: MemoryLayout<UInt32>.size)
-    }
-}
-
-fileprivate extension UInt16 {
-    var data: Data {
-        var int = self
-        return Data(bytes: &int, count: MemoryLayout<UInt16>.size)
-    }
-}
-
-fileprivate extension Int {
-    var data: Data {
-        var int = self
-        return Data(bytes: &int, count: MemoryLayout<Int>.size)
-    }
-}
