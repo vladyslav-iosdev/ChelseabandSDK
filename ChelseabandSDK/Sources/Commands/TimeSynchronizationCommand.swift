@@ -17,6 +17,10 @@ public struct TimeSynchronizationCommand: CommandNew {
         case externalReferenceTimeUpdate
         case changeOfTimeZone
         case changeOfDST
+        
+        var data: Data {
+            Data([0b10000000 >> self.rawValue])
+        }
     }
     
     public var uuidForWrite = ChelseabandConfiguration.default.batteryCharacteristic // TODO: Change on time characteristic
@@ -25,7 +29,7 @@ public struct TimeSynchronizationCommand: CommandNew {
         let dateTime: Data = year.data + Data([month, day, hours, minutes, seconds])
         let dayDateTime: Data = dateTime + weekDay.data
         let exactTime256: Data = dayDateTime + fractions256.data
-        let currentTime: Data = exactTime256 + AdjustReason.manualTimeUpdate.rawValue.data
+        let currentTime: Data = exactTime256 + AdjustReason.manualTimeUpdate.data
         return currentTime
     }
     
