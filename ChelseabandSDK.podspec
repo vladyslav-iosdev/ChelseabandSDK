@@ -24,4 +24,7 @@ ChelseabandSDK is a Bluetooth library that makes interaction with band BLE devic
   s.dependency 'RxBluetoothKit', '~> 6.0.0'
   s.dependency 'RxCocoa', '~> 5.1.1' 
 
+  s.test_spec 'UnitTests' do |test_spec|
+    test_spec.source_files = 'Example/Pods/ChelseabandSDKTests/ChelseabandSDKTests.swift'
+  end
 end
