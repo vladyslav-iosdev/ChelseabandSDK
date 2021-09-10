@@ -324,16 +324,6 @@
 		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
-		C5C6521B26EA02FB008C3B5A /* ChelseabandSDKTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6521A26EA02FB008C3B5A /* ChelseabandSDKTests.swift */; };
-		C5C6521D26EA02FB008C3B5A /* ChelseabandSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 025574EF046EF100CF816CEE810D8526 /* ChelseabandSDK.framework */; };
-		C5C6522426EA1039008C3B5A /* SUOTAUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522326EA1039008C3B5A /* SUOTAUpdate.swift */; };
-		C5C6522826EA1053008C3B5A /* UInt.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522526EA1053008C3B5A /* UInt.swift */; };
-		C5C6522926EA1053008C3B5A /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522626EA1053008C3B5A /* Date.swift */; };
-		C5C6522A26EA1053008C3B5A /* Data.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522726EA1053008C3B5A /* Data.swift */; };
-		C5C6522F26EA10AF008C3B5A /* LEDCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522B26EA10AF008C3B5A /* LEDCommandNew.swift */; };
-		C5C6523026EA10AF008C3B5A /* TimeSynchronizationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522C26EA10AF008C3B5A /* TimeSynchronizationCommand.swift */; };
-		C5C6523126EA10AF008C3B5A /* MACAddressCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522D26EA10AF008C3B5A /* MACAddressCommand.swift */; };
-		C5C6523226EA10AF008C3B5A /* VibrationCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5C6522E26EA10AF008C3B5A /* VibrationCommandNew.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
 		C7522A4AC82C24337F4BC373E0FF37B4 /* KVORepresentable+CoreGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4C4A75356CD3405BE3534DFB64E4EB /* KVORepresentable+CoreGraphics.swift */; };
@@ -502,13 +492,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = EA9EA43B3B503823EE36C60D9C8A865F;
 			remoteInfo = RxSwift;
-		};
-		C5C6521E26EA02FB008C3B5A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = BFDFE7DC352907FC980B868725387E98 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3FC2F71E97C58A25ACB9D7C459ED1AF3;
-			remoteInfo = ChelseabandSDK;
 		};
 		CED95C3E14D13AE7197139A0313E2584 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -885,17 +868,6 @@
 		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
-		C5C6521826EA02FB008C3B5A /* ChelseabandSDKTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ChelseabandSDKTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		C5C6521A26EA02FB008C3B5A /* ChelseabandSDKTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChelseabandSDKTests.swift; sourceTree = "<group>"; };
-		C5C6521C26EA02FB008C3B5A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		C5C6522326EA1039008C3B5A /* SUOTAUpdate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SUOTAUpdate.swift; path = ChelseabandSDK/Sources/SUOTAUpdate.swift; sourceTree = "<group>"; };
-		C5C6522526EA1053008C3B5A /* UInt.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UInt.swift; sourceTree = "<group>"; };
-		C5C6522626EA1053008C3B5A /* Date.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
-		C5C6522726EA1053008C3B5A /* Data.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Data.swift; sourceTree = "<group>"; };
-		C5C6522B26EA10AF008C3B5A /* LEDCommandNew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LEDCommandNew.swift; sourceTree = "<group>"; };
-		C5C6522C26EA10AF008C3B5A /* TimeSynchronizationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeSynchronizationCommand.swift; sourceTree = "<group>"; };
-		C5C6522D26EA10AF008C3B5A /* MACAddressCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MACAddressCommand.swift; sourceTree = "<group>"; };
-		C5C6522E26EA10AF008C3B5A /* VibrationCommandNew.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrationCommandNew.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1074,14 +1046,6 @@
 				E092D5CC85D6CB94AFDF26D03F1BDEF8 /* Foundation.framework in Frameworks */,
 				34A0E0E8074825AA62534008338F523B /* RxBluetoothKit.framework in Frameworks */,
 				9EDB1600EFF1627A2918BEF399F27C49 /* RxCocoa.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C5C6521526EA02FB008C3B5A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C5C6521D26EA02FB008C3B5A /* ChelseabandSDK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1457,9 +1421,6 @@
 		6B99CDF6654516DC72E5CE9DCE1EA471 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				C5C6522726EA1053008C3B5A /* Data.swift */,
-				C5C6522626EA1053008C3B5A /* Date.swift */,
-				C5C6522526EA1053008C3B5A /* UInt.swift */,
 				87BDF82D25FF9DE1007DCD36 /* Observable.swift */,
 				2B6ACED49385C7102F07B51E9CE5BC00 /* Array.swift */,
 				AF02C58CB216881107009A2831A0FE1D /* String.swift */,
@@ -1596,21 +1557,11 @@
 			path = ChelseabandSDK/Sources/Statistics;
 			sourceTree = "<group>";
 		};
-		C5C6521926EA02FB008C3B5A /* ChelseabandSDKTests */ = {
-			isa = PBXGroup;
-			children = (
-				C5C6521A26EA02FB008C3B5A /* ChelseabandSDKTests.swift */,
-				C5C6521C26EA02FB008C3B5A /* Info.plist */,
-			);
-			path = ChelseabandSDKTests;
-			sourceTree = "<group>";
-		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
 				9D940727FF8FB9C785EB98E56350EF41 /* Podfile */,
 				032D7094D960B49CE30BD8F46247765A /* Development Pods */,
-				C5C6521926EA02FB008C3B5A /* ChelseabandSDKTests */,
 				E1511EA620D405EA82791DEFC55B4764 /* Frameworks */,
 				D2173A31156021664CE7D74B6335A64E /* Pods */,
 				EE8BE1CE96708B221EF091023D3652CE /* Products */,
@@ -1676,10 +1627,6 @@
 		E315B39525CDFDC690D5EAFCB040402B /* Commands */ = {
 			isa = PBXGroup;
 			children = (
-				C5C6522B26EA10AF008C3B5A /* LEDCommandNew.swift */,
-				C5C6522D26EA10AF008C3B5A /* MACAddressCommand.swift */,
-				C5C6522C26EA10AF008C3B5A /* TimeSynchronizationCommand.swift */,
-				C5C6522E26EA10AF008C3B5A /* VibrationCommandNew.swift */,
 				87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */,
 				87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */,
 				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
@@ -1708,7 +1655,6 @@
 				60ED621770F8AB869B6615D3A031EE91 /* Configuration.swift */,
 				B13D729595F41E37AF515F9FD5BBDBBC /* Device.swift */,
 				1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */,
-				C5C6522326EA1039008C3B5A /* SUOTAUpdate.swift */,
 				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
 				6B99CDF6654516DC72E5CE9DCE1EA471 /* Extensions */,
@@ -1742,7 +1688,6 @@
 				FF8B264DFE802855D5D67E7CDDABFC3C /* RxRelay.framework */,
 				809C5FAB588354C9BA37DC3EAB8CB45C /* RxSwift.framework */,
 				979486118B3E90C08386079D57962701 /* SnapKit.framework */,
-				C5C6521826EA02FB008C3B5A /* ChelseabandSDKTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1996,24 +1941,6 @@
 			productReference = 3F886A7C5679E4A363FCB60DB99F1E91 /* Pods_ChelseabandSDK_Example.framework */;
 			productType = "com.apple.product-type.framework";
 		};
-		C5C6521726EA02FB008C3B5A /* ChelseabandSDKTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = C5C6522226EA02FB008C3B5A /* Build configuration list for PBXNativeTarget "ChelseabandSDKTests" */;
-			buildPhases = (
-				C5C6521426EA02FB008C3B5A /* Sources */,
-				C5C6521526EA02FB008C3B5A /* Frameworks */,
-				C5C6521626EA02FB008C3B5A /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				C5C6521F26EA02FB008C3B5A /* PBXTargetDependency */,
-			);
-			name = ChelseabandSDKTests;
-			productName = ChelseabandSDKTests;
-			productReference = C5C6521826EA02FB008C3B5A /* ChelseabandSDKTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
 		E9F9401E9C74C0C393164FD8D86D0068 /* DropDown */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = EBED57D13F9A2559E14BCD92E7CFF597 /* Build configuration list for PBXNativeTarget "DropDown" */;
@@ -2056,15 +1983,8 @@
 		BFDFE7DC352907FC980B868725387E98 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1250;
+				LastSwiftUpdateCheck = 1100;
 				LastUpgradeCheck = 1100;
-				TargetAttributes = {
-					C5C6521726EA02FB008C3B5A = {
-						CreatedOnToolsVersion = 12.5.1;
-						DevelopmentTeam = 46V775Z749;
-						ProvisioningStyle = Automatic;
-					};
-				};
 			};
 			buildConfigurationList = 4821239608C13582E20E6DA73FD5F1F9 /* Build configuration list for PBXProject "Pods" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -2087,7 +2007,6 @@
 				4622BFEF3DC16E8BD15EEFC30D4D0084 /* RxRelay */,
 				EA9EA43B3B503823EE36C60D9C8A865F /* RxSwift */,
 				19622742EBA51E823D6DAE3F8CDBFAD4 /* SnapKit */,
-				C5C6521726EA02FB008C3B5A /* ChelseabandSDKTests */,
 			);
 		};
 /* End PBXProject section */
@@ -2115,13 +2034,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		88EE4B53103B633A169002498AB7FE6F /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		C5C6521626EA02FB008C3B5A /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -2166,37 +2078,29 @@
 			files = (
 				C5547F762601F22B0084825B /* UserDefaults.swift in Sources */,
 				87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */,
-				C5C6523026EA10AF008C3B5A /* TimeSynchronizationCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
 				F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */,
 				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
-				C5C6522826EA1053008C3B5A /* UInt.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
 				C5547F7A2601FCF20084825B /* API.swift in Sources */,
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
-				C5C6522F26EA10AF008C3B5A /* LEDCommandNew.swift in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
 				87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */,
 				87BDF81025FF9DC2007DCD36 /* MessageCommand.swift in Sources */,
 				87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */,
-				C5C6522A26EA1053008C3B5A /* Data.swift in Sources */,
 				87BDF80F25FF9DC2007DCD36 /* AccelerometerCommand.swift in Sources */,
 				EA1AC7E1284CB9BD12947E1CD909350E /* Configuration.swift in Sources */,
 				87BDF81725FF9DC2007DCD36 /* HardwareSettings.swift in Sources */,
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
 				59692A412C41314B6114AA4E7977AD00 /* GoalCommand.swift in Sources */,
-				C5C6523126EA10AF008C3B5A /* MACAddressCommand.swift in Sources */,
 				87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */,
-				C5C6522926EA1053008C3B5A /* Date.swift in Sources */,
 				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
-				C5C6523226EA10AF008C3B5A /* VibrationCommandNew.swift in Sources */,
 				87BDF81825FF9DC2007DCD36 /* VotingCommand.swift in Sources */,
 				87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
-				C5C6522426EA1039008C3B5A /* SUOTAUpdate.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
@@ -2550,14 +2454,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		C5C6521426EA02FB008C3B5A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				C5C6521B26EA02FB008C3B5A /* ChelseabandSDKTests.swift in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		E209FCC4F16FD54987DA825FEFB698C3 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2683,11 +2579,6 @@
 			name = SnapKit;
 			target = 19622742EBA51E823D6DAE3F8CDBFAD4 /* SnapKit */;
 			targetProxy = F77179D55F772768D8834D3D53DF6CEC /* PBXContainerItemProxy */;
-		};
-		C5C6521F26EA02FB008C3B5A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3FC2F71E97C58A25ACB9D7C459ED1AF3 /* ChelseabandSDK */;
-			targetProxy = C5C6521E26EA02FB008C3B5A /* PBXContainerItemProxy */;
 		};
 		E3F1A82B62177B1C5F62FDE3784D2C51 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -3264,43 +3155,6 @@
 			};
 			name = Release;
 		};
-		C5C6522026EA02FB008C3B5A /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 46V775Z749;
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = ChelseabandSDKTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = SergP.ChelseabandSDKTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-			};
-			name = Debug;
-		};
-		C5C6522126EA02FB008C3B5A /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 46V775Z749;
-				INFOPLIST_FILE = ChelseabandSDKTests/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = SergP.ChelseabandSDKTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SDKROOT = iphoneos;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VALIDATE_PRODUCT = YES;
-			};
-			name = Release;
-		};
 		CA547D2C7E9A8A153DC2B27FBE00B112 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -3433,15 +3287,6 @@
 			buildConfigurations = (
 				1F825B95B22573A98F36F3F3F4D5A45A /* Debug */,
 				B08EA98982717F9E4C89A3AC7D7B15A3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		C5C6522226EA02FB008C3B5A /* Build configuration list for PBXNativeTarget "ChelseabandSDKTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				C5C6522026EA02FB008C3B5A /* Debug */,
-				C5C6522126EA02FB008C3B5A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
