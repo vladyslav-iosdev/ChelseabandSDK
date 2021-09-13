@@ -220,7 +220,7 @@ public final class Chelseaband: ChelseabandType {
         device
             .readCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
-            .compactMap { $0.characteristic.value }
+            .compactMap { $0.cbCharacteristic.value }
             .catchError { _ in .never() } //NOTE: update this to avoid sending never when error
             .subscribe(readCharacteristicSubject)
             .disposed(by: disposeBag)
@@ -234,7 +234,7 @@ public final class Chelseaband: ChelseabandType {
     private func synchronizeBattery() {
         device.batteryCharacteristicObservable
             .flatMap { $0.observeValueUpdateAndSetNotification() }
-            .compactMap{ $0.characteristic.value }
+            .compactMap{ $0.cbCharacteristic.value }
             .compactMap{ $0.uint8 }
             .bind(to: batteryLevelSubject)
             .disposed(by: disposeBag)

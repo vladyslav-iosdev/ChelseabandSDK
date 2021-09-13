@@ -81,7 +81,7 @@ public protocol UpdateDeviceViaSuotaType {
     
     var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> { get }
     
-    var suotaServStatusCharacteristicObservable: Observable<Characteristic> { get }
+    var suotaServStatusCharacteristicObservable: Observable<CharacteristicType> { get }
     
     func writeInMemDev(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
     
@@ -103,21 +103,21 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
 
     var connectionObservable: Observable<Device.State> { get }
 
-    var readCharacteristicObservable: Observable<Characteristic> { get }
+    var readCharacteristicObservable: Observable<CharacteristicType> { get }
     
-    var batteryCharacteristicObservable: Observable<Characteristic> { get }
+    var batteryCharacteristicObservable: Observable<CharacteristicType> { get }
     
-    var firmwareVersionCharacteristicObservable: Observable<Characteristic> { get }
+    var firmwareVersionCharacteristicObservable: Observable<CharacteristicType> { get }
     
     var firmwareVersionSubject: BehaviorSubject<String?> { get }
 
-    var peripheralObservable: Observable<ScannedPeripheral> { get }
+    var peripheralObservable: Observable<ScannedPeripheralType> { get }
 
     var scanningRetry: DispatchTimeInterval { get set }
     
     func updateDeviceInfo(timeOut: RxSwift.RxTimeInterval)
     
-    func connect(peripheral: Peripheral) -> Observable<Void>
+    func connect(peripheral: ScannedPeripheralType) -> Observable<Void>
 
     func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
 
@@ -146,6 +146,94 @@ private enum DeviceError: Error {
     }
 }
 
+public protocol ScannedPeripheralType {
+    var peripheralType: PeripheralType { get }
+}
+
+extension RxBluetoothKit.ScannedPeripheral: ScannedPeripheralType {
+    public var peripheralType: PeripheralType {
+        self.peripheral
+    }
+}
+
+public protocol PeripheralType {
+    var cbperipheral: CBPeripheralType { get }
+    var isConnected: Bool { get }
+    func establishConnection(options: [String: Any]?) -> Observable<PeripheralType>
+    func discoverServices(_ serviceUUIDs: [CBUUID]?) -> Single<[ServiceType]>
+}
+
+extension RxBluetoothKit.Peripheral: PeripheralType {
+    public var cbperipheral: CBPeripheralType {
+        self.peripheral
+    }
+    
+    public func establishConnection(options: [String : Any]?) -> Observable<PeripheralType> {
+        let connectionSignature: ([String : Any]?) -> Observable<RxBluetoothKit.Peripheral> = establishConnection
+        return connectionSignature(options).map { $0 as PeripheralType}
+    }
+    
+    public func discoverServices(_ serviceUUIDs: [CBUUID]?) -> Single<[ServiceType]> {
+        let discoverSignature: ([CBUUID]?) -> Single<[Service]> = discoverServices
+        return discoverSignature(serviceUUIDs).map { $0 as [ServiceType] }
+    }
+}
+
+public protocol CBPeripheralType {
+    var name: String? { get }
+}
+
+extension CBPeripheral: CBPeripheralType { }
+
+public protocol ServiceType {
+    var uuid: CBUUID { get }
+    func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?) -> Single<[CharacteristicType]>
+}
+
+extension Service: ServiceType {
+    public func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?) -> Single<[CharacteristicType]> {
+        let discoverSignature: ([CBUUID]?) -> Single<[Characteristic]> = discoverCharacteristics
+        return discoverSignature(characteristicUUIDs).map{ $0 as [CharacteristicType]}
+    }
+}
+
+public protocol CharacteristicType {
+    var cbCharacteristic: CBCharacteristicType { get }
+    var value: Data? { get }
+    var uuid: CBUUID { get }
+    func readValue() -> Single<CharacteristicType>
+    func writeValue(_ data: Data, type: CBCharacteristicWriteType) -> Single<CharacteristicType>
+    func observeValueUpdateAndSetNotification() -> Observable<CharacteristicType>
+}
+
+extension Characteristic: CharacteristicType {
+    public var cbCharacteristic: CBCharacteristicType {
+        let char: CBCharacteristic = characteristic
+        return char as CBCharacteristicType
+    }
+    
+    public func readValue() -> Single<CharacteristicType> {
+        let readValueSignature: () -> Single<Characteristic> = readValue
+        return readValueSignature().map{ $0 as CharacteristicType}
+    }
+    
+    public func writeValue(_ data: Data, type: CBCharacteristicWriteType) -> Single<CharacteristicType> {
+        let writeValueSignature: (_: Data, _ type: CBCharacteristicWriteType) -> Single<Characteristic> = writeValue
+        return writeValueSignature(data, type).map{ $0 as CharacteristicType}
+    }
+    
+    public func observeValueUpdateAndSetNotification() -> Observable<CharacteristicType> {
+        let observeValueSignature: () -> Observable<Characteristic> = observeValueUpdateAndSetNotification
+        return observeValueSignature().map{ $0 as CharacteristicType}
+    }
+}
+
+public protocol CBCharacteristicType {
+    var value: Data? { get }
+}
+
+extension CBCharacteristic: CBCharacteristicType { }
+
 public final class Device: DeviceType {
 
     private let manager = CentralManager()
@@ -170,15 +258,15 @@ public final class Device: DeviceType {
         connectionBehaviourSubject
     }
 
-    public var readCharacteristicObservable: Observable<Characteristic> {
+    public var readCharacteristicObservable: Observable<CharacteristicType> {
         readCharacteristic.compactMap { $0 }
     }
     
-    public var batteryCharacteristicObservable: Observable<Characteristic> {
+    public var batteryCharacteristicObservable: Observable<CharacteristicType> {
         batteryCharacteristic.compactMap { $0 }
     }
     
-    public var firmwareVersionCharacteristicObservable: Observable<Characteristic> {
+    public var firmwareVersionCharacteristicObservable: Observable<CharacteristicType> {
         firmwareVersionCharacteristic.compactMap { $0 }
     }
     
@@ -188,11 +276,11 @@ public final class Device: DeviceType {
     
     public var suotaPatchDataSizeSubject: BehaviorSubject<UInt16> = .init(value: 20) //NOTE: 20 it's default value from dialog tutorial
     
-    public var suotaServStatusCharacteristicObservable: Observable<Characteristic> {
+    public var suotaServStatusCharacteristicObservable: Observable<CharacteristicType> {
         suotaServStatusCharacteristic.compactMap { $0 }
     }
 
-    public var peripheralObservable: Observable<ScannedPeripheral> {
+    public var peripheralObservable: Observable<ScannedPeripheralType> {
         peripheral.compactMap { $0 }
     }
 
@@ -202,19 +290,19 @@ public final class Device: DeviceType {
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
     private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
-    private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var batteryCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var firmwareVersionCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaMtuCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaMemDevCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaGpioMapCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaPatchLenCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaPatchDataCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var suotaServStatusCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
-    private var fanbandCharacteristicsForWrite = [Observable<Characteristic>]()
+    private var writeCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var readCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var batteryCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var firmwareVersionCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaMtuCharSizeCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaMemDevCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaGpioMapCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaPatchLenCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaPatchDataCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var suotaServStatusCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
+    private var peripheral: BehaviorSubject<ScannedPeripheralType?> = .init(value: nil)
+    private var fanbandCharacteristicsForWrite = [Observable<CharacteristicType>]()
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -293,7 +381,7 @@ public final class Device: DeviceType {
             .disposed(by: disposeBag)
     }
 
-    public func connect(peripheral: Peripheral) -> Observable<Void> {
+    public func connect(peripheral: ScannedPeripheralType) -> Observable<Void> {
         let configuration = self.configuration
 
         return .deferred {
@@ -305,7 +393,7 @@ public final class Device: DeviceType {
 
                 var connectionDisposable: Disposable?
                 var characteristicsDisposable: Disposable?
-                var characteristicsDictionary: [String: Observable<Characteristic>] = [:]
+                var characteristicsDictionary: [String: Observable<CharacteristicType>] = [:]
 
                 connectionDisposable = strongSelf.connect(peripheral: peripheral, services: configuration.servicesForDiscovering)
                     .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
@@ -426,7 +514,7 @@ public final class Device: DeviceType {
                     set.removeAllObjects()
                     //NOTE: if you make reconnect to device in delay time peripheral wouln't added to set
                     if  let value = try? self.peripheral.value(),
-                        value.peripheral.isConnected {
+                        value.peripheralType.isConnected {
                         set.add(value)
                     }
                 }
@@ -449,7 +537,7 @@ public final class Device: DeviceType {
         manager.manager.stopScan()
     }
 
-    private func discoverCharacteristics(_ service: Service, id: ID) -> Observable<Characteristic> {
+    private func discoverCharacteristics(_ service: ServiceType, id: ID) -> Observable<CharacteristicType> {
         Observable.just(service)
             .compactMap { $0.discoverCharacteristics([id]) }
             .flatMap { $0 }
@@ -467,12 +555,12 @@ public final class Device: DeviceType {
             .debug("\(self).discoverCharacteristics")
     }
 
-    private func connect(peripheral: ScannedPeripheral, services: [ID], retry: DispatchTimeInterval = .seconds(5)) -> Observable<Service> {
+    private func connect(peripheral: ScannedPeripheralType, services: [ID], retry: DispatchTimeInterval = .seconds(5)) -> Observable<ServiceType> {
         return Observable.of(peripheral)
             .do(onNext: { [weak self] _ in
                 self?.connectionBehaviourSubject.onNext(.connecting)
             })
-            .flatMap { $0.peripheral.establishConnection() }
+            .flatMap { $0.peripheralType.establishConnection(options: nil) }
             .flatMap { $0.discoverServices(services) }
             .flatMap { Observable.from($0) }
             .debug("\(self).connect")
@@ -485,7 +573,7 @@ public final class Device: DeviceType {
             }
 
             return strongSelf.writeCharacteristic
-                .flatMap { characteristic -> Observable<Characteristic> in
+                .flatMap { characteristic -> Observable<CharacteristicType> in
                     if let value = characteristic {
                         return value.writeValue(data, type: .withResponse).asObservable()
                     } else {
@@ -506,7 +594,7 @@ public final class Device: DeviceType {
             }
 
             return strongSelf.findCharacteristicForWrite(command: command)
-                .flatMap { characteristic -> Observable<Characteristic> in
+                .flatMap { characteristic -> Observable<CharacteristicType> in
                     if let value = characteristic {
                         return value.writeValue(command.dataForSend,
                                                 type: .withResponse).asObservable()
@@ -521,9 +609,9 @@ public final class Device: DeviceType {
         }
     }
     
-    private func findCharacteristicForWrite(command: WritableCommand) -> Observable<Characteristic?> {
+    private func findCharacteristicForWrite(command: WritableCommand) -> Observable<CharacteristicType?> {
         return .deferred {
-            return Observable<Characteristic?>.create { [weak self] seal in
+            return Observable<CharacteristicType?>.create { [weak self] seal in
                 guard let strongSelf = self else {
                     seal.onError(BluetoothError.destroyed)
                     return Disposables.create()
@@ -565,7 +653,7 @@ public final class Device: DeviceType {
             }
 
             return strongSelf.suotaPatchDataCharacteristic
-                .flatMap { characteristic -> Observable<Characteristic> in
+                .flatMap { characteristic -> Observable<CharacteristicType> in
                     if let value = characteristic {
                         return value.writeValue(data, type: .withoutResponse).asObservable()
                     } else {
@@ -579,14 +667,14 @@ public final class Device: DeviceType {
         }
     }
     
-    private func write(in characteristic: BehaviorSubject<Characteristic?>, data: Data, withTimeOut timeout: DispatchTimeInterval) -> Observable<Void> {
+    private func write(in characteristic: BehaviorSubject<CharacteristicType?>, data: Data, withTimeOut timeout: DispatchTimeInterval) -> Observable<Void> {
         return .deferred { [weak self] in
             guard let strongSelf = self else {
                 return .error(BluetoothError.destroyed)
             }
 
             return characteristic
-                .flatMap { characteristic -> Observable<Characteristic> in
+                .flatMap { characteristic -> Observable<CharacteristicType> in
                     if let value = characteristic {
                         return value.writeValue(data, type: .withResponse).asObservable()
                     } else {
