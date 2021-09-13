@@ -20,7 +20,12 @@ final class MockService: ServiceType {
     }
     
     func discoverCharacteristics(_ characteristicUUIDs: [ID]?) -> Single<[CharacteristicType]> {
-        Observable.just(characteristics).asSingle()
+        guard let characteristicID = characteristicUUIDs else {
+            return Observable.just(characteristics).asSingle()
+        }
+        
+        let filteredCharacteristics = characteristics.filter{ characteristicID.contains($0.uuid) }
+        return Observable.just(filteredCharacteristics).asSingle()
     }
 }
 

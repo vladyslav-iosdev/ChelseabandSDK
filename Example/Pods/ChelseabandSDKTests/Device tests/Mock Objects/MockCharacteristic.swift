@@ -26,7 +26,8 @@ final class MockCharacteristic: CharacteristicType {
     }
     
     func writeValue(_ data: Data, type: CBCharacteristicWriteType) -> Single<CharacteristicType> {
-        Observable<CharacteristicType>.just(self).asSingle()
+        value = data
+        return Observable<CharacteristicType>.just(self).asSingle()
     }
     
     func observeValueUpdateAndSetNotification() -> Observable<CharacteristicType> {

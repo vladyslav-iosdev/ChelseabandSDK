@@ -41,6 +41,11 @@ final class MockPeripheral: PeripheralType {
     }
     
     func discoverServices(_ serviceUUIDs: [ID]?) -> Single<[ServiceType]> {
-        .just(services)
+        guard let servicesID = serviceUUIDs else {
+            return .just(services)
+        }
+        
+        let filteredServices = services.filter{ servicesID.contains($0.uuid) }
+        return .just(filteredServices)
     }
 }

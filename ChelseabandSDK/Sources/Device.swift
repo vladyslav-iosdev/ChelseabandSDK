@@ -187,7 +187,7 @@ public protocol CBPeripheralType {
 extension CBPeripheral: CBPeripheralType { }
 
 public protocol ServiceType {
-    var uuid: CBUUID { get }
+    var uuid: ID { get }
     func discoverCharacteristics(_ characteristicUUIDs: [CBUUID]?) -> Single<[CharacteristicType]>
 }
 
