@@ -10,7 +10,7 @@ import RxSwift
 import ChelseabandSDK
 import CoreBluetooth
 
-final class MockCharacteristic: CharacteristicType {
+class MockCharacteristic: CharacteristicType {
     var cbCharacteristic: CBCharacteristicType
     var value: Data?
     var uuid: ID
@@ -35,11 +35,36 @@ final class MockCharacteristic: CharacteristicType {
     }
 }
 
+final class BatteryMockCharacteristic: MockCharacteristic {
+    override func observeValueUpdateAndSetNotification() -> Observable<CharacteristicType> {
+        return .deferred {
+            return Observable<CharacteristicType>.create{ [weak self] seal in
+                let disposableTimer = Observable<UInt8>.timer(.seconds(0),
+                                                            period: .seconds(1),
+                                                            scheduler: MainScheduler.instance)
+                    .take(5)
+                    .subscribe(
+                        onNext: { [weak self] tick in
+                            guard let strongSelf = self else { return }
+                            strongSelf.value = Data([tick])
+                            seal.onNext(strongSelf)
+                        },
+                        onCompleted: { seal.onCompleted() }
+                    )
+                
+                return Disposables.create {
+                    disposableTimer.dispose()
+                }
+            }
+        }
+    }
+}
+
 extension MockCharacteristic {
     static var battery: MockCharacteristic {
-        .init(cbCharacteristic: MockCBCharacteristic.battery,
-              uuid: ChelseabandConfiguration.default.batteryCharacteristic,
-              value: MockCBCharacteristic.battery.value)
+        BatteryMockCharacteristic(cbCharacteristic: MockCBCharacteristic.battery,
+                                  uuid: ChelseabandConfiguration.default.batteryCharacteristic,
+                                  value: MockCBCharacteristic.battery.value)
     }
     
     static var firmwareVersion: MockCharacteristic {
