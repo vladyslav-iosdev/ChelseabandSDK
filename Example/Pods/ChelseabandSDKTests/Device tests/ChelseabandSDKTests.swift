@@ -8,7 +8,6 @@
 import XCTest
 import ChelseabandSDK
 import RxBlocking
-import RxSwift
 
 final class ChelseabandSDKTests: XCTestCase {
     
@@ -23,11 +22,8 @@ final class ChelseabandSDKTests: XCTestCase {
     }
     
     func testConnectedWithError() throws {
-        //TODO: replace in future defaultDevice.connect on private connect function
-        let connectStatus: Void? = try? defaultDevice.connect(peripheral: MockExtraneousScannedPeripheral())
-            .timeout(.seconds(30), scheduler: MainScheduler.instance)//TODO: remove this in future when will be fixed todo in device.swift file
-            .toBlocking()
-            .first()
+        let connectStatus: Void? = connect(device: defaultDevice,
+                                           withFanband: MockExtraneousScannedPeripheral())
         XCTAssert(connectStatus == nil)
     }
 
