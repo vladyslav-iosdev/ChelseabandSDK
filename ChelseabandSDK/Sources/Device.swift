@@ -131,7 +131,6 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
 private enum DeviceError: Error {
     case maxRetryAttempts
     case writeCharacteristicMissing
-    case mandatoryCharacteristicsNotFound
 
     static func isRetryable(error: Error) -> Bool {
         if let value = error as? BluetoothError {
@@ -407,13 +406,7 @@ public final class Device: DeviceType {
 
                         switch event {
                         case .completed:
-                            let allSatisfy = configuration.mandatoryCharacteristicIDForWork.allSatisfy({ mandatoryKey in
-                                characteristicsDictionary.contains { $0.key == mandatoryKey }
-                            })
-                            if !allSatisfy {
-                                seal.onError(DeviceError.mandatoryCharacteristicsNotFound)
-                                seal.onCompleted()
-                            }
+                            seal.onCompleted()
                         case .error(let error):
                             seal.onError(error)
                         case .next(let service):
@@ -485,15 +478,15 @@ public final class Device: DeviceType {
                                         strongSelf.suotaServStatusCharacteristic.on(.next(nil))
 
                                         seal.onError(error)
-                                        seal.onCompleted()
                                     }, onCompleted: {
                                         strongSelf.updateDeviceInfo()
                                         strongSelf.updateSuotaParameters()
                                         seal.onNext(())
-                                        seal.onCompleted()
 
                                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     })
+                            } else {
+                                // TODO: here start timer if after some time allSatisfy will not fire send error and broke connection
                             }
                         }
                     }, onError: { error in
