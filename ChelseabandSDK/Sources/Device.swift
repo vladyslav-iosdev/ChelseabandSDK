@@ -131,6 +131,8 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
 private enum DeviceError: Error {
     case maxRetryAttempts
     case writeCharacteristicMissing
+    case mandatoryCharacteristicsMissing
+
 
     static func isRetryable(error: Error) -> Bool {
         if let value = error as? BluetoothError {
@@ -306,6 +308,7 @@ public final class Device: DeviceType {
                 var connectionDisposable: Disposable?
                 var characteristicsDisposable: Disposable?
                 var characteristicsDictionary: [String: Observable<Characteristic>] = [:]
+                var countDownTimer: Disposable?
 
                 connectionDisposable = strongSelf.connect(peripheral: peripheral, services: configuration.servicesForDiscovering)
                     .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
@@ -315,6 +318,14 @@ public final class Device: DeviceType {
                     .materialize()
                     .subscribe(onNext: { event in
                         strongSelf.peripheral.onNext(peripheral)
+                        if countDownTimer == nil {
+                            countDownTimer = Observable<Int>.timer(.seconds(0), period: .seconds(30), scheduler: MainScheduler.instance)
+                                .skip(1)
+                                .take(1)
+                                .subscribe(onNext: { timePassed in
+                                    seal.onError(DeviceError.mandatoryCharacteristicsMissing)
+                                })
+                        }
 
                         switch event {
                         case .completed:
@@ -394,11 +405,10 @@ public final class Device: DeviceType {
                                         strongSelf.updateDeviceInfo()
                                         strongSelf.updateSuotaParameters()
                                         seal.onNext(())
+                                        countDownTimer?.dispose()
 
                                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     })
-                            } else {
-                                // TODO: here start timer if after some time allSatisfy will not fire send error and broke connection
                             }
                         }
                     }, onError: { error in
@@ -410,6 +420,7 @@ public final class Device: DeviceType {
 
                     connectionDisposable?.dispose()
                     characteristicsDisposable?.dispose()
+                    countDownTimer?.dispose()
                 }
             }
         }
@@ -522,28 +533,10 @@ public final class Device: DeviceType {
     }
     
     private func findCharacteristicForWrite(command: WritableCommand) -> Observable<Characteristic?> {
-        return .deferred {
-            return Observable<Characteristic?>.create { [weak self] seal in
-                guard let strongSelf = self else {
-                    seal.onError(BluetoothError.destroyed)
-                    return Disposables.create()
-                }
-                
-                let characteristicsDisposable = Observable.combineLatest(strongSelf.fanbandCharacteristicsForWrite)
-                    .subscribe(
-                        onNext: { characteristics in
-                            let characteristicForWrite = characteristics.first { $0.uuid == command.uuidForWrite }
-                            seal.onNext(characteristicForWrite)
-                        },
-                        onError: { seal.onError($0) },
-                        onCompleted: { seal.onCompleted() }
-                    )
-                
-                return Disposables.create {
-                    characteristicsDisposable.dispose()
-                }
-            }
-        }
+        Observable.combineLatest(fanbandCharacteristicsForWrite)
+            .map { $0.first { $0.uuid == command.uuidForWrite } }
+            .take(1)
+
     }
     
     public func writeInMemDev(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
