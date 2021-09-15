@@ -8,6 +8,7 @@
 import XCTest
 import ChelseabandSDK
 import RxBlocking
+import RxSwift
 
 final class ChelseabandSDKTests: XCTestCase {
     
@@ -16,46 +17,47 @@ final class ChelseabandSDKTests: XCTestCase {
     }
 
     func testSuccessfullConnected() throws {
-        let value: Void? = try? defaultDevice.connect(peripheral: MockFanbandScannedPeripheral()).toBlocking().first()
-        XCTAssert(value != nil)
+        let connectStatus: Void? = connect(device: defaultDevice,
+                                           withFanband: MockFanbandScannedPeripheral())
+        XCTAssert(connectStatus != nil)
     }
     
     func testConnectedWithError() throws {
-        let value: Void? = try? defaultDevice.connect(peripheral: MockExtraneousScannedPeripheral()).toBlocking().first()
-        XCTAssert(value == nil)
+        //TODO: replace in future defaultDevice.connect on private connect function
+        let connectStatus: Void? = try? defaultDevice.connect(peripheral: MockExtraneousScannedPeripheral())
+            .timeout(.seconds(30), scheduler: MainScheduler.instance)//TODO: remove this in future when will be fixed todo in device.swift file
+            .toBlocking()
+            .first()
+        XCTAssert(connectStatus == nil)
     }
 
     func testWriteCommandInExistedCharacteristic() {
         let device = defaultDevice
         let fanband = MockFanbandScannedPeripheral()
         let mockCommand = MockCommand(typeOfUUID: .existed)
-        let _ = try? device.connect(peripheral: fanband).toBlocking().first()
-        let value: Void? = try? device.write(command: mockCommand, timeout: .seconds(5)).toBlocking().first()
-        XCTAssert(value != nil)
+        let connectStatus: Void? = connect(device: device, withFanband: fanband)
+        XCTAssert(connectStatus != nil)
         
-        let services = try? fanband.peripheralType.discoverServices(nil).toBlocking().first()
-        XCTAssert(services != nil)
+        let writeStatus: Void? = try? device.write(command: mockCommand, timeout: .seconds(5))
+            .toBlocking()
+            .first()
+        XCTAssert(writeStatus != nil)
         
-        let characteristics = services?.reduce([CharacteristicType]()) { resultArray, service in
-            if let serviceCharacteristics = try? service.discoverCharacteristics([mockCommand.uuidForWrite]).toBlocking().first() {
-                var mutableArray = resultArray
-                mutableArray.append(contentsOf: serviceCharacteristics)
-                return mutableArray
-            }
-            return resultArray
-        }
-        
-        XCTAssertEqual(characteristics?.count, 1)
-        XCTAssertEqual(characteristics?.first?.value, mockCommand.dataForSend)
+        let characteristic = findCharacteristic(in: fanband, withId: mockCommand.uuidForWrite)
+        XCTAssertEqual(characteristic.value, mockCommand.dataForSend)
     }
     
     func testWriteCommandInMissingCharacteristic() {
         let device = defaultDevice
         let fanband = MockFanbandScannedPeripheral()
         let mockCommand = MockCommand(typeOfUUID: .notExisted)
-        let _ = try? device.connect(peripheral: fanband).toBlocking().first()
-        let value: Void? = try? device.write(command: mockCommand, timeout: .seconds(5)).toBlocking().first()
-        XCTAssert(value == nil)
+        let connectStatus: Void? = connect(device: device, withFanband: fanband)
+        XCTAssert(connectStatus != nil)
+        
+        let writeStatus: Void? = try? device.write(command: mockCommand, timeout: .seconds(5))
+            .toBlocking()
+            .first()
+        XCTAssert(writeStatus == nil)
     }
     
     func testBattery() {

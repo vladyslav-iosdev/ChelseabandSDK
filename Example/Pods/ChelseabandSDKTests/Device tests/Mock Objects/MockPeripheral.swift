@@ -37,7 +37,7 @@ final class MockPeripheral: PeripheralType {
     }
     
     func establishConnection(options: [String: Any]?) -> Observable<PeripheralType> {
-        Observable.just(self)
+        Observable.of(self).never()
     }
     
     func discoverServices(_ serviceUUIDs: [ID]?) -> Single<[ServiceType]> {
@@ -47,5 +47,11 @@ final class MockPeripheral: PeripheralType {
         
         let filteredServices = services.filter{ servicesID.contains($0.uuid) }
         return .just(filteredServices)
+    }
+}
+
+extension Observable {
+    public func never() -> Observable<Element> {
+        return .merge(self, .never())
     }
 }
