@@ -76,6 +76,14 @@ final class ChelseabandSDKTests: XCTestCase {
         XCTAssertEqual(batteryChargingLevel?.count, 5)
         XCTAssertEqual(batteryChargingLevel, [0, 1, 2, 3, 4])
     }
+    
+    func testTimeSynchronizationCommand() {
+        let timeForCheck: Double = 1630924946068 / 1000
+        let dateForCheck = Date(timeIntervalSince1970: timeForCheck)
+        let expectedValue: [UInt8] = [229, 7, 9, 6, 13, 42, 26, 1, 17, 128]
+        let timeSynchronizationCommand = TimeSynchronizationCommand(date: dateForCheck)
+        XCTAssertEqual([UInt8](timeSynchronizationCommand.dataForSend), expectedValue)
+    }
 }
 
 private extension ChelseabandSDKTests {
