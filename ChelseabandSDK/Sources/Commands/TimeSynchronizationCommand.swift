@@ -10,7 +10,11 @@ import RxSwift
 
 public struct TimeSynchronizationCommand: CommandNew {
     
-    private let date = Date()
+    private let date: Date
+        
+    public init(date: Date = .init()) {
+        self.date = date
+    }
     
     enum AdjustReason: UInt8 {
         case manualTimeUpdate
