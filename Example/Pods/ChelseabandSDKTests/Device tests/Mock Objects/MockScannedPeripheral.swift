@@ -15,3 +15,7 @@ final class MockFanbandScannedPeripheral: ScannedPeripheralType {
 final class MockExtraneousScannedPeripheral: ScannedPeripheralType {
     var peripheralType: PeripheralType = MockPeripheral(type: .extraneous)
 }
+
+final class MaxRetryConnectErrorScannedPeripheral: ScannedPeripheralType {
+    var peripheralType: PeripheralType = MockPeripheral(type: .maxRetryConnectionError)
+}

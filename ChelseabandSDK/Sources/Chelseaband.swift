@@ -145,7 +145,7 @@ public final class Chelseaband: ChelseabandType {
 
     public func connect(peripheral: Peripheral) {
         connectionDisposable = device
-            .connect(peripheral: peripheral)
+            .connect(peripheral: peripheral, scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
                 strongSelf.connectedPeripheral = peripheral

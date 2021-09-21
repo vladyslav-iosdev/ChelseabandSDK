@@ -8,6 +8,8 @@
 import XCTest
 import ChelseabandSDK
 import RxBlocking
+import RxTest
+import RxSwift
 
 final class ChelseabandSDKTests: XCTestCase {
     
@@ -25,6 +27,37 @@ final class ChelseabandSDKTests: XCTestCase {
         let connectStatus: Void? = connect(device: defaultDevice,
                                            withFanband: MockExtraneousScannedPeripheral())
         XCTAssert(connectStatus == nil)
+    }
+    
+    func testMaxRetryConnectError() throws {
+        let disposeBag = DisposeBag()
+        let scheduler = TestScheduler(initialClock: 0, resolution: 1)
+        
+        let connectionObserver = scheduler.record(defaultDevice.connect(peripheral: MaxRetryConnectErrorScannedPeripheral(), scheduler: scheduler),
+                                        disposeBag: disposeBag)
+        scheduler.start()
+        
+        let correctValues: [Recorded<Event<Void>>] = Recorded.events(
+            .error(15, DeviceError.maxRetryAttempts)
+        )
+        
+        XCTAssertEqual(connectionObserver.events.count, correctValues.count)
+        
+        for (actual, expected) in zip(connectionObserver.events, correctValues) {
+            XCTAssertEqual(actual.time, expected.time, "different times")
+
+            let equal: Bool
+            switch (actual.value, expected.value) {
+            case (.next, .next),
+                 (.completed, .completed):
+                equal = true
+            case (.error(let errorObserved), .error(let errorExpected)):
+                equal = errorObserved.localizedDescription == errorExpected.localizedDescription
+            default:
+                equal = false
+            }
+            XCTAssertTrue(equal, "different event")
+        }
     }
 
     func testWriteCommandInExistedCharacteristic() {
@@ -88,7 +121,8 @@ final class ChelseabandSDKTests: XCTestCase {
 
 private extension ChelseabandSDKTests {
     func connect(device: DeviceType, withFanband fanband: ScannedPeripheralType) -> Void? {
-        try? device.connect(peripheral: fanband).toBlocking().first()
+        try? device.connect(peripheral: fanband,
+                            scheduler: MainScheduler.instance).mapToVoid().toBlocking().first()
     }
     
     func findCharacteristic(in device: ScannedPeripheralType, withId id: ID) -> CharacteristicType {
@@ -120,4 +154,21 @@ fileprivate extension Data {
         self.copyBytes(to:&number, count: MemoryLayout<UInt8>.size)
         return number
     }
+}
+
+extension TestScheduler {
+/**
+    Creates a `TestableObserver` instance which immediately subscribes to the `source`
+    */
+   func record<O: ObservableConvertibleType>(
+       _ source: O,
+       disposeBag: DisposeBag
+   ) -> TestableObserver<O.Element> {
+       let observer = self.createObserver(O.Element.self)
+       source
+           .asObservable()
+           .bind(to: observer)
+           .disposed(by: disposeBag)
+       return observer
+   }
 }

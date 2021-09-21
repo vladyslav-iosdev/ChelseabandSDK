@@ -8,23 +8,39 @@
 import Foundation
 import ChelseabandSDK
 import RxSwift
+import UIKit
 
 final class MockPeripheral: PeripheralType {
     
     enum MockType {
         case fanband
         case extraneous
+        case maxRetryConnectionError
     }
     
     var cbperipheral: CBPeripheralType = MockCBPeripheral()
     
     var isConnected: Bool = false
     
+    private var mockType: MockType
     private var services: [ServiceType]
+    private var establishConnectionObservable: Observable<PeripheralType> {
+        switch mockType {
+        case .fanband, .extraneous:
+            return Observable.of(self).never()
+        case .maxRetryConnectionError:
+            return Observable.create({ observer -> Disposable in
+                let error = NSError(domain:"test error", code: 1, userInfo:nil)
+                observer.onError(error)
+                return Disposables.create()
+            })
+        }
+    }
     
     init(type: MockType) {
+        self.mockType = type
         switch type {
-        case .fanband:
+        case .fanband, .maxRetryConnectionError:
             services = [
                 MockService.batteryService,
                 MockService.suotaService,
@@ -37,7 +53,7 @@ final class MockPeripheral: PeripheralType {
     }
     
     func establishConnection(options: [String: Any]?) -> Observable<PeripheralType> {
-        Observable.of(self).never()
+        establishConnectionObservable
     }
     
     func discoverServices(_ serviceUUIDs: [ID]?) -> Single<[ServiceType]> {

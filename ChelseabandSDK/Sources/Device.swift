@@ -31,7 +31,7 @@ public extension Device {
 
 public extension ObservableType {
 
-    func retryWithDelay(timeInterval: RxTimeInterval, maxAttempts: Int, onError: @escaping (Error) -> Void = { _ in }) -> Observable<Element> {
+    func retryWithDelay(timeInterval: RxTimeInterval, maxAttempts: Int, scheduler: SchedulerType, onError: @escaping (Error) -> Void = { _ in }) -> Observable<Element> {
         return retryWhen { error in
             error
                 .do(onNext: { error in
@@ -43,7 +43,7 @@ public extension ObservableType {
                     guard DeviceError.isRetryable(error: error) else { throw error }
 
                     return attempts + 1
-            }.delay(timeInterval, scheduler: MainScheduler.instance)
+            }.delay(timeInterval, scheduler: scheduler)
         }
     }
     
@@ -117,7 +117,7 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     
     func updateDeviceInfo(timeOut: RxSwift.RxTimeInterval)
     
-    func connect(peripheral: ScannedPeripheralType) -> Observable<Void>
+    func connect(peripheral: ScannedPeripheralType, scheduler: SchedulerType) -> Observable<Void>
 
     func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
 
@@ -128,7 +128,7 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
 }
 
-private enum DeviceError: Error {
+public enum DeviceError: Error {
     case maxRetryAttempts
     case writeCharacteristicMissing
     case mandatoryCharacteristicsMissing
@@ -383,7 +383,7 @@ public final class Device: DeviceType {
             .disposed(by: disposeBag)
     }
 
-    public func connect(peripheral: ScannedPeripheralType) -> Observable<Void> {
+    public func connect(peripheral: ScannedPeripheralType, scheduler: SchedulerType) -> Observable<Void> {
         let configuration = self.configuration
 
         return .deferred {
@@ -399,7 +399,7 @@ public final class Device: DeviceType {
                 var countDownTimer: Disposable?
 
                 connectionDisposable = strongSelf.connect(peripheral: peripheral, services: configuration.servicesForDiscovering)
-                    .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, onError: { error in
+                    .retryWithDelay(timeInterval: .seconds(5), maxAttempts: 3, scheduler: scheduler, onError: { error in
                         strongSelf.connectionBehaviourSubject.onNext(Device.State.disconnected)
                         strongSelf.connectionBehaviourSubject.onNext(Device.State.connecting)
                     })
