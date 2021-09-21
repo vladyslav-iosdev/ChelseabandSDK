@@ -110,10 +110,18 @@ final class ChelseabandSDKTests: XCTestCase {
         XCTAssertEqual(batteryChargingLevel, [0, 1, 2, 3, 4])
     }
     
-    func testTimeSynchronizationCommand() {
+    func test1TimeSynchronizationCommand() {
         let timeForCheck: Double = 1630924946068 / 1000
         let dateForCheck = Date(timeIntervalSince1970: timeForCheck)
         let expectedValue: [UInt8] = [229, 7, 9, 6, 13, 42, 26, 1, 17, 128]
+        let timeSynchronizationCommand = TimeSynchronizationCommand(date: dateForCheck)
+        XCTAssertEqual([UInt8](timeSynchronizationCommand.dataForSend), expectedValue)
+    }
+    
+    func test2TimeSynchronizationCommand() {
+        let timeForCheck: Double = 1630838546068 / 1000
+        let dateForCheck = Date(timeIntervalSince1970: timeForCheck)
+        let expectedValue: [UInt8] = [229, 7, 9, 5, 13, 42, 26, 7, 17, 128]
         let timeSynchronizationCommand = TimeSynchronizationCommand(date: dateForCheck)
         XCTAssertEqual([UInt8](timeSynchronizationCommand.dataForSend), expectedValue)
     }
