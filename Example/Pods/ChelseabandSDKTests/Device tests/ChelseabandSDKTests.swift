@@ -119,11 +119,29 @@ final class ChelseabandSDKTests: XCTestCase {
     }
     
     func test2TimeSynchronizationCommand() {
+        //1. Create and validate time synchronization command
         let timeForCheck: Double = 1630838546068 / 1000
         let dateForCheck = Date(timeIntervalSince1970: timeForCheck)
         let expectedValue: [UInt8] = [229, 7, 9, 5, 13, 42, 26, 7, 17, 128]
         let timeSynchronizationCommand = TimeSynchronizationCommand(date: dateForCheck)
         XCTAssertEqual([UInt8](timeSynchronizationCommand.dataForSend), expectedValue)
+        
+        //2. Write command in mock characteristic and validate
+        let device = defaultDevice
+        let fanband = MockFanbandScannedPeripheral()
+        let connectStatus: Void? = connect(device: device, withFanband: fanband)
+        XCTAssert(connectStatus != nil)
+        
+        let commandsExecutor = CommandsExecutor(device: device)
+        
+        let writeStatus: Void? = try? timeSynchronizationCommand.perform(on: commandsExecutor)
+            .toBlocking()
+            .first()
+        XCTAssert(writeStatus != nil)
+        
+        let timeSynchronizationCharacteristic = findCharacteristic(in: fanband,
+                                                                   withId: timeSynchronizationCommand.uuidForWrite)
+        XCTAssertEqual(timeSynchronizationCharacteristic.value, timeSynchronizationCommand.dataForSend)
     }
 }
 
