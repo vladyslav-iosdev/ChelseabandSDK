@@ -132,7 +132,7 @@ final class ChelseabandSDKTests: XCTestCase {
         let connectStatus: Void? = connect(device: device, withFanband: fanband)
         XCTAssert(connectStatus != nil)
         
-        let commandsExecutor = CommandsExecutor(device: device)
+        let commandsExecutor = MockCommandsExecutor(device: device)
         
         let writeStatus: Void? = try? timeSynchronizationCommand.perform(on: commandsExecutor)
             .toBlocking()

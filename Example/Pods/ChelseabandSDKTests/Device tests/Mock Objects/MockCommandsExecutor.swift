@@ -1,13 +1,14 @@
 //
-//  CommandsExecutor.swift
+//  MockCommandsExecutor.swift
 //  ChelseabandSDKTests
 //
 //  Created by Sergey Pohrebnuak on 22.09.2021.
 //
 
-import Foundation
+import RxSwift
+import ChelseabandSDK
 
-struct CommandsExecutor: CommandExecutor {
+struct MockCommandsExecutor: CommandExecutor {
     private var device: DeviceType
     
     var isConnected: Observable<Bool> = .just(true)
