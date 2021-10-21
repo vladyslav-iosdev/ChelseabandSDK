@@ -149,6 +149,7 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
                 strongSelf.connectedPeripheral = peripheral
+                API().register(bandName: peripheral.peripheral.name ?? "")
                 strongSelf.lastConnectedPeripheralUUID = peripheral.peripheral.identifier.uuidString
 
                 strongSelf.setupChelseaband(device: strongSelf.device)

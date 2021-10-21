@@ -35,6 +35,9 @@ final class API: Statistics {
             case fmc
             case mac
             case status
+            case name
+            case phone
+            case pin
             case inArea = "in-area"
         }
         
@@ -95,6 +98,24 @@ final class API: Statistics {
         sendRequest(Modules.fanbands(.mac).path,
                     method: .patch,
                     jsonParams: ["mac": mac])
+    }
+    
+    func register(bandName name: String) {
+        sendRequest(Modules.fanbands(.name).path,
+                    method: .patch,
+                    jsonParams: ["name": name])
+    }
+    
+    func register(bandPin pin: String) {
+        sendRequest(Modules.fanbands(.pin).path,
+                    method: .patch,
+                    jsonParams: ["pin": pin])
+    }
+    
+    func register(phoneNumber: String) {
+        sendRequest(Modules.fanbands(.phone).path,
+                    method: .patch,
+                    jsonParams: ["phone": phoneNumber])
     }
     
     func sendBand(status: Bool) {
