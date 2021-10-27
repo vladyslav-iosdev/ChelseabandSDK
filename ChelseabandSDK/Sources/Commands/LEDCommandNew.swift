@@ -7,11 +7,30 @@
 
 import RxSwift
 
+public enum LedError: LocalizedError {
+    case cantDecodeDataToLedModel
+    
+    public var errorDescription: String? {
+        switch self {
+        case .cantDecodeDataToLedModel:
+            return "Cant decode data to led model"
+        }
+    }
+}
+
 public struct LEDCommandNew: CommandNew {
     public let uuidForWrite = ChelseabandConfiguration.default.ledCharacteristic
 
-    public var dataForSend: Data {
-        LedPattern(loopCount: 1, frames: [LedFrame(time: 16, colorForAllLed: LedColor(red: 255, green: 0, blue: 0))]).encodeToData()
+    public var dataForSend: Data { ledPattern.encodeToData() }
+    
+    private let ledPattern: LedPattern
+    
+    init(fromData data: Data, withDecoder decoder: JSONDecoder) throws {
+        if let ledModel = try? decoder.decode(LedPattern.self, from: data) {
+            ledPattern = ledModel
+        } else {
+            throw LedError.cantDecodeDataToLedModel
+        }
     }
     
     public func perform(on executor: CommandExecutor) -> Observable<Void> {
@@ -20,9 +39,9 @@ public struct LEDCommandNew: CommandNew {
 }
 
 extension LEDCommandNew {
-    private struct LedPattern {
+    private struct LedPattern: Decodable {
         let loopCount: UInt8
-        let frames: [LedFrame] //max count of array == 13!
+        let frames: [LedFrame] //Max count of array == 13!
         private let maxFramesCount = 13
         
         func encodeToData() -> Data {
@@ -35,9 +54,9 @@ extension LEDCommandNew {
         }
     }
     
-    private struct LedFrame {
-        let time: UInt8 //how long to show colors for units: 12ms
-        let colors: [LedColor] //max count of color == 6!
+    private struct LedFrame: Decodable {
+        let time: UInt8 //How long to show colors for units: 12ms
+        let colors: [LedColor] //Max count of color == 6!
         private let maxColorsCount = 6
         
         init(time: UInt8, colorForAllLed: LedColor) {
@@ -55,7 +74,7 @@ extension LEDCommandNew {
         }
     }
     
-    private struct LedColor {
+    private struct LedColor: Decodable {
         let red: UInt8
         let green: UInt8
         let blue: UInt8

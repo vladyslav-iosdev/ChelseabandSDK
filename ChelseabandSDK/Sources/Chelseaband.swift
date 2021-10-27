@@ -65,6 +65,8 @@ public protocol ChelseabandType {
     
     func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
+    func sendLedCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
+    
     func sendReaction(id: String)
 
     func startScanForPeripherals() -> Observable<[Peripheral]>
@@ -312,6 +314,15 @@ public final class Chelseaband: ChelseabandType {
         do {
             let vibrationCommand = try VibrationCommandNew(fromData: data, withDecoder: decoder)
             return performSafe(command: vibrationCommand, timeOut: .seconds(5))
+        } catch {
+            return Observable<Any>.error(error).mapToVoid()
+        }
+    }
+    
+    public func sendLedCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
+        do {
+            let ledCommand = try LEDCommandNew(fromData: data, withDecoder: decoder)
+            return performSafe(command: ledCommand, timeOut: .seconds(5))
         } catch {
             return Observable<Any>.error(error).mapToVoid()
         }
