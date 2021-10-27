@@ -21,15 +21,13 @@ public enum VibrationError: LocalizedError {
 public struct VibrationCommandNew: CommandNew {
     public let uuidForWrite = ChelseabandConfiguration.default.vibrationCharacteristic
 
-    public var dataForSend: Data {
-        vibrationPattern.encodeToData()
-    }
+    public var dataForSend: Data { vibrationPattern.encodeToData() }
     
     private let vibrationPattern: VibrationPattern
     
     init(fromData data: Data, withDecoder decoder: JSONDecoder) throws {
-        if let ledModel = try? decoder.decode(VibrationPattern.self, from: data) {
-            vibrationPattern = ledModel
+        if let vibrationModel = try? decoder.decode(VibrationPattern.self, from: data) {
+            vibrationPattern = vibrationModel
         } else {
             throw VibrationError.cantDecodeDataToVibrationModel
         }
