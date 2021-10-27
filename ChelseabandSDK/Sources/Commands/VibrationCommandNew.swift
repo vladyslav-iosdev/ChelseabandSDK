@@ -7,14 +7,32 @@
 
 import RxSwift
 
+public enum VibrationError: LocalizedError {
+    case cantDecodeDataToVibrationModel
+    
+    public var errorDescription: String? {
+        switch self {
+        case .cantDecodeDataToVibrationModel:
+            return "Cant decode data to vibration model"
+        }
+    }
+}
+
 public struct VibrationCommandNew: CommandNew {
     public let uuidForWrite = ChelseabandConfiguration.default.vibrationCharacteristic
 
     public var dataForSend: Data {
-        VibrationPattern(loopCount: 2, frames: [
-            .init(time: 20, intensity: 255),
-            .init(time: 10, intensity: 0)
-        ]).encodeToData()
+        vibrationPattern.encodeToData()
+    }
+    
+    private let vibrationPattern: VibrationPattern
+    
+    init(fromData data: Data, withDecoder decoder: JSONDecoder) throws {
+        if let ledModel = try? decoder.decode(VibrationPattern.self, from: data) {
+            vibrationPattern = ledModel
+        } else {
+            throw VibrationError.cantDecodeDataToVibrationModel
+        }
     }
     
     public func perform(on executor: CommandExecutor) -> Observable<Void> {
@@ -23,9 +41,9 @@ public struct VibrationCommandNew: CommandNew {
 }
 
 extension VibrationCommandNew {
-    private struct VibrationPattern {
+    private struct VibrationPattern: Decodable {
         let loopCount: UInt8
-        let frames: [VibrationFrame] //max count of array == 20!
+        let frames: [VibrationFrame] //Max count of array == 20!
         private let maxFramesCount = 20
         
         func encodeToData() -> Data {
@@ -41,8 +59,8 @@ extension VibrationCommandNew {
         }
     }
     
-    private struct VibrationFrame {
-        let time: UInt8 //how long to show colors for units: 10ms
+    private struct VibrationFrame: Decodable {
+        let time: UInt8 //How long to show colors for units: 12ms
         let intensity: UInt8 //How intense to run the motor, 0 - it's off
     }
 }

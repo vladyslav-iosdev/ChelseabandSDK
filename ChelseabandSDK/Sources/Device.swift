@@ -128,7 +128,7 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
 }
 
-private enum DeviceError: Error {
+private enum DeviceError: LocalizedError {
     case maxRetryAttempts
     case writeCharacteristicMissing
     case mandatoryCharacteristicsMissing
@@ -144,6 +144,17 @@ private enum DeviceError: Error {
             }
         } else {
             return true
+        }
+    }
+    
+    var errorDescription: String? {
+        switch self {
+        case .maxRetryAttempts:
+            return "Maximum retry attempts"
+        case .writeCharacteristicMissing:
+            return "Write characteristic missing"
+        case .mandatoryCharacteristicsMissing:
+            return "Mandatory characteristics missing"
         }
     }
 }

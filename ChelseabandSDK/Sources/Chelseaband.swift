@@ -63,6 +63,8 @@ public protocol ChelseabandType {
 
     func sendGoalCommand(id: String) -> Observable<Void>
     
+    func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
+    
     func sendReaction(id: String)
 
     func startScanForPeripherals() -> Observable<[Peripheral]>
@@ -303,6 +305,15 @@ public final class Chelseaband: ChelseabandType {
         let command1 = performSafe(command: command0, timeOut: .seconds(5))
         return Observable.zip(command1, command0.votingObservable).map { (_, response) -> VotingResult in
             return response
+        }
+    }
+    
+    public func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
+        do {
+            let vibrationCommand = try VibrationCommandNew(fromData: data, withDecoder: decoder)
+            return performSafe(command: vibrationCommand, timeOut: .seconds(5))
+        } catch {
+            return Observable<Any>.error(error).mapToVoid()
         }
     }
     
