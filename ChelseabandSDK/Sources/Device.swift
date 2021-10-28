@@ -360,6 +360,8 @@ public final class Device: DeviceType {
                             case configuration.fanbandService:
                                 characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
                                 characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
+                                characteristicsDictionary[configuration.imageControlCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageControlCharacteristic)
+                                characteristicsDictionary[configuration.imageChunkCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageChunkCharacteristic)
                                 characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
                             default:
                                 break
@@ -398,6 +400,10 @@ public final class Device: DeviceType {
                                                 strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
                                                 strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                            case configuration.imageControlCharacteristic:
+                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                            case configuration.imageChunkCharacteristic:
+                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             case configuration.alertCharacteristic:
                                                 strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             default:
@@ -414,6 +420,7 @@ public final class Device: DeviceType {
                                         strongSelf.suotaPatchLenCharacteristic.on(.next(nil))
                                         strongSelf.suotaPatchDataCharacteristic.on(.next(nil))
                                         strongSelf.suotaServStatusCharacteristic.on(.next(nil))
+                                        strongSelf.fanbandCharacteristicsForWrite.removeAll()
 
                                         seal.onError(error)
                                     }, onCompleted: {
