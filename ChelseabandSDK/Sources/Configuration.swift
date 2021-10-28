@@ -26,6 +26,7 @@ public protocol Configuration {
     var fanbandService: ID { get }
     var ledCharacteristic: ID { get }
     var vibrationCharacteristic: ID { get }
+    var alertCharacteristic: ID { get }
     
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }
@@ -84,6 +85,13 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "11111111-0000-0000-0000-111111111113")
+        }
+    }
+    
+    public var alertCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-11111111111b")
         }
     }
     
@@ -161,7 +169,8 @@ public enum ChelseabandConfiguration: Configuration {
             suotaPatchDataCharacteristic.uuidString,
             suotaServStatusCharacteristic.uuidString,
             ledCharacteristic.uuidString,
-            vibrationCharacteristic.uuidString
+            vibrationCharacteristic.uuidString,
+            alertCharacteristic.uuidString
         ]
     }
 }

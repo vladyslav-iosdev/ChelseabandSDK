@@ -7,11 +7,6 @@
 
 import RxSwift
 
-public enum MessageType: String {
-    case goal = "01"
-    case news = "02"
-}
-
 enum NewsCommandError: Error {
     case done
 }
@@ -59,5 +54,35 @@ public class MessageCommand: Command {
 
     deinit {
         print("\(self)-deinit")
+    }
+}
+
+public protocol MessageType {
+    var messageTypeIdentifier: Int { get }
+}
+
+public extension MessageType where Self: RawRepresentable, RawValue == Int {
+    var messageTypeIdentifier: Int { self.rawValue }
+}
+
+public struct MessageCommandNew: CommandNew {
+    public let uuidForWrite = ChelseabandConfiguration.default.alertCharacteristic
+
+    public var dataForSend: Data {
+        messageType.messageTypeIdentifier.data +
+        message.data(using: .utf8)! +
+        "\0".data(using: .utf8)!
+    }
+    
+    private let message: String
+    private let messageType: MessageType
+    
+    init(_ message: String, type: MessageType) {
+        self.message = message
+        messageType = type
+    }
+    
+    public func perform(on executor: CommandExecutor) -> Observable<Void> {
+        executor.write(command: self)
     }
 }

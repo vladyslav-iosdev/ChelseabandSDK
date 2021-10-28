@@ -60,6 +60,8 @@ public protocol ChelseabandType {
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
 
     func sendMessageCommand(message: String, id: String) -> Observable<Void>
+    
+    func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
 
     func sendGoalCommand(id: String) -> Observable<Void>
     
@@ -287,6 +289,14 @@ public final class Chelseaband: ChelseabandType {
         let command0 = MessageCommand(value: message)
 
         return performSafe(command: command0, timeOut: .seconds(5))
+    }
+    
+    public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {
+        commandIdBehaviourSubject.onNext(id)
+        
+        let messageCommand = MessageCommandNew(message, type: type)
+
+        return performSafe(command: messageCommand, timeOut: .seconds(5))
     }
 
     public func sendGoalCommand(id: String) -> Observable<Void> {

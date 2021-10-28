@@ -360,6 +360,7 @@ public final class Device: DeviceType {
                             case configuration.fanbandService:
                                 characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
                                 characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
+                                characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
                             default:
                                 break
                             }
@@ -369,6 +370,7 @@ public final class Device: DeviceType {
                             })
                             
                             if allSatisfy {
+                                strongSelf.fanbandCharacteristicsForWrite.removeAll()
                                 let characteristicsObservable = characteristicsDictionary.map { $0.value }
                                 let characteristicsDisposable = Observable.combineLatest(characteristicsObservable)
                                     .subscribe(onNext: { characteristics in
@@ -395,6 +397,8 @@ public final class Device: DeviceType {
                                             case configuration.vibrationCharacteristic:
                                                 strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
+                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                            case configuration.alertCharacteristic:
                                                 strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
                                             default:
                                                 break
@@ -547,7 +551,6 @@ public final class Device: DeviceType {
         Observable.combineLatest(fanbandCharacteristicsForWrite)
             .map { $0.first { $0.uuid == command.uuidForWrite } }
             .take(1)
-
     }
     
     public func writeInMemDev(data: Data, timeout: DispatchTimeInterval) -> Observable<Void> {
