@@ -58,11 +58,11 @@ public class MessageCommand: Command {
 }
 
 public protocol MessageType {
-    var messageTypeIdentifier: Int { get }
+    var messageTypeIdentifier: UInt8 { get }
 }
 
-public extension MessageType where Self: RawRepresentable, RawValue == Int {
-    var messageTypeIdentifier: Int { self.rawValue }
+public extension MessageType where Self: RawRepresentable, RawValue == UInt8 {
+    var messageTypeIdentifier: UInt8 { self.rawValue }
 }
 
 public struct MessageCommandNew: CommandNew {
