@@ -319,6 +319,7 @@
 		C1C2B61E08DAD3B59BA5D82964D39C3C /* ConstraintRelation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45798F9BD7F1C7FA794326CBAFCC899A /* ConstraintRelation.swift */; };
 		C2514AA77E819396A712CCABB3F82275 /* ShareReplayScope.swift in Sources */ = {isa = PBXBuildFile; fileRef = FEF3D31C876181E313108E71CF33883E /* ShareReplayScope.swift */; };
 		C2706A9A1108AFF2A6F15B8BDB3C1077 /* RxBluetoothKit-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 0EB992A49DE637C2422A80FC51A1D67F /* RxBluetoothKit-dummy.m */; };
+		C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523122B2730067300CCCA10 /* ImageControlCommand.swift */; };
 		C5547F762601F22B0084825B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F752601F22B0084825B /* UserDefaults.swift */; };
 		C5547F7A2601FCF20084825B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F782601FCF20084825B /* API.swift */; };
 		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
@@ -864,6 +865,7 @@
 		C496F68817871C6D5DEB79616AA2A0A6 /* PeripheralManager+RestoredState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "PeripheralManager+RestoredState.swift"; path = "Source/PeripheralManager+RestoredState.swift"; sourceTree = "<group>"; };
 		C4D81DF009DF035445295A9EA89242D0 /* BluetoothState.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = BluetoothState.swift; path = Source/BluetoothState.swift; sourceTree = "<group>"; };
 		C4FA61EABD426012A7DE0E370FED5C6E /* Deferred.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deferred.swift; path = RxSwift/Observables/Deferred.swift; sourceTree = "<group>"; };
+		C523122B2730067300CCCA10 /* ImageControlCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageControlCommand.swift; sourceTree = "<group>"; };
 		C5547F752601F22B0084825B /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
@@ -1640,6 +1642,7 @@
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
 				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
 				10E469E886BFF25957B7188F4D8684CD /* TimeCommand.swift */,
+				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2084,6 +2087,7 @@
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
 				C5547F7A2601FCF20084825B /* API.swift in Sources */,
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
+				C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
 				87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */,
 				87BDF81025FF9DC2007DCD36 /* MessageCommand.swift in Sources */,
