@@ -542,7 +542,7 @@ public final class Device: DeviceType {
                 .flatMap { characteristic -> Observable<Characteristic> in
                     if let value = characteristic {
                         return value.writeValue(command.dataForSend,
-                                                type: .withResponse).asObservable()
+                                                type: command.writeType).asObservable()
                     } else {
                         throw DeviceError.writeCharacteristicMissing
                     }

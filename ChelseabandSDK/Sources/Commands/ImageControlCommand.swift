@@ -7,6 +7,17 @@
 
 import RxSwift
 
+public enum ImageControlCommandError: LocalizedError {
+    case wrongImageSize
+    
+    public var errorDescription: String? {
+        switch self {
+        case .wrongImageSize:
+            return "Image size which should upload to band not equal to expected"
+        }
+    }
+}
+
 public struct ImageControlCommand: CommandNew {
     public let uuidForWrite = ChelseabandConfiguration.default.imageControlCharacteristic
     

@@ -61,6 +61,8 @@ public protocol ChelseabandType {
 
     func sendMessageCommand(message: String, id: String) -> Observable<Void>
     
+    func uploadImage(_ image: UIImage, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
+    
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
 
     func sendGoalCommand(id: String) -> Observable<Void>
@@ -289,6 +291,42 @@ public final class Chelseaband: ChelseabandType {
         let command0 = MessageCommand(value: message)
 
         return performSafe(command: command0, timeOut: .seconds(5))
+    }
+    
+    public func uploadImage(_ image: UIImage, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
+        // TODO: handle this in future
+//        guard imageType.imageLength == image.jpegData(compressionQuality: 1.0)!.count else {
+//            return Observable<Any>.error(ImageControlCommandError.wrongImageSize).mapToVoid()
+//        }
+        
+        let imageControl = ImageControlCommand(imageType)
+        let imageChunk = ImageChunkCommand(image)
+        let commands: [CommandNew] = [imageControl, imageChunk]
+        
+        return Observable<Void>.create { [weak self] seal in
+            let commandsDisposable = Observable.from(commands)
+                .concatMap { [weak self] command -> Observable<Void> in
+                    guard let strongSelf = self else { return .just(()) }
+                    return strongSelf.performSafe(command: command, timeOut: .seconds(5))
+                }
+                .materialize()
+                .subscribe(
+                    onNext: { result in
+                        switch result {
+                        case .error(let error):
+                            seal.onError(error)
+                        default:
+                            break
+                        }
+                    }, onCompleted: {
+                        seal.onNext(())
+                        seal.onCompleted()
+                    })
+            
+            return Disposables.create {
+                commandsDisposable.dispose()
+            }
+        }
     }
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {

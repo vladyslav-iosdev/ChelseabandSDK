@@ -7,6 +7,7 @@
 
 import Foundation
 import RxSwift
+import CoreBluetooth
 
 public protocol CommandExecutor {
     var isConnected: Observable<Bool> { get }
@@ -22,6 +23,13 @@ public protocol CommandNotifier {
 public protocol WritableCommand {
     var uuidForWrite: ID { get }
     var dataForSend: Data { get }
+    var writeType: CBCharacteristicWriteType { get }
+}
+
+public extension WritableCommand {
+    var writeType: CBCharacteristicWriteType {
+        .withResponse
+    }
 }
 
 public protocol CommandNew: WritableCommand {
