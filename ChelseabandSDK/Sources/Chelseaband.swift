@@ -56,6 +56,8 @@ public protocol ChelseabandType {
     func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
 
     func setFMCToken(_ token: String)
+    
+    func register(phoneNumber: String) -> Observable<Void>
 
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
 
@@ -129,6 +131,7 @@ public final class Chelseaband: ChelseabandType {
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt8> = .init(value: 0)
     private let device: DeviceType
+    private let statistic: Statistics
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
     private var longLifeDisposeBag = DisposeBag()
@@ -139,6 +142,7 @@ public final class Chelseaband: ChelseabandType {
 
     required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
         self.device = device
+        self.statistic = API()
         UserDefaults.standard.apiBaseEndpoint = apiBaseEndpoint
         UserDefaults.standard.apiKey = apiKey
         
@@ -157,7 +161,7 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
                 strongSelf.connectedPeripheral = peripheral
-                API().register(bandName: peripheral.peripheral.name ?? "")
+                strongSelf.statistic.register(bandName: peripheral.peripheral.name ?? "")
                 strongSelf.lastConnectedPeripheralUUID = peripheral.peripheral.identifier.uuidString
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
@@ -197,14 +201,14 @@ public final class Chelseaband: ChelseabandType {
         Observable.combineLatest(fcmTokenObservable, connectedOrDisconnectedObservable)
             .map { $0.1 }
             .subscribe(onNext: {
-                API().sendBand(status: $0.isConnected)
+                self.statistic.sendBand(status: $0.isConnected)
             }).disposed(by: disposeBag)
     }
 
     private func observeForFCMTokenChange() {
         fcmTokenObservable
             .subscribe(onNext: { token in
-                API().register(fmcToken: token)
+                self.statistic.register(fmcToken: token)
             }).disposed(by: longLifeDisposeBag)
     }
 
@@ -218,7 +222,7 @@ public final class Chelseaband: ChelseabandType {
                     .map{ _ in location }
             }
             .subscribe(onNext: {
-                API().sendLocation(latitude: $0.latitude, longitude: $0.longitude)
+                self.statistic.sendLocation(latitude: $0.latitude, longitude: $0.longitude)
             }).disposed(by: disposeBag)
     }
 
@@ -254,7 +258,7 @@ public final class Chelseaband: ChelseabandType {
         Observable.combineLatest(commandIdObservable, accelerometerCommand.axisObservable)
             .filter{ !$0.1.values.isEmpty }
             .subscribe(onNext: { values in
-                API().sendAccelerometer(values.1.values, forId: values.0)
+                self.statistic.sendAccelerometer(values.1.values, forId: values.0)
         }).disposed(by: disposeBag)
 
         perform(command: accelerometerCommand)
@@ -276,7 +280,7 @@ public final class Chelseaband: ChelseabandType {
         //NOTE: combinelatest didn't work because observing of fcm didn't call after connection to the band at first time
         macAddressCommand.MACAddressObservable
             .subscribe(onNext: { MACAddress in
-                API().register(bandMacAddress: MACAddress)
+                self.statistic.register(bandMacAddress: MACAddress)
                 self.macAddressObservable.onNext(MACAddress)
             }).disposed(by: disposeBag)
 
@@ -348,7 +352,7 @@ public final class Chelseaband: ChelseabandType {
 
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
-            API().sendVotingResponse(response, id)
+            self.statistic.sendVotingResponse(response, id)
             self.reactionOnVoteSubject.onNext((response, id))
         }).disposed(by: disposeBag)
 
@@ -445,8 +449,12 @@ public final class Chelseaband: ChelseabandType {
         tokenBehaviourSubject.onNext(token)
     }
     
+    public func register(phoneNumber: String) -> Observable<Void> {
+        statistic.register(phoneNumber: phoneNumber)
+    }
+    
     public func sendReaction(id: String) {
-        API().sendReaction(id)
+        statistic.sendReaction(id)
     }
 
     public func startScanForPeripherals() -> Observable<[Peripheral]> {

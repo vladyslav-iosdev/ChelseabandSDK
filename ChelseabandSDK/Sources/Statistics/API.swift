@@ -6,6 +6,24 @@
 //
 
 import Foundation
+import RxSwift
+
+public enum APIError: LocalizedError {
+    case missingRequiredData
+    case cantConvertDataToJSON
+    case customServerError(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .missingRequiredData:
+            return "Missing required data in response"
+        case .cantConvertDataToJSON:
+            return "Can't convert data to JSON dictionary"
+        case .customServerError(let description):
+            return description
+        }
+    }
+}
 
 final class API: Statistics {
 
@@ -36,7 +54,8 @@ final class API: Statistics {
             case mac
             case status
             case name
-            case phone
+            case sendOTP = "phone/send-code"
+            case verifyOTP = "phone/verify"
             case pin
             case inArea = "in-area"
         }
@@ -112,10 +131,25 @@ final class API: Statistics {
                     jsonParams: ["pin": pin])
     }
     
-    func register(phoneNumber: String) {
-        sendRequest(Modules.fanbands(.phone).path,
-                    method: .patch,
-                    jsonParams: ["phone": phoneNumber])
+    func register(phoneNumber: String) -> Observable<Void> {
+        Observable<Void>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.fanbands(.sendOTP).path,
+                                   method: .post,
+                                   jsonParams: ["phone": phoneNumber])
+            { result in
+                switch result {
+                case .success(let dictionary):
+                    observer.onNext(())
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
     }
     
     func sendBand(status: Bool) {
@@ -154,15 +188,14 @@ final class API: Statistics {
     }
     
     // MARK: - Private functions
-    @discardableResult
     private func sendRequest(_ url: String, method: Method,
-                             jsonParams: [String : Any]? = nil) {
+                             jsonParams: [String : Any]? = nil,
+                             callback: ((Result<[String: Any], Error>) -> ())? = nil) {
             
         guard let url = URL(string: url) else { return }
         let session = urlSession
         var request = HeaderHelper().generateURLRequest(path: url)
         request.httpMethod = method.rawValue
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         request.cachePolicy = NSURLRequest.CachePolicy.reloadIgnoringCacheData
         if let jsonParams = jsonParams {
             request.httpBody = try? JSONSerialization.data(withJSONObject: jsonParams, options: .prettyPrinted)
@@ -170,14 +203,40 @@ final class API: Statistics {
         
         let task = session.dataTask(with: request, completionHandler: {(data, response, error) in
             session.finishTasksAndInvalidate()
-            guard   error == nil,
-                    let jsonData = data,
-                    let json = try? JSONSerialization.jsonObject(with: jsonData, options: [])
-            else {
+            if let error = error {
                 print("❌", url, response)
+                callback?(.failure(error))
                 return
             }
-            print("✅", url, json)
+            
+            guard let jsonData = data else {
+                print("❌", url, response)
+                callback?(.failure(APIError.missingRequiredData))
+                return
+            }
+            
+            do {
+                let json = try JSONSerialization.jsonObject(with: jsonData, options: [])
+                
+                guard let dictionary = json as? [String: Any] else {
+                    print("❌", url, response)
+                    callback?(.failure(APIError.cantConvertDataToJSON))
+                    return
+                }
+                
+                if dictionary["statusCode"] as? Int == 0 {
+                    print("✅", url, json)
+                    callback?(.success(dictionary))
+                } else {
+                    print("❌", url, response)
+                    let errorDescription = dictionary["message"] as? String ?? "Unknown server error"
+                    let error = APIError.customServerError(errorDescription)
+                    callback?(.failure(error))
+                }
+            } catch let error {
+                print("❌", url, response)
+                callback?(.failure(error))
+            }
         })
         task.resume()
     }
@@ -190,6 +249,7 @@ extension API {
     
         func generateURLRequest(path: URL) -> URLRequest {
             var request = URLRequest(url: path)
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
             request.setValue(token, forHTTPHeaderField: "experiwear-fmc")
             return request
