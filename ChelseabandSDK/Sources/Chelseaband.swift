@@ -55,7 +55,7 @@ public protocol ChelseabandType {
 
     func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
 
-    func setFMCToken(_ token: String)
+    func setFCMToken(_ token: String)
     
     func register(phoneNumber: String) -> Observable<Void>
     
@@ -210,7 +210,7 @@ public final class Chelseaband: ChelseabandType {
     private func observeForFCMTokenChange() {
         fcmTokenObservable
             .subscribe(onNext: { token in
-                self.statistic.register(fmcToken: token)
+                self.statistic.register(fcmToken: token)
             }).disposed(by: longLifeDisposeBag)
     }
 
@@ -447,7 +447,7 @@ public final class Chelseaband: ChelseabandType {
         macAddressObservable.onNext(" ")
     }
 
-    public func setFMCToken(_ token: String) {
+    public func setFCMToken(_ token: String) {
         tokenBehaviourSubject.onNext(token)
     }
     

@@ -53,7 +53,7 @@ final class API: Statistics {
         case accelerometer(_ endpoint: AccelerometerEndpoint)
         
         enum FanbandsEndpoint: String {
-            case fmc
+            case fcm
             case mac
             case status
             case name
@@ -109,11 +109,11 @@ final class API: Statistics {
     }
     
     // MARK: - Public functions
-    func register(fmcToken token: String) {
+    func register(fcmToken token: String) {
         UserDefaults.standard.pushToken = token
-        sendRequest(Modules.fanbands(.fmc).path,
+        sendRequest(Modules.fanbands(.fcm).path,
                     method: .post,
-                    jsonParams: ["fmc": token])
+                    jsonParams: ["fcm": token])
     }
     
     func register(bandMacAddress mac: String) {
@@ -286,7 +286,7 @@ extension API {
             var request = URLRequest(url: path)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
-            request.setValue(token, forHTTPHeaderField: "experiwear-fmc")
+            request.setValue(token, forHTTPHeaderField: "experiwear-fcm")
             return request
         }
     }

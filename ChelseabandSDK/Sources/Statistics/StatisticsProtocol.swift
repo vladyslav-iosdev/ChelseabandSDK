@@ -8,7 +8,7 @@
 import RxSwift
 
 protocol Statistics {
-    func register(fmcToken: String)
+    func register(fcmToken: String)
     func register(bandMacAddress: String)
     func register(bandName: String)
     func register(bandPin: String)
