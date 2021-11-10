@@ -11,6 +11,7 @@ import RxSwift
 public enum APIError: LocalizedError {
     case missingRequiredData
     case cantConvertDataToJSON
+    case incorrectVerificationCode
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -19,6 +20,8 @@ public enum APIError: LocalizedError {
             return "Missing required data in response"
         case .cantConvertDataToJSON:
             return "Can't convert data to JSON dictionary"
+        case .incorrectVerificationCode:
+            return "Incorrect verification code"
         case .customServerError(let description):
             return description
         }
@@ -152,6 +155,35 @@ final class API: Statistics {
         }
     }
     
+    func verify(phoneNumber: String, withOTPCode OTPCode: String) -> Observable<Bool> {
+        Observable<Bool>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            let jsonData = [
+                "phone": phoneNumber,
+                "code": OTPCode
+            ]
+            strongSelf.sendRequest(Modules.fanbands(.verifyOTP).path,
+                                   method: .post,
+                                   jsonParams: jsonData)
+            { result in
+                switch result {
+                case .success(let dictionary):
+                    observer.onNext(true)
+                case .failure(let error):
+                    if case APIError.incorrectVerificationCode = error {
+                        observer.onNext(false)
+                    } else {
+                        observer.onError(error)
+                    }
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
     func sendBand(status: Bool) {
         sendRequest(Modules.fanbands(.status).path,
                     method: .patch,
@@ -227,6 +259,9 @@ final class API: Statistics {
                 if dictionary["statusCode"] as? Int == 0 {
                     print("✅", url, json)
                     callback?(.success(dictionary))
+                } else if dictionary["statusCode"] as? Int == 60022 {
+                    print("❌", url, response)
+                    callback?(.failure(APIError.incorrectVerificationCode))
                 } else {
                     print("❌", url, response)
                     let errorDescription = dictionary["message"] as? String ?? "Unknown server error"

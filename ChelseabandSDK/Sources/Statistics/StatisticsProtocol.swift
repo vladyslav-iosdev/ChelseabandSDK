@@ -13,6 +13,7 @@ protocol Statistics {
     func register(bandName: String)
     func register(bandPin: String)
     func register(phoneNumber: String) -> Observable<Void>
+    func verify(phoneNumber: String, withOTPCode OTPCode: String) -> Observable<Bool>
     func sendBand(status: Bool)
     func sendLocation(latitude: Double, longitude: Double)
     func sendAccelerometer(_ data: [[Double]], forId id: String)// TODO: remove in future

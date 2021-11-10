@@ -58,6 +58,8 @@ public protocol ChelseabandType {
     func setFMCToken(_ token: String)
     
     func register(phoneNumber: String) -> Observable<Void>
+    
+    func verify(phoneNumber: String, withOTPCode: String) -> Observable<Bool>
 
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
 
@@ -451,6 +453,10 @@ public final class Chelseaband: ChelseabandType {
     
     public func register(phoneNumber: String) -> Observable<Void> {
         statistic.register(phoneNumber: phoneNumber)
+    }
+    
+    public func verify(phoneNumber: String, withOTPCode OTPCode: String) -> Observable<Bool> {
+        statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode)
     }
     
     public func sendReaction(id: String) {
