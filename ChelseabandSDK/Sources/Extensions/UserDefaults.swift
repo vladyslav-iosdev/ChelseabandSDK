@@ -12,9 +12,9 @@ extension UserDefaults {
     private enum Keys {
         static let apiBaseEndpoint: String = "apiBaseEndpoint"
         static let apiKey: String = "apiKey"
-        static let pushToken: String = "pushTokenKey"
         static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
         static let firmwareVersion: String = "firmwareVersion"
+        static let fanbandId: String = "fanbandId"
     }
     
     var apiBaseEndpoint: String {
@@ -27,16 +27,16 @@ extension UserDefaults {
         set { setValue(newValue, forKey: Keys.apiKey) }
     }
     
-    var pushToken: String? {
+    var fanbandId: String? {
         get {
-            return value(forKey: Keys.pushToken) as? String
+            return value(forKey: Keys.fanbandId) as? String
         }
 
         set {
             if let value = newValue {
-                setValue(value, forKey: Keys.pushToken)
+                setValue(value, forKey: Keys.fanbandId)
             } else {
-                removeObject(forKey: Keys.pushToken)
+                removeObject(forKey: Keys.fanbandId)
             }
         }
     }

@@ -12,6 +12,7 @@ public enum APIError: LocalizedError {
     case missingRequiredData
     case cantConvertDataToJSON
     case incorrectVerificationCode
+    case missedFanbandId
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -22,6 +23,8 @@ public enum APIError: LocalizedError {
             return "Can't convert data to JSON dictionary"
         case .incorrectVerificationCode:
             return "Incorrect verification code"
+        case .missedFanbandId:
+            return "Fanband id not found in verification response"
         case .customServerError(let description):
             return description
         }
@@ -110,9 +113,8 @@ final class API: Statistics {
     
     // MARK: - Public functions
     func register(fcmToken token: String) {
-        UserDefaults.standard.pushToken = token
         sendRequest(Modules.fanbands(.fcm).path,
-                    method: .post,
+                    method: .patch,
                     jsonParams: ["fcm": token])
     }
     
@@ -155,13 +157,15 @@ final class API: Statistics {
         }
     }
     
-    func verify(phoneNumber: String, withOTPCode OTPCode: String) -> Observable<Bool> {
+    func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool>
+    {
         Observable<Bool>.create { [weak self] observer in
             guard let strongSelf = self else { return Disposables.create() }
             
             let jsonData = [
                 "phone": phoneNumber,
-                "code": OTPCode
+                "code": OTPCode,
+                "fcm": fcm
             ]
             strongSelf.sendRequest(Modules.fanbands(.verifyOTP).path,
                                    method: .post,
@@ -169,7 +173,12 @@ final class API: Statistics {
             { result in
                 switch result {
                 case .success(let dictionary):
-                    observer.onNext(true)
+                    if let fanbandId = (dictionary["data"] as? [String: Any])?["fanbandId"] as? String {
+                        UserDefaults.standard.fanbandId = fanbandId
+                        observer.onNext(true)
+                    } else {
+                        observer.onError(APIError.missedFanbandId)
+                    }
                 case .failure(let error):
                     if case APIError.incorrectVerificationCode = error {
                         observer.onNext(false)
@@ -257,13 +266,13 @@ final class API: Statistics {
                 }
                 
                 if dictionary["statusCode"] as? Int == 0 {
-                    print("✅", url, json)
+                    print("✅", url, dictionary)
                     callback?(.success(dictionary))
                 } else if dictionary["statusCode"] as? Int == 60022 {
-                    print("❌", url, response)
+                    print("❌", url, dictionary)
                     callback?(.failure(APIError.incorrectVerificationCode))
                 } else {
-                    print("❌", url, response)
+                    print("❌", url, dictionary)
                     let errorDescription = dictionary["message"] as? String ?? "Unknown server error"
                     let error = APIError.customServerError(errorDescription)
                     callback?(.failure(error))
@@ -280,13 +289,14 @@ final class API: Statistics {
 extension API {
     struct HeaderHelper {
         private let appKey = UserDefaults.standard.apiKey
-        private let token = UserDefaults.standard.pushToken
+        private let fanbandId = UserDefaults.standard.fanbandId
     
         func generateURLRequest(path: URL) -> URLRequest {
             var request = URLRequest(url: path)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
-            request.setValue(token, forHTTPHeaderField: "experiwear-fcm")
+            request.setValue(fanbandId, forHTTPHeaderField: "fanband-id")
+            
             return request
         }
     }

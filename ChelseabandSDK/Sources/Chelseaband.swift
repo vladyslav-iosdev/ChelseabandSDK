@@ -59,7 +59,7 @@ public protocol ChelseabandType {
     
     func register(phoneNumber: String) -> Observable<Void>
     
-    func verify(phoneNumber: String, withOTPCode: String) -> Observable<Bool>
+    func verify(phoneNumber: String, withOTPCode: String, andFCM: String) -> Observable<Bool>
 
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
 
@@ -455,8 +455,8 @@ public final class Chelseaband: ChelseabandType {
         statistic.register(phoneNumber: phoneNumber)
     }
     
-    public func verify(phoneNumber: String, withOTPCode OTPCode: String) -> Observable<Bool> {
-        statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode)
+    public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool> {
+        statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
     }
     
     public func sendReaction(id: String) {
