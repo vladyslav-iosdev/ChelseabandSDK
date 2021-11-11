@@ -35,6 +35,8 @@ public protocol ChelseabandType {
     var lastConnectedPeripheralUUID: String? { get set }
     
     var locationManager: LocationManager { get }
+    
+    var isAuthorize: Observable<Bool> { get }
 
     init(device: DeviceType, apiBaseEndpoint: String, apiKey: String)
     
@@ -126,6 +128,8 @@ public final class Chelseaband: ChelseabandType {
     public var locationManager: LocationManager {
         locationTracker
     }
+    
+    public var isAuthorize: Observable<Bool> { UserDefaults.standard.isAuthorizeObservable }
     
     public var macAddressObservable: BehaviorSubject<String> = .init(value: "")
 

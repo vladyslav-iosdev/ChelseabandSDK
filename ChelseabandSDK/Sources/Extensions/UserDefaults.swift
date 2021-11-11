@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import RxSwift
 
 extension UserDefaults {
     // MARK: - Keys
@@ -25,6 +26,11 @@ extension UserDefaults {
     var apiKey: String {
         get { value(forKey: Keys.apiKey) as? String ?? "" }
         set { setValue(newValue, forKey: Keys.apiKey) }
+    }
+    
+    var isAuthorizeObservable: Observable<Bool> {
+        UserDefaults.standard.rx.observe(String.self, Keys.fanbandId)
+            .map { $0 == nil ? false : true}
     }
     
     var fanbandId: String? {
