@@ -128,7 +128,7 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
 }
 
-private enum DeviceError: LocalizedError {
+enum DeviceError: LocalizedError {
     case maxRetryAttempts
     case writeCharacteristicMissing
     case mandatoryCharacteristicsMissing
@@ -330,7 +330,7 @@ public final class Device: DeviceType {
                     .subscribe(onNext: { event in
                         strongSelf.peripheral.onNext(peripheral)
                         if countDownTimer == nil {
-                            countDownTimer = Observable<Int>.timer(.seconds(0), period: .seconds(30), scheduler: MainScheduler.instance)
+                            countDownTimer = Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
                                 .skip(1)
                                 .take(1)
                                 .subscribe(onNext: { timePassed in
@@ -454,23 +454,8 @@ public final class Device: DeviceType {
             return self.manager.scanForPeripherals(withServices: self.configuration.advertisementServices)
                 .do(onSubscribed: { self.bluetoothIsSearchingSubject.onNext(true) },
                     onDispose: { self.bluetoothIsSearchingSubject.onNext(false) })
-                .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
-                .retryWithDelay(timeInterval: self.scanningRetry) {
-                    set.removeAllObjects()
-                    //NOTE: if you make reconnect to device in delay time peripheral wouln't added to set
-                    if  let value = try? self.peripheral.value(),
-                        value.peripheral.isConnected {
-                        set.add(value)
-                    }
-                }
                 .scan(set, accumulator: { set, peripheral -> NSMutableSet in
-                    if !set.contains(where: {
-                        ($0 as? Peripheral)?.peripheral.identifier == peripheral.peripheral.identifier
-                    })
-                    {
-                        set.add(peripheral)
-                    }
-
+                    set.add(peripheral)
                     return set
                 })
                 .compactMap { $0.allObjects as? [Peripheral] }
