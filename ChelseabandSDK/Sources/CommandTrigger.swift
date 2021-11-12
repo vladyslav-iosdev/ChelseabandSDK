@@ -8,17 +8,17 @@
 import Foundation
 
 public enum CommandTrigger: String, CaseIterable {
-    case goal
+    case promo
     case news
-    case gesture
+    case vote
 
     var hex: String {
         switch self {
-        case .goal:
+        case .promo:
             return "01"
         case .news:
             return "02"
-        case .gesture:
+        case .vote:
             return "03"
         }
     }

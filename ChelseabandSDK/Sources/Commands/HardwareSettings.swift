@@ -43,11 +43,11 @@ public class HardwareEnablement: Command {
 
 fileprivate extension Array where Element == CommandTrigger {
     var enabledLEDsHex: String {
-        if contains(.goal) && contains(.news) {
+        if contains(.promo) && contains(.news) {
             return "03"
         } else if contains(.news) {
             return "02"
-        } else if contains(.goal) {
+        } else if contains(.promo) {
             return "01"
         } else {
             return "00"
