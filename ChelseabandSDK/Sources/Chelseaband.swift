@@ -178,11 +178,8 @@ public final class Chelseaband: ChelseabandType {
                 
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
-                if case DeviceError.mandatoryCharacteristicsMissing = error {
-                    strongSelf.disconnect(forgotLastPeripheral: true)
-                } else {
-                    strongSelf.disconnect(forgotLastPeripheral: false)
-                }
+                
+                strongSelf.disconnect(forgotLastPeripheral: false)
             })
     }
 
