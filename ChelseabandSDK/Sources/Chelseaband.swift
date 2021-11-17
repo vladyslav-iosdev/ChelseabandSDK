@@ -67,7 +67,7 @@ public protocol ChelseabandType {
 
     func sendMessageCommand(message: String, id: String) -> Observable<Void>
     
-    func uploadImage(_ image: UIImage, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
+    func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
     
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
 
@@ -303,14 +303,13 @@ public final class Chelseaband: ChelseabandType {
         return performSafe(command: command0, timeOut: .seconds(5))
     }
     
-    public func uploadImage(_ image: UIImage, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
-        // TODO: handle this in future
-//        guard imageType.imageLength == image.jpegData(compressionQuality: 1.0)!.count else {
-//            return Observable<Any>.error(ImageControlCommandError.wrongImageSize).mapToVoid()
-//        }
+    public func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
+        guard imageType.imageLength == binImage.count else {
+            return Observable<Any>.error(ImageControlCommandError.wrongImageSize).mapToVoid()
+        }
         
-        let imageControl = ImageControlCommand(imageType)
-        let imageChunk = ImageChunkCommand(image)
+        let imageControl = ImageControlCommand(imageType, imageData: binImage)
+        let imageChunk = ImageChunkCommand(binImage)
         let commands: [CommandNew] = [imageControl, imageChunk]
         
         return Observable<Void>.create { [weak self] seal in

@@ -19,17 +19,10 @@ public final class ImageChunkCommand: CommandNew {
     
     private var imageChunkedArray: [Data]
     
-    private static let maxChunkSize = 251
-    private let image: UIImage
+    private static let maxChunkSize = 200
     
-    init(_ image: UIImage) {
-        self.image = image
-        let imageData = image.jpegData(compressionQuality: 1.0)!
-        let imageArray = [UInt8](imageData)
-        let correctArray = imageArray[..<3200]
-        let imageDataCorrect = Data(correctArray)
-        
-        imageChunkedArray = imageDataCorrect.createChunks(chunkSize: ImageChunkCommand.maxChunkSize)
+    init(_ binImage: Data) {
+        imageChunkedArray = binImage.createChunks(chunkSize: ImageChunkCommand.maxChunkSize)
     }
     
     public func perform(on executor: CommandExecutor) -> Observable<Void> {
