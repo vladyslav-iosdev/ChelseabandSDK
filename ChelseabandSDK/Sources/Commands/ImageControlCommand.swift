@@ -83,7 +83,7 @@ extension ImageControlCommand {
             case .opposingTeamImage:
                 return 2240
             case .alertIcon:
-                return 7200
+                return 2738
             case .opposingTeamWinningLogo:
                 return 3200
             case .gamedayTheme:
