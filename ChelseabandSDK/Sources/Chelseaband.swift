@@ -305,7 +305,7 @@ public final class Chelseaband: ChelseabandType {
     
     public func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
         guard imageType.imageLength == binImage.count else {
-            return Observable<Any>.error(ImageControlCommandError.wrongImageSize).mapToVoid()
+            return Observable<Void>.error(ImageControlCommandError.wrongImageSize)
         }
         
         let imageControl = ImageControlCommand(imageType, imageData: binImage)
@@ -372,7 +372,7 @@ public final class Chelseaband: ChelseabandType {
             let vibrationCommand = try VibrationCommandNew(fromData: data, withDecoder: decoder)
             return performSafe(command: vibrationCommand, timeOut: .seconds(5))
         } catch {
-            return Observable<Any>.error(error).mapToVoid()
+            return Observable<Void>.error(error)
         }
     }
     
@@ -381,7 +381,7 @@ public final class Chelseaband: ChelseabandType {
             let ledCommand = try LEDCommandNew(fromData: data, withDecoder: decoder)
             return performSafe(command: ledCommand, timeOut: .seconds(5))
         } catch {
-            return Observable<Any>.error(error).mapToVoid()
+            return Observable<Void>.error(error)
         }
     }
     

@@ -62,7 +62,6 @@ extension ImageControlCommand {
     public enum AlertImage {
         case opposingTeamImage
         case alertIcon
-        case opposingTeamWinningLogo
         case gamedayTheme
         
         var imageType: UInt8 {
@@ -71,10 +70,8 @@ extension ImageControlCommand {
                 return 0
             case .alertIcon:
                 return 1
-            case .opposingTeamWinningLogo:
-                return 2
             case .gamedayTheme:
-                return 3
+                return 2
             }
         }
         
@@ -84,8 +81,6 @@ extension ImageControlCommand {
                 return 2240
             case .alertIcon:
                 return 2738
-            case .opposingTeamWinningLogo:
-                return 3200
             case .gamedayTheme:
                 return 25600
             }
