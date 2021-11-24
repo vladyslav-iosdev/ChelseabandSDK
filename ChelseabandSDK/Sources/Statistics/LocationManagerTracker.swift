@@ -80,9 +80,12 @@ extension LocationManagerTracker: CLLocationManagerDelegate {
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {
         if #available(iOS 14.0, *) {
             locationStatusSubject.onNext(manager.authorizationStatus)
-        } else {
-            locationStatusSubject.onNext(CLLocationManager.authorizationStatus())
         }
+        startObservLocation()
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        locationStatusSubject.onNext(status)
         startObservLocation()
     }
 }
