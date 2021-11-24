@@ -13,11 +13,23 @@ import typealias CommonCrypto.CC_LONG
 
 public enum ImageControlCommandError: LocalizedError {
     case wrongImageSize
+    case noHashData
+    case wrongHashDataSize
+    case imageHashNotEqual
+    case tooManyAttempts
     
     public var errorDescription: String? {
         switch self {
         case .wrongImageSize:
             return "Image size which should upload to band not equal to expected"
+        case .noHashData:
+            return "Read from characteristic, but hash data is empty"
+        case .wrongHashDataSize:
+            return "Data which received from the band is not equal to expected"
+        case .imageHashNotEqual:
+            return "Hash from prototype didn't equal to expected"
+        case .tooManyAttempts:
+            return "Too many attempts for uploading image to the band"
         }
     }
 }
@@ -55,6 +67,24 @@ public struct ImageControlCommand: CommandNew {
             }
         }
         return digestData
+    }
+}
+
+extension ImageControlCommand: PerformReadCommandProtocol {
+    public func performRead(on executor: CommandExecutor) -> Observable<Void> {
+        executor.read(command: self)
+            .do(onNext: {
+                guard let data = $0 else { throw ImageControlCommandError.noHashData }
+                guard data.count == 48 else { throw ImageControlCommandError.wrongHashDataSize }
+                
+                let hashArrays = ([UInt8](data)).chunked(by: 16)
+                let imageHashFromPrototype = Data(hashArrays[Int(alertImage.imageType)])
+                
+                if imageHashFromPrototype != md5ImageHashData {
+                    throw ImageControlCommandError.imageHashNotEqual
+                }
+            })
+            .mapToVoid()
     }
 }
 

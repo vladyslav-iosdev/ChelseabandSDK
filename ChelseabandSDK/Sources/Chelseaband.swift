@@ -56,6 +56,10 @@ public protocol ChelseabandType {
     func perform(command: CommandNew) -> Observable<Void>
 
     func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
+    
+    func performRead(command: PerformReadCommandProtocol) -> Observable<Void>
+    
+    func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval) -> Observable<Void>
 
     func setFCMToken(_ token: String)
     
@@ -310,13 +314,23 @@ public final class Chelseaband: ChelseabandType {
         
         let imageControl = ImageControlCommand(imageType, imageData: binImage)
         let imageChunk = ImageChunkCommand(binImage)
-        let commands: [CommandNew] = [imageControl, imageChunk]
+        let commands = [
+            performSafe(command: imageControl, timeOut: .seconds(5)),
+            performSafe(command: imageChunk, timeOut: .seconds(5)),
+            performSafeRead(command: imageControl, timeOut: .seconds(5))
+        ]
         
         return Observable<Void>.create { [weak self] seal in
             let commandsDisposable = Observable.from(commands)
-                .concatMap { [weak self] command -> Observable<Void> in
-                    guard let strongSelf = self else { return .just(()) }
-                    return strongSelf.performSafe(command: command, timeOut: .seconds(5))
+                .concatMap { $0 }
+                .retryWhen { error in
+                    error
+                        .scan(0) { attempts, error in
+                            let max = 3
+                            guard attempts < max else { throw ImageControlCommandError.tooManyAttempts }
+                            guard case ImageControlCommandError.imageHashNotEqual = error else { throw error }
+                            return attempts + 1
+                        }
                 }
                 .materialize()
                 .subscribe(
@@ -439,6 +453,23 @@ public final class Chelseaband: ChelseabandType {
                 self.perform(command: command)
             }
     }
+    
+    public func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+        connectionObservable
+            .skipWhile { !$0.isConnected }
+            .take(1)
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .flatMap { _ -> Observable<Void> in
+                self.performRead(command: command)
+            }
+    }
+    
+    public func performRead(command: PerformReadCommandProtocol) -> Observable<Void> {
+        command
+            .performRead(on: self)
+            .observeOn(MainScheduler.instance)
+            .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
+    }
 
     public func disconnect(forgotLastPeripheral: Bool) {
         connectionDisposable?.dispose()
@@ -498,5 +529,9 @@ extension Chelseaband: CommandExecutor {
     
     public func write(command: WritableCommand) -> Observable<Void> {
         device.write(command: command, timeout: .seconds(5))
+    }
+    
+    public func read(command: ReadableCommand) -> Observable<Data?> {
+        device.read(command: command, timeout: .seconds(5))
     }
 }

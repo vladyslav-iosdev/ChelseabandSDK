@@ -126,6 +126,8 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
     
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func read(command: ReadableCommand, timeout: DispatchTimeInterval) -> Observable<Data?>
 }
 
 private enum DeviceError: LocalizedError {
@@ -227,7 +229,7 @@ public final class Device: DeviceType {
     private var suotaPatchDataCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaServStatusCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheral?> = .init(value: nil)
-    private var fanbandCharacteristicsForWrite = [Observable<Characteristic>]()
+    private var fanbandCharacteristics = [Observable<Characteristic>]()
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -372,7 +374,7 @@ public final class Device: DeviceType {
                             })
                             
                             if allSatisfy {
-                                strongSelf.fanbandCharacteristicsForWrite.removeAll()
+                                strongSelf.fanbandCharacteristics.removeAll()
                                 let characteristicsObservable = characteristicsDictionary.map { $0.value }
                                 let characteristicsDisposable = Observable.combineLatest(characteristicsObservable)
                                     .subscribe(onNext: { characteristics in
@@ -397,15 +399,15 @@ public final class Device: DeviceType {
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             case configuration.vibrationCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.imageControlCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.imageChunkCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.alertCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             default:
                                                 break
                                             }
@@ -420,7 +422,7 @@ public final class Device: DeviceType {
                                         strongSelf.suotaPatchLenCharacteristic.on(.next(nil))
                                         strongSelf.suotaPatchDataCharacteristic.on(.next(nil))
                                         strongSelf.suotaServStatusCharacteristic.on(.next(nil))
-                                        strongSelf.fanbandCharacteristicsForWrite.removeAll()
+                                        strongSelf.fanbandCharacteristics.removeAll()
 
                                         seal.onError(error)
                                     }, onCompleted: {
@@ -523,7 +525,7 @@ public final class Device: DeviceType {
                 return .error(BluetoothError.destroyed)
             }
 
-            return strongSelf.findCharacteristicForWrite(command: command)
+            return strongSelf.findCharacteristic(forCommand: command)
                 .flatMap { characteristic -> Observable<Characteristic> in
                     if let value = characteristic {
                         return value.writeValue(command.dataForSend,
@@ -539,8 +541,31 @@ public final class Device: DeviceType {
         }
     }
     
-    private func findCharacteristicForWrite(command: WritableCommand) -> Observable<Characteristic?> {
-        Observable.combineLatest(fanbandCharacteristicsForWrite)
+    public func read(command: ReadableCommand, timeout: DispatchTimeInterval) -> Observable<Data?> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.findCharacteristic(forCommand: command)
+                .flatMap { characteristic -> Observable<Data?> in
+                    if let value = characteristic {
+                        return value.readValue()
+                            .map { $0.value }
+                            .asObservable()
+                        
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+            }
+            .timeout(timeout, scheduler: MainScheduler.instance)
+            .take(1)
+            .debug("\(strongSelf).write")
+        }
+    }
+    
+    private func findCharacteristic(forCommand command: GeneralCommand) -> Observable<Characteristic?> {
+        Observable.combineLatest(fanbandCharacteristics)
             .map { $0.first { $0.uuid == command.uuidForWrite } }
             .take(1)
     }
