@@ -48,6 +48,7 @@ final class SUOTAUpdate: SUOTAUpdateType {
     
     private var step: Steps = .first
     private var nextStep: Steps = .zero
+    private var shouldHandleError = true
     
     private let disposeBag = DisposeBag()
     private let timeout: DispatchTimeInterval = .seconds(5)
@@ -220,6 +221,7 @@ final class SUOTAUpdate: SUOTAUpdateType {
     private func seventhStep() {
         step = .eight
         let suotaReboot: UInt32 = 0xFD000000
+        shouldHandleError = false
         device.writeInMemDev(data: suotaReboot.data, timeout: timeout)
             .subscribe { [weak self] in self?.doStep() }
             .disposed(by: disposeBag)
@@ -244,7 +246,10 @@ final class SUOTAUpdate: SUOTAUpdateType {
                             }
                         }
                     }, onError: { [weak self] error in
-                        self?.percentOfUploadingSubject.on(.error(error))
+                        guard let strongSelf = self else { return }
+                        if strongSelf.shouldHandleError {
+                            strongSelf.percentOfUploadingSubject.on(.error(error))
+                        }
                     })
                     .disposed(by: strongSelf.disposeBag)
             })
