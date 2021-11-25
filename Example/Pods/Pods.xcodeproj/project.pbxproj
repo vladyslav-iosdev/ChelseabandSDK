@@ -326,6 +326,7 @@
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
+		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
 		C7522A4AC82C24337F4BC373E0FF37B4 /* KVORepresentable+CoreGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4C4A75356CD3405BE3534DFB64E4EB /* KVORepresentable+CoreGraphics.swift */; };
@@ -872,6 +873,7 @@
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
+		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1646,6 +1648,7 @@
 				10E469E886BFF25957B7188F4D8684CD /* TimeCommand.swift */,
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
 				C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */,
+				C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2101,6 +2104,7 @@
 				87BDF81725FF9DC2007DCD36 /* HardwareSettings.swift in Sources */,
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
 				59692A412C41314B6114AA4E7977AD00 /* GoalCommand.swift in Sources */,
+				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */,
 				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,

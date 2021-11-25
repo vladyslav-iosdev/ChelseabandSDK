@@ -47,6 +47,8 @@ public protocol ChelseabandType {
     func isLastConnected(peripheral: Peripheral) -> Bool
 
     func disconnect(forgotLastPeripheral: Bool)
+    
+    func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
 
     // TODO: remove in future unused function perform
     func perform(command: Command) -> Observable<Void>
@@ -418,6 +420,11 @@ public final class Chelseaband: ChelseabandType {
         
         suotaUpdate = suota
         return suota.percentOfUploadingObservable
+    }
+    
+    public func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void> {
+        let deviceSettingsCommand = DeviceSettingsCommand(bandOrientation: bandOrientation)
+        return performSafe(command: deviceSettingsCommand, timeOut: .seconds(5))
     }
 
     public func perform(command: Command) -> Observable<Void> {

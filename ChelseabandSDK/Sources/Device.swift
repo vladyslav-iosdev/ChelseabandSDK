@@ -360,6 +360,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
                                 characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
                             case configuration.fanbandService:
+                                characteristicsDictionary[configuration.deviceSettingsCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.deviceSettingsCharacteristic)
                                 characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
                                 characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
                                 characteristicsDictionary[configuration.imageControlCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageControlCharacteristic)
@@ -399,6 +400,8 @@ public final class Device: DeviceType {
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             case configuration.vibrationCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.deviceSettingsCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
