@@ -24,6 +24,8 @@ public protocol Configuration {
     var suotaServStatusCharacteristic: ID { get }
     
     var fanbandService: ID { get }
+    var seatingPositionCharacteristic: ID { get }
+    var nfcTicketCharacteristic: ID { get }
     var deviceSettingsCharacteristic: ID { get }
     var ledCharacteristic: ID { get }
     var vibrationCharacteristic: ID { get }
@@ -74,6 +76,20 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "00000000-1111-2222-2222-333333333333")
+        }
+    }
+    
+    public var seatingPositionCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111111")
+        }
+    }
+    
+    public var nfcTicketCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111116")
         }
     }
     
@@ -193,6 +209,8 @@ public enum ChelseabandConfiguration: Configuration {
             suotaPatchDataCharacteristic.uuidString,
             suotaServStatusCharacteristic.uuidString,
             deviceSettingsCharacteristic.uuidString,
+            seatingPositionCharacteristic.uuidString,
+            nfcTicketCharacteristic.uuidString,
             ledCharacteristic.uuidString,
             vibrationCharacteristic.uuidString,
             imageControlCharacteristic.uuidString,

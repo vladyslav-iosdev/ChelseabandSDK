@@ -360,6 +360,8 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
                                 characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
                             case configuration.fanbandService:
+                                characteristicsDictionary[configuration.seatingPositionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.seatingPositionCharacteristic)
+                                characteristicsDictionary[configuration.nfcTicketCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.nfcTicketCharacteristic)
                                 characteristicsDictionary[configuration.deviceSettingsCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.deviceSettingsCharacteristic)
                                 characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
                                 characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
@@ -400,6 +402,10 @@ public final class Device: DeviceType {
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             case configuration.vibrationCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.seatingPositionCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.nfcTicketCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.deviceSettingsCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
