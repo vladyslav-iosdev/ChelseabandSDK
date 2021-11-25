@@ -243,6 +243,8 @@ final class SUOTAUpdate: SUOTAUpdateType {
                                 strongSelf.percentOfUploadingSubject.on(.error(SUOTAUpdateError.wrongExpectedValue))
                             }
                         }
+                    }, onError: { [weak self] error in
+                        self?.percentOfUploadingSubject.on(.error(error))
                     })
                     .disposed(by: strongSelf.disposeBag)
             })
