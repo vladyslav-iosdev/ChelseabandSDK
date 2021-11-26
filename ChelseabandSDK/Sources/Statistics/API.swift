@@ -13,6 +13,7 @@ public enum APIError: LocalizedError {
     case cantConvertDataToJSON
     case incorrectVerificationCode
     case missedFanbandId
+    case missedTicketData
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -25,6 +26,8 @@ public enum APIError: LocalizedError {
             return "Incorrect verification code"
         case .missedFanbandId:
             return "Fanband id not found in verification response"
+        case .missedTicketData:
+            return "Ticket data not found or cant decode it into ticket model"
         case .customServerError(let description):
             return description
         }
@@ -44,6 +47,7 @@ final class API: Statistics {
     
     // MARK: - Enums
     private enum Method: String {
+        case get = "GET"
         case post = "POST"
         case patch = "PATCH"
     }
@@ -54,6 +58,7 @@ final class API: Statistics {
         case fanbands(_ endpoint: FanbandsEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
         case accelerometer(_ endpoint: AccelerometerEndpoint)
+        case tickets(_ endpoint: TicketsEndpoint)
         
         enum FanbandsEndpoint: String {
             case fcm
@@ -84,6 +89,10 @@ final class API: Statistics {
             case none = ""
         }
         
+        enum TicketsEndpoint: String {
+            case bandTicket = "band-ticket"
+        }
+        
         var path: String {
             var endpointURL: String!
             
@@ -93,6 +102,8 @@ final class API: Statistics {
             case .notifications(let endpoint):
                 endpointURL = endpoint.rawValue
             case .accelerometer(let endpoint):
+                endpointURL = endpoint.rawValue
+            case .tickets(let endpoint):
                 endpointURL = endpoint.rawValue
             }
             
@@ -107,6 +118,8 @@ final class API: Statistics {
                 return "notifications/"
             case .accelerometer(_):
                 return "accelerometer/"
+            case .tickets(_):
+                return "tickets/"
             }
         }
     }
@@ -226,6 +239,34 @@ final class API: Statistics {
     func sendReaction(_ id: String) {
         sendRequest(Modules.notifications(.react(id)).path,
                     method: .patch)
+    }
+    
+    func fetchTicket() -> Observable<TicketType> {
+        Observable<TicketType>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.tickets(.bandTicket).path,
+                                   method: .get)
+            { result in
+                switch result {
+                case .success(let json):
+                    let decoder = JSONDecoder()
+                    if let jsonTicket = json["data"] as? [String: Any],
+                       let ticketData = try? JSONSerialization.data(withJSONObject: jsonTicket),
+                       let ticket = try? decoder.decode(Ticket.self, from: ticketData)
+                    {
+                        observer.onNext(ticket)
+                    } else {
+                        observer.onError(APIError.missedTicketData)
+                    }
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
     }
     
     // MARK: - Private functions

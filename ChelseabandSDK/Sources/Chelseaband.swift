@@ -75,6 +75,8 @@ public protocol ChelseabandType {
     
     func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
     
+    func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType>
+    
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
 
     func sendGoalCommand(id: String) -> Observable<Void>
@@ -90,6 +92,17 @@ public protocol ChelseabandType {
     func stopScanForPeripherals()
     
     func updateFirmware() -> Observable<Double>
+}
+
+public enum ChelseabandError: LocalizedError {
+    case destroyed
+    
+    public var errorDescription: String? {
+        switch self {
+        case .destroyed:
+            return "Chelseaband SDK was destroyed"
+        }
+    }
 }
 
 public final class Chelseaband: ChelseabandType {
@@ -352,6 +365,23 @@ public final class Chelseaband: ChelseabandType {
                 commandsDisposable.dispose()
             }
         }
+    }
+    
+    public func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType> {
+        statistic.fetchTicket()
+            .flatMap { [weak self] ticket -> Observable<Observable<TicketType>> in
+                guard let strongSelf = self else { throw ChelseabandError.destroyed }
+                do {
+                    let seatCommand = try SeatPositionCommand(fromTicket: ticket)
+                    let nfcCommand = try NFCCommand(fromTicket: ticket)
+                    return Observable.from([seatCommand.perform(on: strongSelf).map { ticket },
+                                            nfcCommand.perform(on: strongSelf).map { ticket }])
+                } catch let error {
+                    throw error
+                }
+            }
+            .concatMap { $0 }
+            .takeLast(1)
     }
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {

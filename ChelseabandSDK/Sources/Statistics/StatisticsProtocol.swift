@@ -19,4 +19,5 @@ protocol Statistics {
     func sendAccelerometer(_ data: [[Double]], forId id: String)// TODO: remove in future
     func sendVotingResponse(_: VotingResult, _: String)
     func sendReaction(_: String)
+    func fetchTicket() -> Observable<TicketType>
 }

@@ -324,6 +324,9 @@
 		C5547F7A2601FCF20084825B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F782601FCF20084825B /* API.swift */; };
 		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
+		C58175A12751213B00BFE00E /* SeatPositionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A02751213B00BFE00E /* SeatPositionCommand.swift */; };
+		C58175A32751215900BFE00E /* NFCCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A22751215900BFE00E /* NFCCommand.swift */; };
+		C58175A92751246900BFE00E /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A82751246800BFE00E /* Ticket.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
@@ -872,6 +875,9 @@
 		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
+		C58175A02751213B00BFE00E /* SeatPositionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatPositionCommand.swift; sourceTree = "<group>"; };
+		C58175A22751215900BFE00E /* NFCCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCommand.swift; sourceTree = "<group>"; };
+		C58175A82751246800BFE00E /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
@@ -1563,6 +1569,15 @@
 			path = ChelseabandSDK/Sources/Statistics;
 			sourceTree = "<group>";
 		};
+		C58175A72751246800BFE00E /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				C58175A82751246800BFE00E /* Ticket.swift */,
+			);
+			name = Models;
+			path = ChelseabandSDK/Sources/Models;
+			sourceTree = "<group>";
+		};
 		CF1408CF629C7361332E53B88F7BD30C = {
 			isa = PBXGroup;
 			children = (
@@ -1649,6 +1664,8 @@
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
 				C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */,
 				C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */,
+				C58175A02751213B00BFE00E /* SeatPositionCommand.swift */,
+				C58175A22751215900BFE00E /* NFCCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -1666,6 +1683,7 @@
 				1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */,
 				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
+				C58175A72751246800BFE00E /* Models */,
 				6B99CDF6654516DC72E5CE9DCE1EA471 /* Extensions */,
 				F3CCDCFA1C2A09BE43FCC0CD31A2457B /* Pod */,
 				1D491F7703BEA8A4C820E02ED2AE8D17 /* Support Files */,
@@ -2086,7 +2104,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				C5547F762601F22B0084825B /* UserDefaults.swift in Sources */,
+				C58175A12751213B00BFE00E /* SeatPositionCommand.swift in Sources */,
 				87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */,
+				C58175A32751215900BFE00E /* NFCCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
 				F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */,
 				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
@@ -2114,6 +2134,7 @@
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
+				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
