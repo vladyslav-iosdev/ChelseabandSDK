@@ -374,8 +374,8 @@ public final class Chelseaband: ChelseabandType {
                 do {
                     let seatCommand = try SeatPositionCommand(fromTicket: ticket)
                     let nfcCommand = try NFCCommand(fromTicket: ticket)
-                    return Observable.from([seatCommand.perform(on: strongSelf).map { ticket },
-                                            nfcCommand.perform(on: strongSelf).map { ticket }])
+                    return Observable.from([nfcCommand.perform(on: strongSelf).map { ticket },
+                                            seatCommand.perform(on: strongSelf).map { ticket }])
                 } catch let error {
                     throw error
                 }

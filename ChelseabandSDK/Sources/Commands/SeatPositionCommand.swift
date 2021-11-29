@@ -29,7 +29,7 @@ public struct SeatPositionCommand: CommandNew {
     }
     
     init(fromTicket ticket: TicketType) throws {
-        let resultString = "section \(ticket.section)\nrow \(ticket.row)\nseat \(ticket.seat)\0"
+        let resultString = "\(ticket.section)\n\(ticket.row)\n\(ticket.seat)\0"
         if let data = resultString.data(using: .utf8) {
             dataForSend = data
         } else {
