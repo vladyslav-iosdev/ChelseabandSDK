@@ -7,14 +7,14 @@
 
 import Foundation
 
-public protocol TicketType {
+public protocol TicketType: Codable {
     var section: String { get }
     var row: Int { get }
     var seat: String { get }
     var nfcString: String { get }
 }
 
-public struct Ticket: TicketType, Decodable {
+public struct Ticket: TicketType {
     public var section: String
     public var row: Int
     public var seat: String
