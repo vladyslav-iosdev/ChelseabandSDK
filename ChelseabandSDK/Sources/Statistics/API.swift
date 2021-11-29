@@ -13,7 +13,6 @@ public enum APIError: LocalizedError {
     case cantConvertDataToJSON
     case incorrectVerificationCode
     case missedFanbandId
-    case missedTicketData
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -26,8 +25,6 @@ public enum APIError: LocalizedError {
             return "Incorrect verification code"
         case .missedFanbandId:
             return "Fanband id not found in verification response"
-        case .missedTicketData:
-            return "Ticket data not found or cant decode it into ticket model"
         case .customServerError(let description):
             return description
         }
@@ -241,8 +238,8 @@ final class API: Statistics {
                     method: .patch)
     }
     
-    func fetchTicket() -> Observable<TicketType> {
-        Observable<TicketType>.create { [weak self] observer in
+    func fetchTicket() -> Observable<TicketType?> {
+        Observable<TicketType?>.create { [weak self] observer in
             guard let strongSelf = self else { return Disposables.create() }
             
             strongSelf.sendRequest(Modules.tickets(.bandTicket).path,
@@ -257,7 +254,7 @@ final class API: Statistics {
                     {
                         observer.onNext(ticket)
                     } else {
-                        observer.onError(APIError.missedTicketData)
+                        observer.onNext(nil)
                     }
                 case .failure(let error):
                     observer.onError(error)

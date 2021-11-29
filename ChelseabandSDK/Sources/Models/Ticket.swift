@@ -14,7 +14,7 @@ public protocol TicketType: Codable {
     var nfcString: String { get }
 }
 
-public struct Ticket: TicketType {
+public struct Ticket: TicketType, Equatable {
     public var section: String
     public var row: Int
     public var seat: String

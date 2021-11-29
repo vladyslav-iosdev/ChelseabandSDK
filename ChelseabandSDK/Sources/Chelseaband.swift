@@ -77,6 +77,8 @@ public protocol ChelseabandType {
     
     func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType>
     
+    func fetchTicket() -> Observable<TicketType?>
+    
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
 
     func sendGoalCommand(id: String) -> Observable<Void>
@@ -96,11 +98,14 @@ public protocol ChelseabandType {
 
 public enum ChelseabandError: LocalizedError {
     case destroyed
+    case userHaventTicket
     
     public var errorDescription: String? {
         switch self {
         case .destroyed:
             return "Chelseaband SDK was destroyed"
+        case .userHaventTicket:
+            return "Looks like user still haven't ticket on server"
         }
     }
 }
@@ -369,6 +374,14 @@ public final class Chelseaband: ChelseabandType {
     
     public func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType> {
         statistic.fetchTicket()
+            //TODO: check this map
+            .map { serverTicket -> TicketType in
+                if let ticket = serverTicket {
+                    return ticket
+                } else {
+                    throw ChelseabandError.userHaventTicket
+                }
+            }
             .flatMap { [weak self] ticket -> Observable<Observable<TicketType>> in
                 guard let strongSelf = self else { throw ChelseabandError.destroyed }
                 do {
@@ -382,6 +395,11 @@ public final class Chelseaband: ChelseabandType {
             }
             .concatMap { $0 }
             .takeLast(1)
+    }
+    
+    public func fetchTicket() -> Observable<TicketType?> {
+        statistic.fetchTicket()
+            .take(1)
     }
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {
