@@ -502,6 +502,7 @@ public final class Chelseaband: ChelseabandType {
     public func performSafe(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
+            .skipWhile { _ in self.suotaUpdate != nil }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Void> in
@@ -512,6 +513,7 @@ public final class Chelseaband: ChelseabandType {
     public func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
+            .skipWhile { _ in self.suotaUpdate != nil }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Void> in
