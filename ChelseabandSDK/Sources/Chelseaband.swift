@@ -99,6 +99,7 @@ public protocol ChelseabandType {
 public enum ChelseabandError: LocalizedError {
     case destroyed
     case userHaventTicket
+    case bandDisconnected
     
     public var errorDescription: String? {
         switch self {
@@ -106,6 +107,8 @@ public enum ChelseabandError: LocalizedError {
             return "Chelseaband SDK was destroyed"
         case .userHaventTicket:
             return "Looks like user still haven't ticket on server"
+        case .bandDisconnected:
+            return "Looks like band is disconnected, connect band to phone and try again"
         }
     }
 }
@@ -373,8 +376,18 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType> {
-        statistic.fetchTicket()
-            //TODO: check this map
+        Observable.combineLatest(statistic.fetchTicket(), connectionObservable)
+            .skipWhile { !$0.1.isConnected }
+            .timeout(.seconds(15), scheduler: MainScheduler.instance)
+            .take(1)
+            .catchError { error in
+                if case RxSwift.RxError.timeout = error {
+                    throw ChelseabandError.bandDisconnected
+                } else {
+                    throw error
+                }
+            }
+            .map{ $0.0 }
             .map { serverTicket -> TicketType in
                 if let ticket = serverTicket {
                     return ticket
