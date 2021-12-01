@@ -62,8 +62,8 @@ extension ScoreCommand {
         func encodeToData() -> Data {
             var resultData = Data([wakeUpScreen, titleType])
             resultData.append(time.data)
-            resultData.append(title.uppercased().data(using: .utf8) ?? Data())
-            resultData.append(body.uppercased().data(using: .utf8) ?? Data())
+            resultData.append(title.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
+            resultData.append(body.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             
             return resultData
         }

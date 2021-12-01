@@ -78,7 +78,7 @@ public struct MessageCommandNew: CommandNew {
     private let messageType: MessageType
     
     init(_ message: String, type: MessageType) {
-        self.message = message
+        self.message = message.uppercased() //NOTE: band ignore lowercase symbols
         messageType = type
     }
     
