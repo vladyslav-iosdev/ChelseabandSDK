@@ -83,6 +83,8 @@ public protocol ChelseabandType {
 
     func sendGoalCommand(id: String) -> Observable<Void>
     
+    func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void>
+    
     func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
     func sendLedCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
@@ -427,6 +429,15 @@ public final class Chelseaband: ChelseabandType {
         commandIdBehaviourSubject.onNext(id)
         
         return performSafe(command: GoalCommand(), timeOut: .seconds(5))
+    }
+    
+    public func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void> {
+        do {
+            let scoreCommand = try ScoreCommand(fromData: data, withDecoder: decoder)
+            return performSafe(command: scoreCommand, timeOut: .seconds(5))
+        } catch {
+            return Observable<Void>.error(error)
+        }
     }
 
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {

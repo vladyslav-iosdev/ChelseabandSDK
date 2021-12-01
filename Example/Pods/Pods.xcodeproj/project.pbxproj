@@ -327,6 +327,8 @@
 		C58175A12751213B00BFE00E /* SeatPositionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A02751213B00BFE00E /* SeatPositionCommand.swift */; };
 		C58175A32751215900BFE00E /* NFCCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A22751215900BFE00E /* NFCCommand.swift */; };
 		C58175A92751246900BFE00E /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A82751246800BFE00E /* Ticket.swift */; };
+		C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175B02757BE6E00BFE00E /* ScoreCommand.swift */; };
+		C58175B32757BE7D00BFE00E /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175B22757BE7D00BFE00E /* ScoreModelType.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
@@ -878,6 +880,8 @@
 		C58175A02751213B00BFE00E /* SeatPositionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatPositionCommand.swift; sourceTree = "<group>"; };
 		C58175A22751215900BFE00E /* NFCCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCommand.swift; sourceTree = "<group>"; };
 		C58175A82751246800BFE00E /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
+		C58175B02757BE6E00BFE00E /* ScoreCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCommand.swift; sourceTree = "<group>"; };
+		C58175B22757BE7D00BFE00E /* ScoreModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
@@ -1573,6 +1577,7 @@
 			isa = PBXGroup;
 			children = (
 				C58175A82751246800BFE00E /* Ticket.swift */,
+				C58175B22757BE7D00BFE00E /* ScoreModelType.swift */,
 			);
 			name = Models;
 			path = ChelseabandSDK/Sources/Models;
@@ -1666,6 +1671,7 @@
 				C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */,
 				C58175A02751213B00BFE00E /* SeatPositionCommand.swift */,
 				C58175A22751215900BFE00E /* NFCCommand.swift */,
+				C58175B02757BE6E00BFE00E /* ScoreCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2126,6 +2132,7 @@
 				59692A412C41314B6114AA4E7977AD00 /* GoalCommand.swift in Sources */,
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */,
+				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
 				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
@@ -2138,6 +2145,7 @@
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
+				C58175B32757BE7D00BFE00E /* ScoreModelType.swift in Sources */,
 				87C2F4E14A31CC17E0FD3EC935D2881A /* TimeCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

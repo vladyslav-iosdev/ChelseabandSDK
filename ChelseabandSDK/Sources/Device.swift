@@ -368,6 +368,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.imageControlCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageControlCharacteristic)
                                 characteristicsDictionary[configuration.imageChunkCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageChunkCharacteristic)
                                 characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
+                                characteristicsDictionary[configuration.scoreCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.scoreCharacteristic)
                             default:
                                 break
                             }
@@ -416,6 +417,8 @@ public final class Device: DeviceType {
                                             case configuration.imageChunkCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.alertCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.scoreCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             default:
                                                 break
