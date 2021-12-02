@@ -12,6 +12,6 @@ protocol ScoreModelType {
     var titleType: UInt8 { get }
     var time: UInt16 { get }
     var title: String { get }
-    var body: String { get }
+    var body: String? { get }
     func encodeToData() -> Data
 }
