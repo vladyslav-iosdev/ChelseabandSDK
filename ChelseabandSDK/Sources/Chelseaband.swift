@@ -280,8 +280,21 @@ public final class Chelseaband: ChelseabandType {
     }
 
     private func synchronizeBattery() {
-        device.batteryCharacteristicObservable
-            .flatMap { $0.observeValueUpdateAndSetNotification() }
+        Observable.combineLatest(device.batteryCharacteristicObservable, device.connectionObservable)
+            .do(onNext: {
+                //NOTE: if device will disconnect set battery level to zero
+                if $0.1 != .connected {
+                    self.batteryLevelSubject.onNext(0)
+                }
+            })
+            .flatMap {
+                //NOTE: when subscribe on value update it didn't return current state that's why need read value for fetch current state
+                Observable<Observable<Event<Characteristic>>>.of(
+                    $0.0.observeValueUpdateAndSetNotification().materialize(),
+                    $0.0.readValue().asObservable().materialize()
+                ).merge()
+            }
+            .compactMap{ $0.element }
             .compactMap{ $0.characteristic.value }
             .compactMap{ $0.uint8 }
             .bind(to: batteryLevelSubject)
