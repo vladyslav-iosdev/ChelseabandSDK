@@ -57,13 +57,22 @@ extension ScoreCommand {
         var titleType: UInt8
         var time: UInt16
         var title: String
+        private var nullTerminatedTitle: String {
+            title + "\0"
+        }
         var body: String?
+        private var nullTerminatedBody: String? {
+            if let body = body {
+                return body + "\0"
+            }
+            return nil
+        }
         
         func encodeToData() -> Data {
             var resultData = Data([wakeUpScreen, titleType])
             resultData.append(time.data)
-            resultData.append(title.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
-            resultData.append(body?.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
+            resultData.append(nullTerminatedTitle.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
+            resultData.append(nullTerminatedBody?.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             
             return resultData
         }
