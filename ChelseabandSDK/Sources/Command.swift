@@ -14,6 +14,7 @@ public protocol CommandExecutor {
 
     func write(data: Data) -> Observable<Void>
     func write(command: WritableCommand) -> Observable<Void>
+    func writeAndObservNotify(command: WritableCommand) -> Observable<Data>
     func read(command: ReadableCommand) -> Observable<Data?>
 }
 
@@ -42,6 +43,30 @@ public extension WritableCommand {
 
 public protocol CommandNew: WritableCommand { //TODO: rename in future on PerformWriteCommandProtocol
     func perform(on executor: CommandExecutor) -> Observable<Void>
+    func performAndObservNotify(on executor: CommandExecutor) -> Observable<Data>
+}
+
+public enum CommandNewError: LocalizedError {
+    case performCommandNotImplemented
+    case performAndObservCommandNotImplemented
+    
+    public var errorDescription: String? {
+        switch self {
+        case .performCommandNotImplemented:
+            return "Perform command not implemented"
+        case .performAndObservCommandNotImplemented:
+            return "Perform and observ command not implemented"
+        }
+    }
+}
+
+public extension CommandNew {
+    func perform(on executor: CommandExecutor) -> Observable<Void> {
+        .error(CommandNewError.performCommandNotImplemented)
+    }
+    func performAndObservNotify(on executor: CommandExecutor) -> Observable<Data> {
+        .error(CommandNewError.performAndObservCommandNotImplemented)
+    }
 }
 
 public protocol PerformReadCommandProtocol: ReadableCommand {

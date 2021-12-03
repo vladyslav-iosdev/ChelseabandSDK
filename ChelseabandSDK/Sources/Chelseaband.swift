@@ -89,6 +89,8 @@ public protocol ChelseabandType {
     
     func sendLedCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
+    func sendPollCommand(id: String, question: String, answers: [String]) -> Observable<(String, Int?)>
+    
     func sendReaction(id: String)
 
     func startScanForPeripherals() -> Observable<[Peripheral]>
@@ -452,6 +454,19 @@ public final class Chelseaband: ChelseabandType {
             return Observable<Void>.error(error)
         }
     }
+    
+    public func sendPollCommand(id: String, question: String, answers: [String]) -> Observable<(String, Int?)> {
+        do {
+            let pollCommand = try PollCommand(pollText: question, pollAnswers: answers)
+            return performSafeAndObservNotify(command: pollCommand, timeOut: .seconds(5))
+                .map { data in
+                    let stringInt = String.init(data: data, encoding: .utf8)
+                    return (id, Int(stringInt ?? ""))
+                }
+        } catch {
+            return .error(error)
+        }
+    }
 
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
         commandIdBehaviourSubject.onNext(id)
@@ -525,6 +540,13 @@ public final class Chelseaband: ChelseabandType {
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
+    
+    public func performAndObservNotify(command: CommandNew) -> Observable<Data> {
+        command
+            .performAndObservNotify(on: self)
+            .observeOn(MainScheduler.instance)
+            .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
+    }
 
     public func performSafe(command: Command, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
@@ -544,6 +566,17 @@ public final class Chelseaband: ChelseabandType {
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Void> in
                 self.perform(command: command)
+            }
+    }
+    
+    public func performSafeAndObservNotify(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Data> {
+        connectionObservable
+            .skipWhile { !$0.isConnected }
+            .skipWhile { _ in self.suotaUpdate != nil }
+            .take(1)
+            .timeout(timeOut, scheduler: MainScheduler.instance)
+            .flatMap { _ -> Observable<Data> in
+                self.performAndObservNotify(command: command)
             }
     }
     
@@ -623,6 +656,10 @@ extension Chelseaband: CommandExecutor {
     
     public func write(command: WritableCommand) -> Observable<Void> {
         device.write(command: command, timeout: .seconds(5))
+    }
+    
+    public func writeAndObservNotify(command: WritableCommand) -> Observable<Data> {
+        device.writeAndObservNotify(command: command, timeout: .seconds(5))
     }
     
     public func read(command: ReadableCommand) -> Observable<Data?> {

@@ -26,3 +26,15 @@ extension Observable where Element == Data {
         }.take(1)//NOTE: Wee need to complete observable sequence
     }
 }
+
+extension ObservableType {
+    func mapTimeoutError(to error: Error) -> Observable<Element> {
+        catchError {
+            if case RxSwift.RxError.timeout = $0 {
+                throw error
+            } else {
+                throw $0
+            }
+        }
+    }
+}

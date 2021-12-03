@@ -101,5 +101,9 @@ public extension String {
             return UInt8(self[startIndex..<endIndex], radix: 16)
         }
     }
+    
+    func removeNullTerminated() -> String {
+        self.replacingOccurrences(of: "\0", with: "", options: .literal, range: nil)
+    }
 }
 

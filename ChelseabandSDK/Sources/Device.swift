@@ -127,6 +127,8 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
     
+    func writeAndObservNotify(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Data>
+    
     func read(command: ReadableCommand, timeout: DispatchTimeInterval) -> Observable<Data?>
 }
 
@@ -369,6 +371,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.imageChunkCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageChunkCharacteristic)
                                 characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
                                 characteristicsDictionary[configuration.scoreCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.scoreCharacteristic)
+                                characteristicsDictionary[configuration.pollCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
                             default:
                                 break
                             }
@@ -419,6 +422,8 @@ public final class Device: DeviceType {
                                             case configuration.alertCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.scoreCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.pollCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             default:
                                                 break
@@ -549,6 +554,29 @@ public final class Device: DeviceType {
             .timeout(timeout, scheduler: MainScheduler.instance)
             .mapToVoid()
             .take(1)
+            .debug("\(strongSelf).write")
+        }
+    }
+    
+    public func writeAndObservNotify(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Data> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.findCharacteristic(forCommand: command)
+                .flatMap { characteristic -> Observable<Characteristic> in
+                    if let value = characteristic {
+                        return value.writeValue(command.dataForSend,
+                                                type: command.writeType).asObservable()
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+            }
+            .timeout(timeout, scheduler: MainScheduler.instance)
+            .take(1)
+            .flatMap { $0.observeValueUpdateAndSetNotification() }
+            .compactMap { $0.value }
             .debug("\(strongSelf).write")
         }
     }
