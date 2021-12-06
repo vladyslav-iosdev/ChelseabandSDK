@@ -20,4 +20,5 @@ protocol Statistics {
     func sendVotingResponse(_: VotingResult, _: String)
     func sendReaction(_: String)
     func fetchTicket() -> Observable<TicketType?>
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]>
 }

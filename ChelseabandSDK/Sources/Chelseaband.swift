@@ -49,6 +49,8 @@ public protocol ChelseabandType {
     func disconnect(forgotLastPeripheral: Bool)
     
     func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
+    
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]>
 
     // TODO: remove in future unused function perform
     func perform(command: Command) -> Observable<Void>
@@ -216,6 +218,10 @@ public final class Chelseaband: ChelseabandType {
 
     public func isLastConnected(peripheral: Peripheral) -> Bool {
         lastConnectedPeripheralUUID == peripheral.peripheral.identifier.uuidString
+    }
+    
+    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]> {
+        statistic.fetchSurveyResponses(forNotificationId: id)
     }
 
     private var fcmTokenObservable: Observable<String> {

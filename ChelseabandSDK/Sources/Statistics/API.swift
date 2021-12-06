@@ -13,6 +13,7 @@ public enum APIError: LocalizedError {
     case cantConvertDataToJSON
     case incorrectVerificationCode
     case missedFanbandId
+    case missedSurveyResponses
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -25,6 +26,8 @@ public enum APIError: LocalizedError {
             return "Incorrect verification code"
         case .missedFanbandId:
             return "Fanband id not found in verification response"
+        case .missedSurveyResponses:
+            return "Survey responses not found"
         case .customServerError(let description):
             return description
         }
@@ -71,6 +74,7 @@ final class API: Statistics {
         enum NotificationsEndpoint {
             case react(String)
             case answer(String)
+            case surveyResponse(String)
             
             var rawValue: String {
                 switch self {
@@ -78,6 +82,8 @@ final class API: Statistics {
                     return "\(id)/react"
                 case .answer(let id):
                     return "\(id)/answer"
+                case .surveyResponse(let id):
+                    return "\(id)/survey-responses"
                 }
             }
         }
@@ -255,6 +261,28 @@ final class API: Statistics {
                         observer.onNext(ticket)
                     } else {
                         observer.onNext(nil)
+                    }
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]> {
+        Observable<[String: Int]>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.notifications(.surveyResponse(id)).path, method: .get) { result in
+                switch result {
+                case .success(let json):
+                    if let surveyResponses = (json["data"] as? [String: Any])?["responses"] as? [String: Int] {
+                        observer.onNext(surveyResponses)
+                    } else {
+                        observer.onError(APIError.missedSurveyResponses)
                     }
                 case .failure(let error):
                     observer.onError(error)
