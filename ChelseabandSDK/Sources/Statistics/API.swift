@@ -233,10 +233,10 @@ final class API: Statistics {
                     jsonParams: json)
     }
     
-    func sendVotingResponse(_ response: VotingResult, _ id: String) {
+    func sendVotingResponse(_ response: Int?, _ id: String) {
         sendRequest(Modules.notifications(.answer(id)).path,
                     method: .patch,
-                    jsonParams: ["answer": "\(response.rawValue)"])
+                    jsonParams: ["answer": "\(response ?? -1)"])
     }
     
     func sendReaction(_ id: String) {

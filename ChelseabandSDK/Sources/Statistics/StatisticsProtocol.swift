@@ -17,7 +17,7 @@ protocol Statistics {
     func sendBand(status: Bool)
     func sendLocation(latitude: Double, longitude: Double)
     func sendAccelerometer(_ data: [[Double]], forId id: String)// TODO: remove in future
-    func sendVotingResponse(_: VotingResult, _: String)
+    func sendVotingResponse(_: Int?, _: String)
     func sendReaction(_: String)
     func fetchTicket() -> Observable<TicketType?>
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]>

@@ -93,6 +93,10 @@ public protocol ChelseabandType {
     
     func sendPollCommand(id: String, question: String, answers: [String]) -> Observable<(String, Int?)>
     
+    func sendEndPollCommand() -> Observable<Void>
+    
+    func sendPoll(response: Int?, id: String)
+    
     func sendReaction(id: String)
 
     func startScanForPeripherals() -> Observable<[Peripheral]>
@@ -473,13 +477,27 @@ public final class Chelseaband: ChelseabandType {
             return .error(error)
         }
     }
+    
+    public func sendEndPollCommand() -> Observable<Void> {
+        do {
+            let endPollCommand = try PollCommand()
+            return performSafe(command: endPollCommand, timeOut: .seconds(5))
+        } catch {
+            return .error(error)
+        }
+    }
 
+    //TODO: remove in future
+    public func sendPoll(response: Int?, id: String) {
+        statistic.sendVotingResponse(response, id)
+    }
+    
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
         commandIdBehaviourSubject.onNext(id)
 
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
-            self.statistic.sendVotingResponse(response, id)
+            //self.statistic.sendVotingResponse(response, id)
             self.reactionOnVoteSubject.onNext((response, id))
         }).disposed(by: disposeBag)
 

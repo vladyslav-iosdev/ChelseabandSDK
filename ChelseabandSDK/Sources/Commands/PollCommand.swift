@@ -15,6 +15,7 @@ public enum PollCommandError: LocalizedError {
     case writeCommandTimeOut
     case wrongDataInResponse
     case timeoutOfReceiveAnswer
+    case cantDecodeEndOfPoll
     
     public var errorDescription: String? {
         switch self {
@@ -32,6 +33,8 @@ public enum PollCommandError: LocalizedError {
             return "Wrong data in poll command response"
         case .timeoutOfReceiveAnswer:
             return "Time out of receive poll command answer"
+        case .cantDecodeEndOfPoll:
+            return "Cant decode end of poll command"
         }
     }
 }
@@ -58,6 +61,10 @@ public struct PollCommand: CommandNew {
             .mapTimeoutError(to: PollCommandError.timeoutOfReceiveAnswer)
     }
     
+    public func perform(on executor: CommandExecutor) -> Observable<Void> {
+        executor.write(command: self)
+    }
+    
     init(pollText: String, pollAnswers: [String]) throws {
         let separator = "\n"
         let endOfCommand = "\0"
@@ -80,5 +87,14 @@ public struct PollCommand: CommandNew {
         }
     
         dataForSend = resultData
+    }
+    
+    //NOTE: End poll
+    init() throws {
+        if let data = "\0".data(using: .utf8) {
+            dataForSend = data
+        } else {
+            throw PollCommandError.cantDecodeEndOfPoll
+        }
     }
 }
