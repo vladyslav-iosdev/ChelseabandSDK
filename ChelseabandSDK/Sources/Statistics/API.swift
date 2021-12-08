@@ -215,10 +215,24 @@ final class API: Statistics {
                                  "lng": longitude])
     }
     
-    func sendVotingResponse(_ response: Int?, _ id: String) {
-        sendRequest(Modules.notifications(.answer(id)).path,
-                    method: .patch,
-                    jsonParams: ["answer": "\(response ?? -1)"])
+    func sendVotingResponse(_ response: Int?, _ id: String) -> Observable<Void> {
+        Observable<Void>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            strongSelf.sendRequest(Modules.notifications(.answer(id)).path,
+                                   method: .patch,
+                                   jsonParams: ["answer": "\(response ?? -1)"])
+            { result in
+                switch result {
+                case .success(let json):
+                    observer.onNext(())
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
     }
     
     func sendReaction(_ id: String) {

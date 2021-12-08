@@ -95,7 +95,7 @@ public protocol ChelseabandType {
     
     func sendEndPollCommand() -> Observable<Void>
     
-    func sendPoll(response: Int?, id: String)
+    func sendPoll(response: Int?, id: String) -> Observable<Void>
     
     func sendReaction(id: String)
 
@@ -455,11 +455,11 @@ public final class Chelseaband: ChelseabandType {
         }
     }
 
-    //TODO: remove in future
-    public func sendPoll(response: Int?, id: String) {
+    public func sendPoll(response: Int?, id: String) -> Observable<Void> {
         statistic.sendVotingResponse(response, id)
     }
     
+    //TODO: remove in future
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
         commandIdBehaviourSubject.onNext(id)
 
