@@ -15,7 +15,7 @@ extension UserDefaults {
         static let apiKey: String = "apiKey"
         static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
         static let firmwareVersion: String = "firmwareVersion"
-        static let fanbandId: String = "fanbandId"
+        static let userId: String = "userId"
     }
     
     var apiBaseEndpoint: String {
@@ -29,20 +29,20 @@ extension UserDefaults {
     }
     
     var isAuthorizeObservable: Observable<Bool> {
-        UserDefaults.standard.rx.observe(String.self, Keys.fanbandId)
-            .map { $0 == nil ? false : true}
+        UserDefaults.standard.rx.observe(String.self, Keys.userId)
+            .map { $0 != nil }
     }
     
-    var fanbandId: String? {
+    var userId: String? {
         get {
-            return value(forKey: Keys.fanbandId) as? String
+            return value(forKey: Keys.userId) as? String
         }
 
         set {
             if let value = newValue {
-                setValue(value, forKey: Keys.fanbandId)
+                setValue(value, forKey: Keys.userId)
             } else {
-                removeObject(forKey: Keys.fanbandId)
+                removeObject(forKey: Keys.userId)
             }
         }
     }

@@ -204,18 +204,16 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
                 strongSelf.connectedPeripheral = peripheral
-                strongSelf.statistic.register(bandName: peripheral.peripheral.name ?? "")
                 strongSelf.lastConnectedPeripheralUUID = peripheral.peripheral.identifier.uuidString
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
                 strongSelf.locationTracker.startObserving()
                 strongSelf.observeForConnectionStatusChange()
                 strongSelf.observeLocationChange()
-                strongSelf.observeMACAddress()
+                strongSelf.sendBandUUIDOnServer(peripheral)
                 
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
-                
                 strongSelf.disconnect(forgotLastPeripheral: false)
             })
     }
@@ -287,8 +285,6 @@ public final class Chelseaband: ChelseabandType {
 
         synchronizeBattery()
         synchonizeDeviceTime()
-
-        synchonizeAccelerometer()
     }
 
     private func synchronizeBattery() {
@@ -313,40 +309,12 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
 
-    private func synchonizeAccelerometer() {
-        let accelerometerCommand = AccelerometerCommand()
-        Observable.combineLatest(commandIdObservable, accelerometerCommand.axisObservable)
-            .filter{ !$0.1.values.isEmpty }
-            .subscribe(onNext: { values in
-                self.statistic.sendAccelerometer(values.1.values, forId: values.0)
-        }).disposed(by: disposeBag)
-
-        perform(command: accelerometerCommand)
-            .subscribe()
-            .disposed(by: disposeBag)
-    }
-
     private func synchonizeDeviceTime() {
         let timeCommand = TimeCommand()
 
         perform(command: timeCommand)
             .subscribe()
             .disposed(by: disposeBag)
-    }
-
-    private func observeMACAddress() {
-        let macAddressCommand = MACAddressCommand()
-
-        //NOTE: combinelatest didn't work because observing of fcm didn't call after connection to the band at first time
-        macAddressCommand.MACAddressObservable
-            .subscribe(onNext: { MACAddress in
-                self.statistic.register(bandMacAddress: MACAddress)
-                self.macAddressObservable.onNext(MACAddress)
-            }).disposed(by: disposeBag)
-
-        perform(command: macAddressCommand).subscribe(onNext: { _ in
-
-        }).disposed(by: disposeBag)
     }
 
     public func sendMessageCommand(message: String, id: String) -> Observable<Void> {
@@ -532,7 +500,7 @@ public final class Chelseaband: ChelseabandType {
         
         //TODO: remove contentsOfFile logic
         let suota = SUOTAUpdate(updateDevice: device,
-                                withData: NSData(contentsOfFile: Bundle.main.path(forResource: "fanband", ofType: "img")!)! as Data)
+                                withData: NSData(contentsOfFile: Bundle.main.path(forResource: "fanband.1.11.1.0", ofType: "img")!)! as Data)
         
         suota.percentOfUploadingObservable
             .subscribe(onError: { [weak self] _ in
@@ -642,6 +610,16 @@ public final class Chelseaband: ChelseabandType {
     
     public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool> {
         statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
+    }
+    
+    private func sendBandUUIDOnServer(_ peripheral: Peripheral) {
+        guard let manufacturerData = peripheral.advertisementData.advertisementData["kCBAdvDataManufacturerData"] as? Data else { return }
+                            
+        var manufacturerBytes = [UInt8](manufacturerData)
+        manufacturerBytes.removeFirst()
+        manufacturerBytes.removeFirst()
+        let bandUUID = Data(manufacturerBytes).hexEncodedString()
+        statistic.connectFanband(bandUUID: bandUUID)
     }
     
     public func sendReaction(id: String) {

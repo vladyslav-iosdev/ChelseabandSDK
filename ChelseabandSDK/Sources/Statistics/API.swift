@@ -12,7 +12,7 @@ public enum APIError: LocalizedError {
     case missingRequiredData
     case cantConvertDataToJSON
     case incorrectVerificationCode
-    case missedFanbandId
+    case missedUserId
     case missedSurveyResponses
     case customServerError(String)
     
@@ -24,8 +24,8 @@ public enum APIError: LocalizedError {
             return "Can't convert data to JSON dictionary"
         case .incorrectVerificationCode:
             return "Incorrect verification code"
-        case .missedFanbandId:
-            return "Fanband id not found in verification response"
+        case .missedUserId:
+            return "User id not found in verification response"
         case .missedSurveyResponses:
             return "Survey responses not found"
         case .customServerError(let description):
@@ -55,19 +55,20 @@ final class API: Statistics {
     private enum Modules {
         private var baseURL: String { UserDefaults.standard.apiBaseEndpoint }
         
-        case fanbands(_ endpoint: FanbandsEndpoint)
+        case auth(_ endpoint: AuthEndpoint)
+        case users(_ endpoint: UsersEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
-        case accelerometer(_ endpoint: AccelerometerEndpoint)
         case tickets(_ endpoint: TicketsEndpoint)
         
-        enum FanbandsEndpoint: String {
-            case fcm
-            case mac
-            case status
-            case name
+        enum AuthEndpoint: String {
             case sendOTP = "phone/send-code"
             case verifyOTP = "phone/verify"
-            case pin
+        }
+        
+        enum UsersEndpoint: String {
+            case fcm
+            case connectFanband = "connect-fanband"
+            case status
             case inArea = "in-area"
         }
         
@@ -88,10 +89,6 @@ final class API: Statistics {
             }
         }
         
-        enum AccelerometerEndpoint: String {
-            case none = ""
-        }
-        
         enum TicketsEndpoint: String {
             case bandTicket = "band-ticket"
         }
@@ -100,11 +97,11 @@ final class API: Statistics {
             var endpointURL: String!
             
             switch self {
-            case .fanbands(let endpoint):
+            case .auth(let endpoint):
+                endpointURL = endpoint.rawValue
+            case .users(let endpoint):
                 endpointURL = endpoint.rawValue
             case .notifications(let endpoint):
-                endpointURL = endpoint.rawValue
-            case .accelerometer(let endpoint):
                 endpointURL = endpoint.rawValue
             case .tickets(let endpoint):
                 endpointURL = endpoint.rawValue
@@ -115,12 +112,12 @@ final class API: Statistics {
         
         private func getModuleRawValue() -> String {
             switch self {
-            case .fanbands(_):
-                return "fanbands/"
+            case .auth(_):
+                return "auth/"
+            case .users(_):
+                return "users/"
             case .notifications(_):
                 return "notifications/"
-            case .accelerometer(_):
-                return "accelerometer/"
             case .tickets(_):
                 return "tickets/"
             }
@@ -129,34 +126,30 @@ final class API: Statistics {
     
     // MARK: - Public functions
     func register(fcmToken token: String) {
-        sendRequest(Modules.fanbands(.fcm).path,
+        sendRequest(Modules.users(.fcm).path,
                     method: .patch,
                     jsonParams: ["fcm": token])
     }
     
-    func register(bandMacAddress mac: String) {
-        sendRequest(Modules.fanbands(.mac).path,
-                    method: .patch,
-                    jsonParams: ["mac": mac])
-    }
-    
-    func register(bandName name: String) {
-        sendRequest(Modules.fanbands(.name).path,
-                    method: .patch,
-                    jsonParams: ["name": name])
-    }
-    
-    func register(bandPin pin: String) {
-        sendRequest(Modules.fanbands(.pin).path,
-                    method: .patch,
-                    jsonParams: ["pin": pin])
+    func connectFanband(bandUUID: String) {
+        sendRequest(Modules.users(.connectFanband).path,
+                               method: .patch,
+                               jsonParams: ["fanbandUUID": bandUUID])
+        { result in
+            switch result {
+            case .success(let dictionary):
+                break
+            case .failure(let error):
+                break
+            }
+        }
     }
     
     func register(phoneNumber: String) -> Observable<Void> {
         Observable<Void>.create { [weak self] observer in
             guard let strongSelf = self else { return Disposables.create() }
             
-            strongSelf.sendRequest(Modules.fanbands(.sendOTP).path,
+            strongSelf.sendRequest(Modules.auth(.sendOTP).path,
                                    method: .post,
                                    jsonParams: ["phone": phoneNumber])
             { result in
@@ -183,17 +176,17 @@ final class API: Statistics {
                 "code": OTPCode,
                 "fcm": fcm
             ]
-            strongSelf.sendRequest(Modules.fanbands(.verifyOTP).path,
+            strongSelf.sendRequest(Modules.auth(.verifyOTP).path,
                                    method: .post,
                                    jsonParams: jsonData)
             { result in
                 switch result {
                 case .success(let dictionary):
-                    if let fanbandId = (dictionary["data"] as? [String: Any])?["fanbandId"] as? String {
-                        UserDefaults.standard.fanbandId = fanbandId
+                    if let userId = (dictionary["data"] as? [String: Any])?["userId"] as? String {
+                        UserDefaults.standard.userId = userId
                         observer.onNext(true)
                     } else {
-                        observer.onError(APIError.missedFanbandId)
+                        observer.onError(APIError.missedUserId)
                     }
                 case .failure(let error):
                     if case APIError.incorrectVerificationCode = error {
@@ -210,27 +203,16 @@ final class API: Statistics {
     }
     
     func sendBand(status: Bool) {
-        sendRequest(Modules.fanbands(.status).path,
+        sendRequest(Modules.users(.status).path,
                     method: .patch,
                     jsonParams: ["status": status])
     }
     
     func sendLocation(latitude: Double, longitude: Double) {
-        sendRequest(Modules.fanbands(.inArea).path,
+        sendRequest(Modules.users(.inArea).path,
                     method: .patch,
                     jsonParams: ["lat": latitude,
                                  "lng": longitude])
-    }
-
-    func sendAccelerometer(_ data: [[Double]], forId id: String) {
-        let json: [String: Any] = [
-            "date": "\(Date())",
-            "notificationId": id,
-            "frame": ["data": data]
-        ]
-        sendRequest(Modules.accelerometer(.none).path,
-                    method: .post,
-                    jsonParams: json)
     }
     
     func sendVotingResponse(_ response: Int?, _ id: String) {
@@ -355,13 +337,13 @@ final class API: Statistics {
 extension API {
     struct HeaderHelper {
         private let appKey = UserDefaults.standard.apiKey
-        private let fanbandId = UserDefaults.standard.fanbandId
+        private let userId = UserDefaults.standard.userId
     
         func generateURLRequest(path: URL) -> URLRequest {
             var request = URLRequest(url: path)
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
             request.setValue(appKey, forHTTPHeaderField: "experiwear-key")
-            request.setValue(fanbandId, forHTTPHeaderField: "fanband-id")
+            request.setValue(userId, forHTTPHeaderField: "user-id")
             
             return request
         }
