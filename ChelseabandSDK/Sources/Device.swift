@@ -473,6 +473,10 @@ public final class Device: DeviceType {
             return self.manager.scanForPeripherals(withServices: self.configuration.advertisementServices)
                 .do(onSubscribed: { self.bluetoothIsSearchingSubject.onNext(true) },
                     onDispose: { self.bluetoothIsSearchingSubject.onNext(false) })
+                .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
+                .retryWithDelay(timeInterval: self.scanningRetry) {
+                    set.removeAllObjects()
+                }
                 .scan(set, accumulator: { set, peripheral -> NSMutableSet in
                     set.add(peripheral)
                     return set
