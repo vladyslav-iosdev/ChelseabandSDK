@@ -204,7 +204,7 @@ public final class Chelseaband: ChelseabandType {
             .subscribe(onNext: { [weak self] _ in
                 guard let strongSelf = self else { return }
                 strongSelf.connectedPeripheral = peripheral
-                strongSelf.lastConnectedPeripheralUUID = peripheral.peripheral.identifier.uuidString
+                strongSelf.lastConnectedPeripheralUUID = peripheral.UUID
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
                 strongSelf.locationTracker.startObserving()
@@ -219,7 +219,7 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func isLastConnected(peripheral: Peripheral) -> Bool {
-        lastConnectedPeripheralUUID == peripheral.peripheral.identifier.uuidString
+        lastConnectedPeripheralUUID == peripheral.UUID
     }
     
     public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]> {
@@ -613,12 +613,8 @@ public final class Chelseaband: ChelseabandType {
     }
     
     private func sendBandUUIDOnServer(_ peripheral: Peripheral) {
-        guard let manufacturerData = peripheral.advertisementData.advertisementData["kCBAdvDataManufacturerData"] as? Data else { return }
-                            
-        var manufacturerBytes = [UInt8](manufacturerData)
-        manufacturerBytes.removeFirst()
-        manufacturerBytes.removeFirst()
-        let bandUUID = Data(manufacturerBytes).hexEncodedString()
+        guard let bandUUID = peripheral.UUID else { return }
+        
         statistic.connectFanband(bandUUID: bandUUID)
     }
     

@@ -325,6 +325,7 @@
 		C5547F7A2601FCF20084825B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F782601FCF20084825B /* API.swift */; };
 		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
+		C55B132C276207A100DF487E /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55B132B276207A100DF487E /* Peripheral.swift */; };
 		C58175A12751213B00BFE00E /* SeatPositionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A02751213B00BFE00E /* SeatPositionCommand.swift */; };
 		C58175A32751215900BFE00E /* NFCCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A22751215900BFE00E /* NFCCommand.swift */; };
 		C58175A92751246900BFE00E /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A82751246800BFE00E /* Ticket.swift */; };
@@ -879,6 +880,7 @@
 		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
+		C55B132B276207A100DF487E /* Peripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peripheral.swift; sourceTree = "<group>"; };
 		C58175A02751213B00BFE00E /* SeatPositionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatPositionCommand.swift; sourceTree = "<group>"; };
 		C58175A22751215900BFE00E /* NFCCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCommand.swift; sourceTree = "<group>"; };
 		C58175A82751246800BFE00E /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
@@ -1443,6 +1445,7 @@
 				2B6ACED49385C7102F07B51E9CE5BC00 /* Array.swift */,
 				AF02C58CB216881107009A2831A0FE1D /* String.swift */,
 				C5547F752601F22B0084825B /* UserDefaults.swift */,
+				C55B132B276207A100DF487E /* Peripheral.swift */,
 			);
 			name = Extensions;
 			path = ChelseabandSDK/Sources/Extensions;
@@ -2127,6 +2130,7 @@
 				87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */,
 				87BDF81025FF9DC2007DCD36 /* MessageCommand.swift in Sources */,
 				87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */,
+				C55B132C276207A100DF487E /* Peripheral.swift in Sources */,
 				C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */,
 				87BDF80F25FF9DC2007DCD36 /* AccelerometerCommand.swift in Sources */,
 				EA1AC7E1284CB9BD12947E1CD909350E /* Configuration.swift in Sources */,
