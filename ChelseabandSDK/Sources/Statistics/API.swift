@@ -14,6 +14,9 @@ public enum APIError: LocalizedError {
     case incorrectVerificationCode
     case missedUserId
     case missedSurveyResponses
+    case noPayloadDataInGameScoreResponse
+    case oppositeTeamLogoNotLoaded
+    case noScoreModelJSONStringInScoreResponse
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -28,6 +31,12 @@ public enum APIError: LocalizedError {
             return "User id not found in verification response"
         case .missedSurveyResponses:
             return "Survey responses not found"
+        case .noPayloadDataInGameScoreResponse:
+            return "No payload data in game score api call"
+        case .oppositeTeamLogoNotLoaded:
+            return "Opposite team logo not loaded"
+        case .noScoreModelJSONStringInScoreResponse:
+            return "Score model JSON String not found in score response"
         case .customServerError(let description):
             return description
         }
@@ -56,6 +65,7 @@ final class API: Statistics {
         private var baseURL: String { UserDefaults.standard.apiBaseEndpoint }
         
         case auth(_ endpoint: AuthEndpoint)
+        case games(_ endpoint: GamesEndpoint)
         case users(_ endpoint: UsersEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
         case tickets(_ endpoint: TicketsEndpoint)
@@ -63,6 +73,10 @@ final class API: Statistics {
         enum AuthEndpoint: String {
             case sendOTP = "phone/send-code"
             case verifyOTP = "phone/verify"
+        }
+        
+        enum GamesEndpoint: String {
+            case score
         }
         
         enum UsersEndpoint: String {
@@ -99,6 +113,8 @@ final class API: Statistics {
             switch self {
             case .auth(let endpoint):
                 endpointURL = endpoint.rawValue
+            case .games(let endpoint):
+                endpointURL = endpoint.rawValue
             case .users(let endpoint):
                 endpointURL = endpoint.rawValue
             case .notifications(let endpoint):
@@ -114,6 +130,8 @@ final class API: Statistics {
             switch self {
             case .auth(_):
                 return "auth/"
+            case .games(_):
+                return "games/"
             case .users(_):
                 return "users/"
             case .notifications(_):
@@ -194,6 +212,45 @@ final class API: Statistics {
                     } else {
                         observer.onError(error)
                     }
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)> {
+        Observable<(image: Data, scoreModel: Data)>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.games(.score).path, method: .get) { result in
+                switch result {
+                case .success(let dictionary):
+                    guard let scoreJSON = dictionary["data"] as? [String: Any]
+                    else {
+                        observer.onError(APIError.noPayloadDataInGameScoreResponse)
+                        return
+                    }
+                    
+                    guard let binImageURL = scoreJSON["binImage"] as? String,
+                          let imageURL = URL(string: binImageURL),
+                          let imageData = try? Data(contentsOf: imageURL)
+                    else {
+                        observer.onError(APIError.oppositeTeamLogoNotLoaded)
+                        return
+                    }
+                    
+                    guard let scoreModelJSONString = scoreJSON["scoreJsonString"] as? String,
+                          let scoreModelData = scoreModelJSONString.data(using: .utf8)
+                    else {
+                        observer.onError(APIError.noScoreModelJSONStringInScoreResponse)
+                        return
+                    }
+
+                    observer.onNext((image: imageData, scoreModel: scoreModelData))
+                case .failure(let error):
+                    observer.onError(error)
                 }
                 observer.onCompleted()
             }

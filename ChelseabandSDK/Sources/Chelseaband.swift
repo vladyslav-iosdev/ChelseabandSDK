@@ -211,6 +211,7 @@ public final class Chelseaband: ChelseabandType {
                 strongSelf.observeForConnectionStatusChange()
                 strongSelf.observeLocationChange()
                 strongSelf.sendBandUUIDOnServer(peripheral)
+                strongSelf.synchronizeScore()
                 
             }, onError: { [weak self] error in
                 guard let strongSelf = self else { return }
@@ -285,6 +286,25 @@ public final class Chelseaband: ChelseabandType {
 
         synchronizeBattery()
         synchonizeDeviceTime()
+    }
+    
+    private func synchronizeScore() {
+        statistic.getCurrentScore()
+            .flatMap { [weak self] resultTuple -> Observable<Data> in
+                guard let strongSelf = self else { throw ChelseabandError.destroyed }
+                return strongSelf.uploadImage(resultTuple.image,
+                                  imageType: .opposingTeamImage)
+                    .map { resultTuple.scoreModel }
+            }
+            .take(1)
+            .flatMap { [weak self] scoreModelData -> Observable<Void> in
+                guard let strongSelf  = self else { throw ChelseabandError.destroyed }
+                return strongSelf.sendGoalCommandNew(data: scoreModelData, decoder: .init())
+            }
+            .take(1)
+            .timeout(.seconds(60), scheduler: MainScheduler.instance)
+            .subscribe()
+            .disposed(by: disposeBag)
     }
 
     private func synchronizeBattery() {

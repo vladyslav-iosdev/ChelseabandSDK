@@ -9,6 +9,7 @@ import RxSwift
 
 protocol Statistics {
     func connectFanband(bandUUID: String)
+    func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)>
     func register(fcmToken: String)
     func register(phoneNumber: String) -> Observable<Void>
     func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Observable<Bool>
