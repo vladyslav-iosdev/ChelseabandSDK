@@ -18,7 +18,7 @@ public enum SUOTAUpdateError: Error {
     case wrongExpectedValue
     case writeError
 }
-// TODO: refactoring suota on comand new model
+
 final class SUOTAUpdate: SUOTAUpdateType {
     public var percentOfUploadingObservable: Observable<Double> {
         percentOfUploadingSubject
