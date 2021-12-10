@@ -61,10 +61,6 @@ public protocol MessageType {
     var messageTypeIdentifier: UInt8 { get }
 }
 
-public extension MessageType where Self: RawRepresentable, RawValue == UInt8 {
-    var messageTypeIdentifier: UInt8 { self.rawValue }
-}
-
 public struct MessageCommandNew: CommandNew {
     public let uuidForWrite = ChelseabandConfiguration.default.alertCharacteristic
 
