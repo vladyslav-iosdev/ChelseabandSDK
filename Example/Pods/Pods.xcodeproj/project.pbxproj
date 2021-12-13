@@ -330,7 +330,9 @@
 		C58175A32751215900BFE00E /* NFCCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A22751215900BFE00E /* NFCCommand.swift */; };
 		C58175A92751246900BFE00E /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A82751246800BFE00E /* Ticket.swift */; };
 		C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175B02757BE6E00BFE00E /* ScoreCommand.swift */; };
-		C58175B32757BE7D00BFE00E /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175B22757BE7D00BFE00E /* ScoreModelType.swift */; };
+		C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */; };
+		C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26B27679EC200C2F20D /* ScoreModelType.swift */; };
+		C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26C27679EC200C2F20D /* LedPatternType.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
@@ -885,7 +887,9 @@
 		C58175A22751215900BFE00E /* NFCCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCommand.swift; sourceTree = "<group>"; };
 		C58175A82751246800BFE00E /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		C58175B02757BE6E00BFE00E /* ScoreCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCommand.swift; sourceTree = "<group>"; };
-		C58175B22757BE7D00BFE00E /* ScoreModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
+		C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDCommandNew.swift; sourceTree = "<group>"; };
+		C58FD26B27679EC200C2F20D /* ScoreModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
+		C58FD26C27679EC200C2F20D /* LedPatternType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedPatternType.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
@@ -1582,10 +1586,19 @@
 			isa = PBXGroup;
 			children = (
 				C58175A82751246800BFE00E /* Ticket.swift */,
-				C58175B22757BE7D00BFE00E /* ScoreModelType.swift */,
 			);
 			name = Models;
 			path = ChelseabandSDK/Sources/Models;
+			sourceTree = "<group>";
+		};
+		C58FD26A27679EC200C2F20D /* Protocols */ = {
+			isa = PBXGroup;
+			children = (
+				C58FD26B27679EC200C2F20D /* ScoreModelType.swift */,
+				C58FD26C27679EC200C2F20D /* LedPatternType.swift */,
+			);
+			name = Protocols;
+			path = ChelseabandSDK/Sources/Protocols;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -1678,6 +1691,7 @@
 				C58175A22751215900BFE00E /* NFCCommand.swift */,
 				C58175B02757BE6E00BFE00E /* ScoreCommand.swift */,
 				C51F2246275A538200E1B64A /* PollCommand.swift */,
+				C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -1695,6 +1709,7 @@
 				1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */,
 				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
+				C58FD26A27679EC200C2F20D /* Protocols */,
 				C58175A72751246800BFE00E /* Models */,
 				6B99CDF6654516DC72E5CE9DCE1EA471 /* Extensions */,
 				F3CCDCFA1C2A09BE43FCC0CD31A2457B /* Pod */,
@@ -2148,13 +2163,15 @@
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
+				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
+				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
-				C58175B32757BE7D00BFE00E /* ScoreModelType.swift in Sources */,
 				87C2F4E14A31CC17E0FD3EC935D2881A /* TimeCommand.swift in Sources */,
+				C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
