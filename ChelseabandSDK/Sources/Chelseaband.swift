@@ -433,11 +433,12 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {
-        commandIdBehaviourSubject.onNext(id)
-        
-        let messageCommand = MessageCommandNew(message, type: type)
-
-        return performSafe(command: messageCommand, timeOut: .seconds(5))
+        do {
+            let messageCommand = try MessageCommandNew(message, type: type)
+            return performSafe(command: messageCommand, timeOut: .seconds(5))
+        } catch {
+            return .error(error)
+        }
     }
 
     public func sendGoalCommand(id: String) -> Observable<Void> {
