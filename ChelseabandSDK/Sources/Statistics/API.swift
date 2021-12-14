@@ -14,6 +14,7 @@ public enum APIError: LocalizedError {
     case incorrectVerificationCode
     case missedUserId
     case missedSurveyResponses
+    case missedSomeDataInSurveyResponses
     case noPayloadDataInGameScoreResponse
     case oppositeTeamLogoNotLoaded
     case noScoreModelJSONStringInScoreResponse
@@ -31,6 +32,8 @@ public enum APIError: LocalizedError {
             return "User id not found in verification response"
         case .missedSurveyResponses:
             return "Survey responses not found"
+        case .missedSomeDataInSurveyResponses:
+            return "In survey responses not found answer or count"
         case .noPayloadDataInGameScoreResponse:
             return "No payload data in game score api call"
         case .oppositeTeamLogoNotLoaded:
@@ -324,17 +327,31 @@ final class API: Statistics {
         }
     }
     
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]> {
-        Observable<[String: Int]>.create { [weak self] observer in
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]> {
+        Observable<[(answer: String, count: Int)]>.create { [weak self] observer in
             guard let strongSelf = self else { return Disposables.create() }
             
             strongSelf.sendRequest(Modules.notifications(.surveyResponse(id)).path, method: .get) { result in
                 switch result {
                 case .success(let json):
-                    if let surveyResponses = (json["data"] as? [String: Any])?["responses"] as? [String: Int] {
-                        observer.onNext(surveyResponses)
-                    } else {
+                    guard let surveyResponses = (json["data"] as? [String: Any])?["responses"] as? [[String: Any]]
+                    else {
                         observer.onError(APIError.missedSurveyResponses)
+                        return
+                    }
+                    
+                    var result = [(answer: String, count: Int)]()
+                    do {
+                        try surveyResponses.forEach {
+                            guard let answer = $0["response"] as? String,
+                                  let count = $0["count"] as? Int
+                            else { throw APIError.missedSomeDataInSurveyResponses }
+                            
+                            result.append((answer, count))
+                        }
+                        observer.onNext(result)
+                    } catch let error {
+                        observer.onError(error)
                     }
                 case .failure(let error):
                     observer.onError(error)

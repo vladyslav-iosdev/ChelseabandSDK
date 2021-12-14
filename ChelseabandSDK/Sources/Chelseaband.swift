@@ -50,7 +50,7 @@ public protocol ChelseabandType {
     
     func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
     
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]>
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]>
 
     func forceSendConnectStatusOnServer(appWillClose: Bool)
     
@@ -225,7 +225,7 @@ public final class Chelseaband: ChelseabandType {
         lastConnectedPeripheralUUID == peripheral.UUID
     }
     
-    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]> {
+    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]> {
         statistic.fetchSurveyResponses(forNotificationId: id)
     }
 
