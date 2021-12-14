@@ -16,7 +16,7 @@ public protocol LocationManager: AnyObject {
 }
 
 protocol LocationTracker: LocationManager {
-    var location: PublishSubject<CLLocationCoordinate2D> {get set}
+    var isInAreaObservable: Observable<Bool> { get }
     func startObserving()
     func stopObserving()
 }
@@ -26,14 +26,17 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     public let locationStatusSubject: BehaviorSubject<CLAuthorizationStatus>
     private let locationManager: CLLocationManager
     private let disposeBag: DisposeBag
+    private let isInAreaPublishSubject: PublishSubject<Bool> = .init()
     
     // MARK: Variables
-    var location = PublishSubject<CLLocationCoordinate2D>()
+    var isInAreaObservable: Observable<Bool> { isInAreaPublishSubject }
     
     override init() {
         locationManager = CLLocationManager()
         locationManager.allowsBackgroundLocationUpdates = true
-        locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.pausesLocationUpdatesAutomatically = false
+        locationManager.activityType = .otherNavigation
         disposeBag = DisposeBag()
         
         if #available(iOS 14.0, *) {
@@ -64,17 +67,35 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     
     // MARK: Private Functions
     private func startObservLocation() {
-        if CLLocationManager.locationServicesEnabled() {
-            locationManager.startUpdatingLocation()
-        }
+        guard CLLocationManager.locationServicesEnabled(),
+              CLLocationManager.authorizationStatus() != .denied,
+              CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self)
+        else { return }
+        
+        let regionCenter = CLLocationCoordinate2D(latitude: 33.75741395979292,
+                                                  longitude: -84.39633513106129)
+        let region = CLCircularRegion(center: regionCenter,
+                                      radius: 300,
+                                      identifier: "State Farm Arena")
+        region.notifyOnExit = true
+        region.notifyOnEntry = true
+        locationManager.startMonitoring(for: region)
     }
 }
 
 // MARK: - Extensions
 extension LocationManagerTracker: CLLocationManagerDelegate {
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let locValue: CLLocationCoordinate2D = manager.location?.coordinate else { return }
-        location.onNext(locValue)
+    func locationManager(_ manager: CLLocationManager, didDetermineState state: CLRegionState, for region: CLRegion) {
+        guard let location: CLLocationCoordinate2D = manager.location?.coordinate else { return }
+        
+        switch state {
+        case .inside:
+            isInAreaPublishSubject.onNext(true)
+        case .outside:
+            isInAreaPublishSubject.onNext(false)
+        case .unknown:
+            break
+        }
     }
     
     func locationManagerDidChangeAuthorization(_ manager: CLLocationManager) {

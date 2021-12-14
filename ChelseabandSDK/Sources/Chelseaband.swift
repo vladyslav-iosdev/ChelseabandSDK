@@ -193,6 +193,7 @@ public final class Chelseaband: ChelseabandType {
         
         locationTracker = LocationManagerTracker()
         observeForFCMTokenChange()
+        observeLocationChange()
     }
     private var connectedPeripheral: Peripheral?
 
@@ -211,7 +212,6 @@ public final class Chelseaband: ChelseabandType {
                 strongSelf.setupChelseaband(device: strongSelf.device)
                 strongSelf.locationTracker.startObserving()
                 strongSelf.observeForConnectionStatusChange()
-                strongSelf.observeLocationChange()
                 strongSelf.sendBandUUIDOnServer(peripheral)
                 strongSelf.synchronizeScore()
                 
@@ -261,17 +261,11 @@ public final class Chelseaband: ChelseabandType {
     }
 
     private func observeLocationChange() {
-        //NOTE: throttle to avoid to many requests to server
-        Observable.combineLatest(fcmTokenObservable, locationTracker.location.throttle(.seconds(60), scheduler: MainScheduler.instance))
-            .map { $0.1 }
-            .flatMap { location -> Observable<CLLocationCoordinate2D> in
-                self.connectionObservable
-                    .filter { $0.isConnected }
-                    .map{ _ in location }
-            }
-            .subscribe(onNext: {
-                self.statistic.sendLocation(latitude: $0.latitude, longitude: $0.longitude)
-            }).disposed(by: disposeBag)
+        locationTracker.isInAreaObservable
+            .subscribe(onNext: { [weak self] in
+                self?.statistic.sendLocation(isInArea: $0)
+            })
+            .disposed(by: longLifeDisposeBag)
     }
 
     private func setupChelseaband(device: DeviceType) {

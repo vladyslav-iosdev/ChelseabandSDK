@@ -265,11 +265,10 @@ final class API: Statistics {
                     jsonParams: ["status": status])
     }
     
-    func sendLocation(latitude: Double, longitude: Double) {
+    func sendLocation(isInArea: Bool) {
         sendRequest(Modules.users(.inArea).path,
                     method: .patch,
-                    jsonParams: ["lat": latitude,
-                                 "lng": longitude])
+                    jsonParams: ["isInArea": isInArea])
     }
     
     func sendVotingResponse(_ response: Int?, _ id: String) -> Observable<Void> {

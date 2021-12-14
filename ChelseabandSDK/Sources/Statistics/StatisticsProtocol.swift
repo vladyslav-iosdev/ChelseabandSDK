@@ -14,7 +14,7 @@ protocol Statistics {
     func register(phoneNumber: String) -> Observable<Void>
     func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Observable<Bool>
     func sendBand(status: Bool)
-    func sendLocation(latitude: Double, longitude: Double)
+    func sendLocation(isInArea: Bool)
     func sendVotingResponse(_: Int?, _: String) -> Observable<Void>
     func sendReaction(_: String)
     func fetchTicket() -> Observable<TicketType?>
