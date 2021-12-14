@@ -52,7 +52,7 @@ public protocol ChelseabandType {
     
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]>
 
-    func forceSendConnectStatusOnServer(appWillClose: Bool)
+    func forceSendConnectStatusOnServer()
     
     // TODO: remove in future unused function perform
     func perform(command: Command) -> Observable<Void>
@@ -106,6 +106,8 @@ public protocol ChelseabandType {
     func stopScanForPeripherals()
     
     func updateFirmware() -> Observable<Double>
+    
+    func appWillBeClose(callback: (() -> Void)?)
 }
 
 public enum ChelseabandError: LocalizedError {
@@ -219,6 +221,10 @@ public final class Chelseaband: ChelseabandType {
                 guard let strongSelf = self else { return }
                 strongSelf.disconnect(forgotLastPeripheral: false)
             })
+    }
+    
+    public func appWillBeClose(callback: (() -> Void)?) {
+        statistic.sendBand(status: false, callback: callback)
     }
 
     public func isLastConnected(peripheral: Peripheral) -> Bool {
@@ -536,8 +542,7 @@ public final class Chelseaband: ChelseabandType {
         return performSafe(command: deviceSettingsCommand, timeOut: .seconds(5))
     }
     
-    public func forceSendConnectStatusOnServer(appWillClose: Bool = false) {
-        guard !appWillClose else { return statistic.sendBand(status: false) }
+    public func forceSendConnectStatusOnServer() {
         connectionObservable
             .take(1)
             .timeout(.seconds(2), scheduler: MainScheduler.instance)

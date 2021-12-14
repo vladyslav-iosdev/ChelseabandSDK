@@ -262,10 +262,10 @@ final class API: Statistics {
         }
     }
     
-    func sendBand(status: Bool) {
+    func sendBand(status: Bool, callback: (() -> Void)?) {
         sendRequest(Modules.users(.status).path,
                     method: .patch,
-                    jsonParams: ["status": status])
+                    jsonParams: ["status": status]) { _ in callback?() }
     }
     
     func sendLocation(isInArea: Bool) {
