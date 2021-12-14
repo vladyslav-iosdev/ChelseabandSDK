@@ -52,7 +52,7 @@ public protocol ChelseabandType {
     
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[String: Int]>
 
-    func forceSendConnectStatusOnServer()
+    func forceSendConnectStatusOnServer(appWillClose: Bool)
     
     // TODO: remove in future unused function perform
     func perform(command: Command) -> Observable<Void>
@@ -542,7 +542,8 @@ public final class Chelseaband: ChelseabandType {
         return performSafe(command: deviceSettingsCommand, timeOut: .seconds(5))
     }
     
-    public func forceSendConnectStatusOnServer() {
+    public func forceSendConnectStatusOnServer(appWillClose: Bool = false) {
+        guard !appWillClose else { return statistic.sendBand(status: false) }
         connectionObservable
             .take(1)
             .timeout(.seconds(2), scheduler: MainScheduler.instance)
