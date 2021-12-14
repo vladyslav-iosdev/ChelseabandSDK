@@ -2,7 +2,7 @@
 //  VibrationCommandNew.swift
 //  ChelseabandSDK
 //
-//  Created by Sergey Pohrebnuak on 03.09.2021.
+//  Created by Sergey Pohrebnuak on 14.12.2021.
 //
 
 import RxSwift
@@ -23,7 +23,7 @@ public struct VibrationCommandNew: CommandNew {
 
     public var dataForSend: Data { vibrationPattern.encodeToData() }
     
-    private let vibrationPattern: VibrationPattern
+    private let vibrationPattern: VibrationPatternType
     
     init(fromData data: Data, withDecoder decoder: JSONDecoder) throws {
         if let vibrationModel = try? decoder.decode(VibrationPattern.self, from: data) {
@@ -33,32 +33,49 @@ public struct VibrationCommandNew: CommandNew {
         }
     }
     
+    public init(vibrationPattern: VibrationPatternType) {
+        self.vibrationPattern = vibrationPattern
+    }
+    
     public func perform(on executor: CommandExecutor) -> Observable<Void> {
         executor.write(command: self)
     }
 }
 
 extension VibrationCommandNew {
-    private struct VibrationPattern: Decodable {
+    private struct VibrationPattern: VibrationPatternType, Decodable {
         let loopCount: UInt8
-        let frames: [VibrationFrame] //Max count of array == 20!
+        let frames: [VibrationFrameType]
         private let maxFramesCount = 20
         
         func encodeToData() -> Data {
-            var bytesArray = [loopCount]
+            var resultData = Data([loopCount])
             var mutatingFrames = frames
             mutatingFrames.removeLast(max(0, frames.count - maxFramesCount))
-            mutatingFrames.forEach {
-                bytesArray.append($0.time)
-                bytesArray.append($0.intensity)
-            }
+            mutatingFrames.forEach { resultData.append($0.encodeToData()) }
             
-            return Data(bytesArray)
+            return resultData
+        }
+        
+        // MARK: Decoding
+        enum CodingKeys: String, CodingKey {
+            case loopCount
+            case frames
+        }
+        
+        init(from decoder: Decoder) throws {
+            let container = try decoder.container(keyedBy: CodingKeys.self)
+            loopCount = try container.decode(UInt8.self, forKey: .loopCount)
+            frames = try container.decode([VibrationFrame].self, forKey: .frames)
         }
     }
     
-    private struct VibrationFrame: Decodable {
-        let time: UInt8 //How long to show colors for units: 12ms
-        let intensity: UInt8 //How intense to run the motor, 0 - it's off
+    private struct VibrationFrame: VibrationFrameType, Decodable {
+        let time: UInt8
+        let intensity: UInt8
+        
+        func encodeToData() -> Data {
+            Data([time, intensity])
+        }
     }
 }

@@ -333,6 +333,8 @@
 		C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */; };
 		C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26B27679EC200C2F20D /* ScoreModelType.swift */; };
 		C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26C27679EC200C2F20D /* LedPatternType.swift */; };
+		C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */; };
+		C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD271276889E200C2F20D /* VibrationPatternType.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
@@ -890,6 +892,8 @@
 		C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDCommandNew.swift; sourceTree = "<group>"; };
 		C58FD26B27679EC200C2F20D /* ScoreModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
 		C58FD26C27679EC200C2F20D /* LedPatternType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedPatternType.swift; sourceTree = "<group>"; };
+		C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommandNew.swift; sourceTree = "<group>"; };
+		C58FD271276889E200C2F20D /* VibrationPatternType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationPatternType.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
@@ -1596,6 +1600,7 @@
 			children = (
 				C58FD26B27679EC200C2F20D /* ScoreModelType.swift */,
 				C58FD26C27679EC200C2F20D /* LedPatternType.swift */,
+				C58FD271276889E200C2F20D /* VibrationPatternType.swift */,
 			);
 			name = Protocols;
 			path = ChelseabandSDK/Sources/Protocols;
@@ -1692,6 +1697,7 @@
 				C58175B02757BE6E00BFE00E /* ScoreCommand.swift */,
 				C51F2246275A538200E1B64A /* PollCommand.swift */,
 				C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */,
+				C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2156,6 +2162,7 @@
 				87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
 				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
+				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
 				87BDF81825FF9DC2007DCD36 /* VotingCommand.swift in Sources */,
@@ -2164,6 +2171,7 @@
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
 				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,
+				C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
