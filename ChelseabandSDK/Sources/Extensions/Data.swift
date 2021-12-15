@@ -14,6 +14,14 @@ extension Data {
         return number
     }
     
+    var bytes: [UInt8] {
+        .init(self)
+    }
+
+    public var hex: String {
+        return map { String(format: "%02x", $0) }.joined()
+    }
+    
     func createChunks(chunkSize: Int) -> [Data] {
       var chunks : [Data] = []
       let length = count
