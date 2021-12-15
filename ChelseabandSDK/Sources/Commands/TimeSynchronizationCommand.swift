@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public struct TimeSynchronizationCommand: CommandNew {
+public struct TimeSynchronizationCommand: PerformWriteCommandProtocol {
     
     private let date: Date
         

@@ -25,7 +25,7 @@ public protocol MessageType {
     var messageTypeIdentifier: UInt8 { get }
 }
 
-public struct MessageCommandNew: CommandNew {
+public struct MessageCommandNew: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.alertCharacteristic
 
     public var dataForSend: Data

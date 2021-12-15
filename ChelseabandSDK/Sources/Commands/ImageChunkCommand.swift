@@ -8,7 +8,7 @@
 import RxSwift
 import CoreBluetooth
 
-public final class ImageChunkCommand: CommandNew {
+public final class ImageChunkCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.imageChunkCharacteristic
     
     public var dataForSend: Data = Data()

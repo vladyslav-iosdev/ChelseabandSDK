@@ -34,7 +34,7 @@ public enum ImageControlCommandError: LocalizedError {
     }
 }
 
-public struct ImageControlCommand: CommandNew {
+public struct ImageControlCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.imageControlCharacteristic
     
     public var dataForSend: Data {

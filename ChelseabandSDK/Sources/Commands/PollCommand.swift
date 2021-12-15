@@ -39,13 +39,13 @@ public enum PollCommandError: LocalizedError {
     }
 }
 
-public struct PollCommand: CommandNew {
+public struct PollCommand: PerformWriteCommandProtocol {
     
     public var commandUUID = ChelseabandConfiguration.default.pollCharacteristic
     
     public var dataForSend: Data
     
-    public func performAndObservNotify(on executor: CommandExecutor) -> Observable<Data> {
+    public func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data> {
         executor.writeAndObservNotify(command: self)
             .mapTimeoutError(to: PollCommandError.writeCommandTimeOut)
             .map { data -> Data in

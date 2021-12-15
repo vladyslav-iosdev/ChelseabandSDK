@@ -36,31 +36,31 @@ public extension WritableCommand {
     }
 }
 
-public protocol CommandNew: WritableCommand { //TODO: rename in future on PerformWriteCommandProtocol
+public protocol PerformWriteCommandProtocol: WritableCommand {
     func perform(on executor: CommandExecutor) -> Observable<Void>
-    func performAndObservNotify(on executor: CommandExecutor) -> Observable<Data>
+    func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data>
 }
 
-public enum CommandNewError: LocalizedError {
+public enum CommandError: LocalizedError {
     case performCommandNotImplemented
-    case performAndObservCommandNotImplemented
+    case performAndObserveCommandNotImplemented
     
     public var errorDescription: String? {
         switch self {
         case .performCommandNotImplemented:
             return "Perform command not implemented"
-        case .performAndObservCommandNotImplemented:
-            return "Perform and observ command not implemented"
+        case .performAndObserveCommandNotImplemented:
+            return "Perform and observe command not implemented"
         }
     }
 }
 
-public extension CommandNew {
+public extension PerformWriteCommandProtocol {
     func perform(on executor: CommandExecutor) -> Observable<Void> {
-        .error(CommandNewError.performCommandNotImplemented)
+        .error(CommandError.performCommandNotImplemented)
     }
-    func performAndObservNotify(on executor: CommandExecutor) -> Observable<Data> {
-        .error(CommandNewError.performAndObservCommandNotImplemented)
+    func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data> {
+        .error(CommandError.performAndObserveCommandNotImplemented)
     }
 }
 

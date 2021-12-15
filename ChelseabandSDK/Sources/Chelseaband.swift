@@ -50,9 +50,9 @@ public protocol ChelseabandType {
 
     func forceSendConnectStatusOnServer()
     
-    func perform(command: CommandNew) -> Observable<Void>
+    func perform(command: PerformWriteCommandProtocol) -> Observable<Void>
 
-    func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
+    func performSafe(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval) -> Observable<Void>
     
     func performRead(command: PerformReadCommandProtocol) -> Observable<Void>
     
@@ -469,21 +469,21 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
     
-    public func perform(command: CommandNew) -> Observable<Void> {
+    public func perform(command: PerformWriteCommandProtocol) -> Observable<Void> {
         command
             .perform(on: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
     
-    public func performAndObservNotify(command: CommandNew) -> Observable<Data> {
+    public func performAndObservNotify(command: PerformWriteCommandProtocol) -> Observable<Data> {
         command
-            .performAndObservNotify(on: self)
+            .performAndObserveNotify(on: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
     
-    public func performSafe(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+    public func performSafe(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .skipWhile { _ in self.suotaUpdate != nil }
@@ -494,7 +494,7 @@ public final class Chelseaband: ChelseabandType {
             }
     }
     
-    public func performSafeAndObservNotify(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Data> {
+    public func performSafeAndObservNotify(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Data> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .skipWhile { _ in self.suotaUpdate != nil }

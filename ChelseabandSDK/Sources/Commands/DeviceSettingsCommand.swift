@@ -12,7 +12,7 @@ public enum BandOrientation: UInt8 {
     case buttonOnRightSide
 }
 
-public struct DeviceSettingsCommand: CommandNew {
+public struct DeviceSettingsCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.deviceSettingsCharacteristic
 
     public var dataForSend: Data { Data([bandOrientation.rawValue]) }
