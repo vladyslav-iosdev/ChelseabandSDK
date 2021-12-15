@@ -210,7 +210,6 @@
 		87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */; };
 		87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82225FF9DD3007DCD36 /* Screen.swift */; };
 		87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82D25FF9DE1007DCD36 /* Observable.swift */; };
-		87C2F4E14A31CC17E0FD3EC935D2881A /* TimeCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E469E886BFF25957B7188F4D8684CD /* TimeCommand.swift */; };
 		892102AFA6D8CC85FF32A58B468C48EB /* Platform.Linux.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A5BD49964C793A51094A7BE80BBD53 /* Platform.Linux.swift */; };
 		89FB172943AD5B5F68E515F4F105A9E0 /* Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751AF3AC51B4205D8E58D4B3507D5F9 /* Timeout.swift */; };
 		8B8BE709B46663F60DB6A661A3B2A28A /* ConstraintMakerPriortizable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 47189760ABB91DDDE57B407ED7FF6AB5 /* ConstraintMakerPriortizable.swift */; };
@@ -562,7 +561,6 @@
 		102C6A57BC976FAB3BFFAEFA53D53A63 /* RxCollectionViewReactiveArrayDataSource.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxCollectionViewReactiveArrayDataSource.swift; path = RxCocoa/iOS/DataSources/RxCollectionViewReactiveArrayDataSource.swift; sourceTree = "<group>"; };
 		1065EBA9A0625AFF052262B3CF9A04DE /* ConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintItem.swift; path = Source/ConstraintItem.swift; sourceTree = "<group>"; };
 		10B643C96AA31B512022B640A88F385A /* ControlTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ControlTarget.swift; path = RxCocoa/Common/ControlTarget.swift; sourceTree = "<group>"; };
-		10E469E886BFF25957B7188F4D8684CD /* TimeCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = TimeCommand.swift; sourceTree = "<group>"; };
 		11455B184E46D0AF4ADBA889FF7ED095 /* NSImageView+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImageView+Rx.swift"; path = "RxCocoa/macOS/NSImageView+Rx.swift"; sourceTree = "<group>"; };
 		1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Sound.swift; path = ChelseabandSDK/Sources/Sound.swift; sourceTree = "<group>"; };
 		115AA0615B395A70EFA42F6C4D93C311 /* AdvertisementData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AdvertisementData.swift; path = Source/AdvertisementData.swift; sourceTree = "<group>"; };
@@ -1688,7 +1686,6 @@
 				C91B2C2E6B51F9E56A3EE86B952DDEEA /* GoalCommand.swift */,
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
 				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
-				10E469E886BFF25957B7188F4D8684CD /* TimeCommand.swift */,
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
 				C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */,
 				C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */,
@@ -2178,7 +2175,6 @@
 				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
-				87C2F4E14A31CC17E0FD3EC935D2881A /* TimeCommand.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
