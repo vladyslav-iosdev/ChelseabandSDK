@@ -201,7 +201,6 @@
 		87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */; };
 		87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */; };
 		87BDF81725FF9DC2007DCD36 /* HardwareSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */; };
-		87BDF81825FF9DC2007DCD36 /* VotingCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80E25FF9DC2007DCD36 /* VotingCommand.swift */; };
 		87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */; };
 		87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82225FF9DD3007DCD36 /* Screen.swift */; };
 		87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82D25FF9DE1007DCD36 /* Observable.swift */; };
@@ -757,7 +756,6 @@
 		87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
 		87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HardwareSettings.swift; sourceTree = "<group>"; };
-		87BDF80E25FF9DC2007DCD36 /* VotingCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VotingCommand.swift; sourceTree = "<group>"; };
 		87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommandTrigger.swift; path = ChelseabandSDK/Sources/CommandTrigger.swift; sourceTree = "<group>"; };
 		87BDF82225FF9DD3007DCD36 /* Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Screen.swift; path = ChelseabandSDK/Sources/Screen.swift; sourceTree = "<group>"; };
 		87BDF82D25FF9DE1007DCD36 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
@@ -1662,7 +1660,6 @@
 				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
 				87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */,
 				87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */,
-				87BDF80E25FF9DC2007DCD36 /* VotingCommand.swift */,
 				56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */,
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
 				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
@@ -2139,7 +2136,6 @@
 				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
-				87BDF81825FF9DC2007DCD36 /* VotingCommand.swift in Sources */,
 				87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,

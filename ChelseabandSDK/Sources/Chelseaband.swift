@@ -16,8 +16,6 @@ public typealias BluetoothState = RxBluetoothKit.BluetoothState
 
 public protocol ChelseabandType {
     
-    var reactionOnVoteObservable: Observable<(VotingResult, String)> { get }
-    
     var connectionObservable: Observable<Device.State> { get }
 
     var batteryLevelObservable: Observable<UInt8> { get }
@@ -70,8 +68,6 @@ public protocol ChelseabandType {
     func register(phoneNumber: String) -> Observable<Void>
     
     func verify(phoneNumber: String, withOTPCode: String, andFCM: String) -> Observable<Bool>
-
-    func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
     
     func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
     
@@ -131,10 +127,6 @@ public final class Chelseaband: ChelseabandType {
         device.firmwareVersionSubject
     }
     
-    public var reactionOnVoteObservable: Observable<(VotingResult, String)> {
-        return reactionOnVoteSubject.map { $0 }
-    }
-    
     public var connectionObservable: Observable<Device.State> {
         return device.connectionObservable
     }
@@ -166,7 +158,6 @@ public final class Chelseaband: ChelseabandType {
     
     public var isAuthorize: Observable<Bool> { UserDefaults.standard.isAuthorizeObservable }
 
-    private var reactionOnVoteSubject: PublishSubject<(VotingResult, String)> = .init()
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt8> = .init(value: 0)
     private let device: DeviceType
@@ -441,20 +432,6 @@ public final class Chelseaband: ChelseabandType {
 
     public func sendPoll(response: Int?, id: String) -> Observable<Void> {
         statistic.sendVotingResponse(response, id)
-    }
-    
-    //TODO: remove in future
-    public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
-        let command0 = VotingCommand(value: message)
-        command0.votingObservable.subscribe(onNext: { response in
-            //self.statistic.sendVotingResponse(response, id)
-            self.reactionOnVoteSubject.onNext((response, id))
-        }).disposed(by: disposeBag)
-
-        let command1 = performSafe(command: command0, timeOut: .seconds(5))
-        return Observable.zip(command1, command0.votingObservable).map { (_, response) -> VotingResult in
-            return response
-        }
     }
     
     public func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
