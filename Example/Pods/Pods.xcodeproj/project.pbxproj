@@ -172,7 +172,6 @@
 		72C2B5D60A24B4B663C8994276A962B6 /* ConstraintOffsetTarget.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9D359515EE877DCA81492943816FE264 /* ConstraintOffsetTarget.swift */; };
 		739B467D1EF55D3B48E9ACFBD2301226 /* DelegateProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8C626E2B79FBFAC58441446BC87AD43 /* DelegateProxy.swift */; };
 		74731A4CEA4EF4EA1359CF7DA54E428C /* Boxes.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9CEDD1D9AD38DB009BD6F22AE8E97C40 /* Boxes.swift */; };
-		770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */; };
 		77303E05FF0B3540D0FFD63185B43C99 /* RxPickerViewDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CD5D15339F1BC2D1E67A5DA85CC0DD8 /* RxPickerViewDataSourceType.swift */; };
 		77A618FE4FF299682F776C974300EBA1 /* ConstraintView+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C7080176EEC8E23301ECA82EE3E5419 /* ConstraintView+Extensions.swift */; };
 		77CF24EC2EE73D38C0E08081F44B9605 /* Create.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80CAD5F07EFC1531200EC0BD543EE452 /* Create.swift */; };
@@ -196,8 +195,6 @@
 		86B8C51C41D147C8455ECEE76E0BDD9A /* ImmediateSchedulerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1C7F652F29DECEE08C6C743C6F0DE3 /* ImmediateSchedulerType.swift */; };
 		86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF02C58CB216881107009A2831A0FE1D /* String.swift */; };
 		8767C060C6D3C32BD07B4B4BEE62547C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E05EEA3C6B5BF564C5BDBF1D5BF19 /* Debug.swift */; };
-		87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */; };
-		87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */; };
 		87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */; };
 		87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82225FF9DD3007DCD36 /* Screen.swift */; };
 		87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82D25FF9DE1007DCD36 /* Observable.swift */; };
@@ -217,7 +214,6 @@
 		90132DE6D70F0D027E904D645C074A91 /* Observable+Bind.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F965152DB2C6D124C658429704BEFDF /* Observable+Bind.swift */; };
 		904A2F17D91B5B471150E92DCB5D14F9 /* ControlProperty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8247A027C9737F660BFC12D52FC42F63 /* ControlProperty.swift */; };
 		90DF8A9B09B7FAAC56999D5C99BFE79D /* AddRef.swift in Sources */ = {isa = PBXBuildFile; fileRef = 096497034E2E8659A1FB02CCC0D07047 /* AddRef.swift */; };
-		912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 799DF0016C039125424C81057C8D0266 /* HexCommand.swift */; };
 		915F458FE56D0E20AECD1F158C463F49 /* SwiftSupport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4D71A64D60F8896EF255C5FF215B3BD9 /* SwiftSupport.swift */; };
 		9257AA4135998DA551B914B4F9441241 /* CentralManagerRestoredState.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55290B41D08D3B8B369E089CC48FE36 /* CentralManagerRestoredState.swift */; };
 		931F5EA1321C1B7C63F808B87ED557DC /* PrimitiveSequence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 01AC2DAAAB8816BCE6FC82CA7D4DE1D7 /* PrimitiveSequence.swift */; };
@@ -721,7 +717,6 @@
 		72FFFFC7212D6C7FCED3AA2DA6E27561 /* RxSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RxSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		74CCCC0047691399BEDD5D5054B2024F /* Just.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Just.swift; path = RxSwift/Observables/Just.swift; sourceTree = "<group>"; };
 		7502ECEF505A063BDBBAC243B205EBF2 /* TakeLast.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TakeLast.swift; path = RxSwift/Observables/TakeLast.swift; sourceTree = "<group>"; };
-		799DF0016C039125424C81057C8D0266 /* HexCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HexCommand.swift; sourceTree = "<group>"; };
 		7A380977EBC8147B7E0E5B2FBF0673BD /* Error.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Error.swift; path = RxSwift/Observables/Error.swift; sourceTree = "<group>"; };
 		7A65D86A9DBAE8D51D95C3BA959FEF7E /* Enumerated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Enumerated.swift; path = RxSwift/Observables/Enumerated.swift; sourceTree = "<group>"; };
 		7C2CA0B2385BC19FA224055A55C435F2 /* Signal.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Signal.swift; path = RxCocoa/Traits/Signal/Signal.swift; sourceTree = "<group>"; };
@@ -746,8 +741,6 @@
 		8539D442A76284969BD177629A9D9661 /* Errors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Errors.swift; path = RxSwift/Errors.swift; sourceTree = "<group>"; };
 		87812339A8BBC91023DAA8B73DAF1EC1 /* TailRecursiveSink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TailRecursiveSink.swift; path = RxSwift/Observers/TailRecursiveSink.swift; sourceTree = "<group>"; };
 		879A2D5C7686BC469FE13893037A1631 /* ChelseabandSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ChelseabandSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
-		87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommandTrigger.swift; path = ChelseabandSDK/Sources/CommandTrigger.swift; sourceTree = "<group>"; };
 		87BDF82225FF9DD3007DCD36 /* Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Screen.swift; path = ChelseabandSDK/Sources/Screen.swift; sourceTree = "<group>"; };
 		87BDF82D25FF9DE1007DCD36 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
@@ -799,7 +792,6 @@
 		A0A5BD49964C793A51094A7BE80BBD53 /* Platform.Linux.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Platform.Linux.swift; path = Platform/Platform.Linux.swift; sourceTree = "<group>"; };
 		A10510CA2482126F06EB633C7271E1E7 /* Queue.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Queue.swift; path = Platform/DataStructures/Queue.swift; sourceTree = "<group>"; };
 		A1AEA322DAC10832EC3ED9DB88668F60 /* DropDown+Appearance.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "DropDown+Appearance.swift"; path = "DropDown/src/DropDown+Appearance.swift"; sourceTree = "<group>"; };
-		A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SoundCommand.swift; sourceTree = "<group>"; };
 		A1DF1B9D25A0ADC0C99EF843037BBC41 /* Using.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Using.swift; path = RxSwift/Observables/Using.swift; sourceTree = "<group>"; };
 		A20364B7CE7BC21FFBCA9F49454F41F4 /* ChelseabandSDK-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "ChelseabandSDK-Info.plist"; sourceTree = "<group>"; };
 		A208A78DFB5C930D6989264E8E4A384C /* ManagerType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ManagerType.swift; path = Source/ManagerType.swift; sourceTree = "<group>"; };
@@ -1647,10 +1639,6 @@
 			isa = PBXGroup;
 			children = (
 				C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */,
-				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
-				87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */,
-				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
-				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
 				C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */,
 				C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */,
@@ -2110,17 +2098,14 @@
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
 				C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
-				87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */,
 				C55B132C276207A100DF487E /* Peripheral.swift in Sources */,
 				C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */,
 				EA1AC7E1284CB9BD12947E1CD909350E /* Configuration.swift in Sources */,
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
-				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
 				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
-				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
@@ -2130,7 +2115,6 @@
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
-				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
