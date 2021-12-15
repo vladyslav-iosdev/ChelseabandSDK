@@ -197,7 +197,6 @@
 		86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF02C58CB216881107009A2831A0FE1D /* String.swift */; };
 		8767C060C6D3C32BD07B4B4BEE62547C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E05EEA3C6B5BF564C5BDBF1D5BF19 /* Debug.swift */; };
 		87BDF80F25FF9DC2007DCD36 /* AccelerometerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */; };
-		87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */; };
 		87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */; };
 		87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */; };
 		87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */; };
@@ -751,7 +750,6 @@
 		87812339A8BBC91023DAA8B73DAF1EC1 /* TailRecursiveSink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TailRecursiveSink.swift; path = RxSwift/Observers/TailRecursiveSink.swift; sourceTree = "<group>"; };
 		879A2D5C7686BC469FE13893037A1631 /* ChelseabandSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ChelseabandSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccelerometerCommand.swift; sourceTree = "<group>"; };
-		87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenCommand.swift; sourceTree = "<group>"; };
 		87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
 		87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommandTrigger.swift; path = ChelseabandSDK/Sources/CommandTrigger.swift; sourceTree = "<group>"; };
@@ -1655,7 +1653,6 @@
 				87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */,
 				C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */,
 				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
-				87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */,
 				87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */,
 				56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */,
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
@@ -2132,7 +2129,6 @@
 				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
 				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				770CD93A8ECB3AD350BA11995AC4369D /* SoundCommand.swift in Sources */,
-				87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
