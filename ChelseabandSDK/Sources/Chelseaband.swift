@@ -72,8 +72,6 @@ public protocol ChelseabandType {
     func verify(phoneNumber: String, withOTPCode: String, andFCM: String) -> Observable<Bool>
 
     func sendVotingCommand(message: String, id: String) -> Observable<VotingResult>
-
-    func sendMessageCommand(message: String, id: String) -> Observable<Void>
     
     func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
     
@@ -82,8 +80,6 @@ public protocol ChelseabandType {
     func fetchTicket() -> Observable<TicketType?>
     
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
-
-    func sendGoalCommand(id: String) -> Observable<Void>
     
     func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
@@ -317,12 +313,6 @@ public final class Chelseaband: ChelseabandType {
             .bind(to: batteryLevelSubject)
             .disposed(by: disposeBag)
     }
-
-    public func sendMessageCommand(message: String, id: String) -> Observable<Void> {
-        let command0 = MessageCommand(value: message)
-
-        return performSafe(command: command0, timeOut: .seconds(5))
-    }
     
     public func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
         guard imageType.imageLength == binImage.count else {
@@ -416,10 +406,6 @@ public final class Chelseaband: ChelseabandType {
         } catch {
             return .error(error)
         }
-    }
-
-    public func sendGoalCommand(id: String) -> Observable<Void> {
-        return performSafe(command: GoalCommand(), timeOut: .seconds(5))
     }
     
     public func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void> {

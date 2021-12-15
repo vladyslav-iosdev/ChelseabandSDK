@@ -36,10 +36,10 @@ public class VotingCommand: Command {
     }
 
     private var votingPublishSubject: PublishSubject<VotingResult>
-    private let messageCommand: MessageCommand
+    //private let messageCommand: MessageCommand
 
     public init(value: String = "hello world?") {
-        messageCommand = MessageCommand(value: value, messagePartPrefix: VotingCommand.prefix)
+        //messageCommand = MessageCommand(value: value, messagePartPrefix: VotingCommand.prefix)
         votingPublishSubject = PublishSubject<VotingResult>()
     }
 
@@ -56,8 +56,8 @@ public class VotingCommand: Command {
             })
             .take(1) //NOTE: complete observable
 
-        let performanceObservable = messageCommand
-            .perform(on: executor, notifyWith: notifier)
+                let performanceObservable = Observable.just(())//messageCommand
+            //.perform(on: executor, notifyWith: notifier)
 
         return Observable.zip(
             performanceObservable,

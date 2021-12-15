@@ -134,7 +134,6 @@
 		5717A7B91A9174E837C4FCE89628ED34 /* NSButton+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0A9E0345FDA2ABF82CAEF000774F366E /* NSButton+Rx.swift */; };
 		58AD959C1C810885F74CF4A57174F6C8 /* RxCocoaRuntime.h in Headers */ = {isa = PBXBuildFile; fileRef = 807A599D6DE7BC195B146F147878E6F7 /* RxCocoaRuntime.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		58BC708AC350736F899D74D111396742 /* ControlEvent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84F416A51A1D307660142A17A17031AE /* ControlEvent.swift */; };
-		59692A412C41314B6114AA4E7977AD00 /* GoalCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C91B2C2E6B51F9E56A3EE86B952DDEEA /* GoalCommand.swift */; };
 		59B80C5E6C5E2FB121D299C0CDCA9DD6 /* UITabBarItem+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AB032BB58EF40D74DE9AE0E10A228BA /* UITabBarItem+Rx.swift */; };
 		5AEB0E0C5484C62D69EDC3541C955503 /* First.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5BFC080CE68A5545E652219C52E235D6 /* First.swift */; };
 		5B4B49F1C576A7ABA14442D71B7B40BD /* RxCollectionViewDataSourceType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8816FD5B327E2494FD2792FBF450F110 /* RxCollectionViewDataSourceType.swift */; };
@@ -198,11 +197,7 @@
 		86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF02C58CB216881107009A2831A0FE1D /* String.swift */; };
 		8767C060C6D3C32BD07B4B4BEE62547C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E05EEA3C6B5BF564C5BDBF1D5BF19 /* Debug.swift */; };
 		87BDF80F25FF9DC2007DCD36 /* AccelerometerCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */; };
-		87BDF81025FF9DC2007DCD36 /* MessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80525FF9DC2007DCD36 /* MessageCommand.swift */; };
 		87BDF81125FF9DC2007DCD36 /* ScreenCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */; };
-		87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80825FF9DC2007DCD36 /* StartMessageCommand.swift */; };
-		87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80925FF9DC2007DCD36 /* EndMessageCommand.swift */; };
-		87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80A25FF9DC2007DCD36 /* MessagePartCommand.swift */; };
 		87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */; };
 		87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */; };
 		87BDF81725FF9DC2007DCD36 /* HardwareSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */; };
@@ -334,6 +329,7 @@
 		C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26C27679EC200C2F20D /* LedPatternType.swift */; };
 		C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */; };
 		C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD271276889E200C2F20D /* VibrationPatternType.swift */; };
+		C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
@@ -757,11 +753,7 @@
 		87812339A8BBC91023DAA8B73DAF1EC1 /* TailRecursiveSink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TailRecursiveSink.swift; path = RxSwift/Observers/TailRecursiveSink.swift; sourceTree = "<group>"; };
 		879A2D5C7686BC469FE13893037A1631 /* ChelseabandSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ChelseabandSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccelerometerCommand.swift; sourceTree = "<group>"; };
-		87BDF80525FF9DC2007DCD36 /* MessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCommand.swift; sourceTree = "<group>"; };
 		87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScreenCommand.swift; sourceTree = "<group>"; };
-		87BDF80825FF9DC2007DCD36 /* StartMessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StartMessageCommand.swift; sourceTree = "<group>"; };
-		87BDF80925FF9DC2007DCD36 /* EndMessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndMessageCommand.swift; sourceTree = "<group>"; };
-		87BDF80A25FF9DC2007DCD36 /* MessagePartCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessagePartCommand.swift; sourceTree = "<group>"; };
 		87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
 		87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HardwareSettings.swift; sourceTree = "<group>"; };
@@ -892,6 +884,7 @@
 		C58FD26C27679EC200C2F20D /* LedPatternType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedPatternType.swift; sourceTree = "<group>"; };
 		C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommandNew.swift; sourceTree = "<group>"; };
 		C58FD271276889E200C2F20D /* VibrationPatternType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationPatternType.swift; sourceTree = "<group>"; };
+		C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCommand.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
@@ -901,7 +894,6 @@
 		C842DD6E92F7FD9F9D384E55DD6A44A3 /* ConstraintRelatableTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintRelatableTarget.swift; path = Source/ConstraintRelatableTarget.swift; sourceTree = "<group>"; };
 		C84B421ED9312EEDFED47664EBF6448A /* ConstraintPriorityTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintPriorityTarget.swift; path = Source/ConstraintPriorityTarget.swift; sourceTree = "<group>"; };
 		C88B249DC743140392BEC57D41FA2A8B /* RxPickerViewAdapter.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxPickerViewAdapter.swift; path = RxCocoa/iOS/DataSources/RxPickerViewAdapter.swift; sourceTree = "<group>"; };
-		C91B2C2E6B51F9E56A3EE86B952DDEEA /* GoalCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = GoalCommand.swift; sourceTree = "<group>"; };
 		CAD0C3FBFC63BD8A1522C1105424A62F /* AsMaybe.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AsMaybe.swift; path = RxSwift/Observables/AsMaybe.swift; sourceTree = "<group>"; };
 		CC3E1F5F622301264BA86CBC15F3C236 /* Deprecated.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Deprecated.swift; path = RxCocoa/Deprecated.swift; sourceTree = "<group>"; };
 		CCF56F94ABA779174FBF3555BBA22241 /* UIImageView+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIImageView+Rx.swift"; path = "RxCocoa/iOS/UIImageView+Rx.swift"; sourceTree = "<group>"; };
@@ -1457,16 +1449,6 @@
 			path = ChelseabandSDK/Sources/Extensions;
 			sourceTree = "<group>";
 		};
-		87BDF80725FF9DC2007DCD36 /* Message */ = {
-			isa = PBXGroup;
-			children = (
-				87BDF80825FF9DC2007DCD36 /* StartMessageCommand.swift */,
-				87BDF80925FF9DC2007DCD36 /* EndMessageCommand.swift */,
-				87BDF80A25FF9DC2007DCD36 /* MessagePartCommand.swift */,
-			);
-			path = Message;
-			sourceTree = "<group>";
-		};
 		88204F94BBFFCF90A95F70F285413599 /* Pods-ChelseabandSDK_Example */ = {
 			isa = PBXGroup;
 			children = (
@@ -1675,15 +1657,13 @@
 			isa = PBXGroup;
 			children = (
 				87BDF80425FF9DC2007DCD36 /* AccelerometerCommand.swift */,
+				C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */,
 				87BDF80D25FF9DC2007DCD36 /* HardwareSettings.swift */,
 				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
-				87BDF80725FF9DC2007DCD36 /* Message */,
-				87BDF80525FF9DC2007DCD36 /* MessageCommand.swift */,
 				87BDF80625FF9DC2007DCD36 /* ScreenCommand.swift */,
 				87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */,
 				87BDF80E25FF9DC2007DCD36 /* VotingCommand.swift */,
 				56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */,
-				C91B2C2E6B51F9E56A3EE86B952DDEEA /* GoalCommand.swift */,
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
 				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
@@ -2138,6 +2118,7 @@
 				87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */,
 				C58175A32751215900BFE00E /* NFCCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
+				C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */,
 				F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */,
 				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
@@ -2145,8 +2126,6 @@
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
 				C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
-				87BDF81325FF9DC2007DCD36 /* EndMessageCommand.swift in Sources */,
-				87BDF81025FF9DC2007DCD36 /* MessageCommand.swift in Sources */,
 				87BDF81525FF9DC2007DCD36 /* LEDCommand.swift in Sources */,
 				C55B132C276207A100DF487E /* Peripheral.swift in Sources */,
 				C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */,
@@ -2154,9 +2133,7 @@
 				EA1AC7E1284CB9BD12947E1CD909350E /* Configuration.swift in Sources */,
 				87BDF81725FF9DC2007DCD36 /* HardwareSettings.swift in Sources */,
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
-				59692A412C41314B6114AA4E7977AD00 /* GoalCommand.swift in Sources */,
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
-				87BDF81425FF9DC2007DCD36 /* MessagePartCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
 				912E6F84913B4B10AE5514185B3F7B50 /* HexCommand.swift in Sources */,
 				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
@@ -2172,7 +2149,6 @@
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
-				87BDF81225FF9DC2007DCD36 /* StartMessageCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				87BDF81625FF9DC2007DCD36 /* VibrationCommand.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */,
