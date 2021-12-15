@@ -417,7 +417,7 @@ public final class Chelseaband: ChelseabandType {
     
     public func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
         do {
-            let vibrationCommand = try VibrationCommandNew(fromData: data, withDecoder: decoder)
+            let vibrationCommand = try VibrationCommand(fromData: data, withDecoder: decoder)
             return performSafe(command: vibrationCommand, timeOut: .seconds(5))
         } catch {
             return Observable<Void>.error(error)

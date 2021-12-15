@@ -316,7 +316,7 @@
 		C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26627679C8E00C2F20D /* LEDCommand.swift */; };
 		C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26B27679EC200C2F20D /* ScoreModelType.swift */; };
 		C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26C27679EC200C2F20D /* LedPatternType.swift */; };
-		C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */; };
+		C58FD270276889B800C2F20D /* VibrationCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26F276889B800C2F20D /* VibrationCommand.swift */; };
 		C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD271276889E200C2F20D /* VibrationPatternType.swift */; };
 		C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
@@ -858,7 +858,7 @@
 		C58FD26627679C8E00C2F20D /* LEDCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
 		C58FD26B27679EC200C2F20D /* ScoreModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
 		C58FD26C27679EC200C2F20D /* LedPatternType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedPatternType.swift; sourceTree = "<group>"; };
-		C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommandNew.swift; sourceTree = "<group>"; };
+		C58FD26F276889B800C2F20D /* VibrationCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		C58FD271276889E200C2F20D /* VibrationPatternType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationPatternType.swift; sourceTree = "<group>"; };
 		C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCommand.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
@@ -1641,7 +1641,7 @@
 				C58175B02757BE6E00BFE00E /* ScoreCommand.swift */,
 				C51F2246275A538200E1B64A /* PollCommand.swift */,
 				C58FD26627679C8E00C2F20D /* LEDCommand.swift */,
-				C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */,
+				C58FD26F276889B800C2F20D /* VibrationCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2094,7 +2094,7 @@
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
-				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
+				C58FD270276889B800C2F20D /* VibrationCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
 				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,

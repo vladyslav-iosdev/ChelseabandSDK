@@ -1,5 +1,5 @@
 //
-//  VibrationCommandNew.swift
+//  VibrationCommand.swift
 //  ChelseabandSDK
 //
 //  Created by Sergey Pohrebnuak on 14.12.2021.
@@ -18,7 +18,7 @@ public enum VibrationError: LocalizedError {
     }
 }
 
-public struct VibrationCommandNew: PerformWriteCommandProtocol {
+public struct VibrationCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.vibrationCharacteristic
 
     public var dataForSend: Data { vibrationPattern.encodeToData() }
@@ -42,7 +42,7 @@ public struct VibrationCommandNew: PerformWriteCommandProtocol {
     }
 }
 
-extension VibrationCommandNew {
+extension VibrationCommand {
     private struct VibrationPattern: VibrationPatternType, Decodable {
         let loopCount: UInt8
         let frames: [VibrationFrameType]
