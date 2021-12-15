@@ -195,8 +195,6 @@
 		86B8C51C41D147C8455ECEE76E0BDD9A /* ImmediateSchedulerType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E1C7F652F29DECEE08C6C743C6F0DE3 /* ImmediateSchedulerType.swift */; };
 		86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF02C58CB216881107009A2831A0FE1D /* String.swift */; };
 		8767C060C6D3C32BD07B4B4BEE62547C /* Debug.swift in Sources */ = {isa = PBXBuildFile; fileRef = 161E05EEA3C6B5BF564C5BDBF1D5BF19 /* Debug.swift */; };
-		87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */; };
-		87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82225FF9DD3007DCD36 /* Screen.swift */; };
 		87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 87BDF82D25FF9DE1007DCD36 /* Observable.swift */; };
 		892102AFA6D8CC85FF32A58B468C48EB /* Platform.Linux.swift in Sources */ = {isa = PBXBuildFile; fileRef = A0A5BD49964C793A51094A7BE80BBD53 /* Platform.Linux.swift */; };
 		89FB172943AD5B5F68E515F4F105A9E0 /* Timeout.swift in Sources */ = {isa = PBXBuildFile; fileRef = E751AF3AC51B4205D8E58D4B3507D5F9 /* Timeout.swift */; };
@@ -264,7 +262,6 @@
 		A98B97636685BA03389DD3887474D924 /* WKWebView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60C0089E4B148F12E62E773F8773A4D3 /* WKWebView+Rx.swift */; };
 		A9DDAD1045B0FB320606AE2EE84861F0 /* CombineLatest+Collection.swift in Sources */ = {isa = PBXBuildFile; fileRef = B4934E3693F0D784721366373CF1C468 /* CombineLatest+Collection.swift */; };
 		AA3D93428AD22A7D183192C3A6B0D852 /* Amb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2AED18AF6D639EAEAB0316782317F618 /* Amb.swift */; };
-		AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */; };
 		AB57314762DB3ED8D7CD215C38BBE3CA /* DispatchQueue+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = C29CCB4B52C2CE9AEFADCE7F29815091 /* DispatchQueue+Extensions.swift */; };
 		AB8318A28F25C7EBFED3260DE8A3C1BF /* RxPickerViewDataSourceProxy.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7401A3A58BD7DD7C0A14674D1CBA740 /* RxPickerViewDataSourceProxy.swift */; };
 		AB8D22380FFBADF2EA6FE11C4FD7F591 /* UIImageView+Rx.swift in Sources */ = {isa = PBXBuildFile; fileRef = CCF56F94ABA779174FBF3555BBA22241 /* UIImageView+Rx.swift */; };
@@ -549,7 +546,6 @@
 		1065EBA9A0625AFF052262B3CF9A04DE /* ConstraintItem.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintItem.swift; path = Source/ConstraintItem.swift; sourceTree = "<group>"; };
 		10B643C96AA31B512022B640A88F385A /* ControlTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ControlTarget.swift; path = RxCocoa/Common/ControlTarget.swift; sourceTree = "<group>"; };
 		11455B184E46D0AF4ADBA889FF7ED095 /* NSImageView+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NSImageView+Rx.swift"; path = "RxCocoa/macOS/NSImageView+Rx.swift"; sourceTree = "<group>"; };
-		1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Sound.swift; path = ChelseabandSDK/Sources/Sound.swift; sourceTree = "<group>"; };
 		115AA0615B395A70EFA42F6C4D93C311 /* AdvertisementData.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AdvertisementData.swift; path = Source/AdvertisementData.swift; sourceTree = "<group>"; };
 		11A539A5345D8FB7319E5AD0B0DFD31F /* UIApplication+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIApplication+Rx.swift"; path = "RxCocoa/iOS/UIApplication+Rx.swift"; sourceTree = "<group>"; };
 		11EA03F8F615BBE807005016A02BB7A2 /* SnapKit-Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "SnapKit-Info.plist"; sourceTree = "<group>"; };
@@ -741,8 +737,6 @@
 		8539D442A76284969BD177629A9D9661 /* Errors.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Errors.swift; path = RxSwift/Errors.swift; sourceTree = "<group>"; };
 		87812339A8BBC91023DAA8B73DAF1EC1 /* TailRecursiveSink.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = TailRecursiveSink.swift; path = RxSwift/Observers/TailRecursiveSink.swift; sourceTree = "<group>"; };
 		879A2D5C7686BC469FE13893037A1631 /* ChelseabandSDK.podspec */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; indentWidth = 2; path = ChelseabandSDK.podspec; sourceTree = "<group>"; tabWidth = 2; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
-		87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = CommandTrigger.swift; path = ChelseabandSDK/Sources/CommandTrigger.swift; sourceTree = "<group>"; };
-		87BDF82225FF9DD3007DCD36 /* Screen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Screen.swift; path = ChelseabandSDK/Sources/Screen.swift; sourceTree = "<group>"; };
 		87BDF82D25FF9DE1007DCD36 /* Observable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Observable.swift; sourceTree = "<group>"; };
 		8816FD5B327E2494FD2792FBF450F110 /* RxCollectionViewDataSourceType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RxCollectionViewDataSourceType.swift; path = RxCocoa/iOS/Protocols/RxCollectionViewDataSourceType.swift; sourceTree = "<group>"; };
 		881C9B735388DBF3A25EFBBBF5E9F1A5 /* ConstraintMultiplierTarget.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ConstraintMultiplierTarget.swift; path = Source/ConstraintMultiplierTarget.swift; sourceTree = "<group>"; };
@@ -1656,13 +1650,10 @@
 		EA2D6B1096E9FAC21A7D67278EB970FA /* ChelseabandSDK */ = {
 			isa = PBXGroup;
 			children = (
-				87BDF82125FF9DD3007DCD36 /* CommandTrigger.swift */,
-				87BDF82225FF9DD3007DCD36 /* Screen.swift */,
 				194318EC515ABF59B911437ECE63F75F /* Chelseaband.swift */,
 				945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */,
 				60ED621770F8AB869B6615D3A031EE91 /* Configuration.swift */,
 				B13D729595F41E37AF515F9FD5BBDBBC /* Device.swift */,
-				1155865935B442F5E5DAE4FC91F3A9D5 /* Sound.swift */,
 				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
 				C58FD26A27679EC200C2F20D /* Protocols */,
@@ -2092,7 +2083,6 @@
 				C58175A32751215900BFE00E /* NFCCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
 				C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */,
-				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
 				C5547F7A2601FCF20084825B /* API.swift in Sources */,
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
@@ -2105,9 +2095,7 @@
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
 				C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */,
-				AACB14AD90D02C55A2DD24B8DF2C6683 /* Sound.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
-				87BDF82425FF9DD3007DCD36 /* Screen.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
 				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,
 				C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */,
