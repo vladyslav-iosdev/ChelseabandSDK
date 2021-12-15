@@ -16,8 +16,6 @@ public typealias BluetoothState = RxBluetoothKit.BluetoothState
 
 public protocol ChelseabandType {
     
-    var macAddressObservable: BehaviorSubject<String> { get }
-    
     var reactionOnVoteObservable: Observable<(VotingResult, String)> { get }
     
     var connectionObservable: Observable<Device.State> { get }
@@ -171,8 +169,6 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public var isAuthorize: Observable<Bool> { UserDefaults.standard.isAuthorizeObservable }
-    
-    public var macAddressObservable: BehaviorSubject<String> = .init(value: "")
 
     private var reactionOnVoteSubject: PublishSubject<(VotingResult, String)> = .init()
     private var readCharacteristicSubject: PublishSubject<Data> = .init()
@@ -184,7 +180,6 @@ public final class Chelseaband: ChelseabandType {
     private var longLifeDisposeBag = DisposeBag()
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
-    private let commandIdBehaviourSubject = BehaviorSubject<String?>(value: nil)
     private var suotaUpdate: SUOTAUpdateType? = nil
 
     required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
@@ -212,7 +207,6 @@ public final class Chelseaband: ChelseabandType {
                 strongSelf.lastConnectedPeripheralUUID = peripheral.UUID
 
                 strongSelf.setupChelseaband(device: strongSelf.device)
-                strongSelf.locationTracker.startObserving()
                 strongSelf.observeForConnectionStatusChange()
                 strongSelf.sendBandUUIDOnServer(peripheral)
                 strongSelf.synchronizeScore()
@@ -237,11 +231,6 @@ public final class Chelseaband: ChelseabandType {
 
     private var fcmTokenObservable: Observable<String> {
         tokenBehaviourSubject
-            .compactMap{ $0 }
-    }
-    
-    private var commandIdObservable: Observable<String> {
-        commandIdBehaviourSubject
             .compactMap{ $0 }
     }
 
@@ -276,7 +265,6 @@ public final class Chelseaband: ChelseabandType {
 
     private func setupChelseaband(device: DeviceType) {
         disposeBag = DisposeBag()
-        locationTracker.stopObserving()
         
         device
             .readCharacteristicObservable
@@ -287,7 +275,6 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
 
         synchronizeBattery()
-        synchonizeDeviceTime()
     }
     
     private func synchronizeScore() {
@@ -331,17 +318,7 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
 
-    private func synchonizeDeviceTime() {
-        let timeCommand = TimeCommand()
-
-        perform(command: timeCommand)
-            .subscribe()
-            .disposed(by: disposeBag)
-    }
-
     public func sendMessageCommand(message: String, id: String) -> Observable<Void> {
-        commandIdBehaviourSubject.onNext(id)
-
         let command0 = MessageCommand(value: message)
 
         return performSafe(command: command0, timeOut: .seconds(5))
@@ -442,8 +419,6 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func sendGoalCommand(id: String) -> Observable<Void> {
-        commandIdBehaviourSubject.onNext(id)
-        
         return performSafe(command: GoalCommand(), timeOut: .seconds(5))
     }
     
@@ -484,8 +459,6 @@ public final class Chelseaband: ChelseabandType {
     
     //TODO: remove in future
     public func sendVotingCommand(message: String, id: String) -> Observable<VotingResult> {
-        commandIdBehaviourSubject.onNext(id)
-
         let command0 = VotingCommand(value: message)
         command0.votingObservable.subscribe(onNext: { response in
             //self.statistic.sendVotingResponse(response, id)
@@ -630,7 +603,6 @@ public final class Chelseaband: ChelseabandType {
         if forgotLastPeripheral {
             lastConnectedPeripheralUUID = .none
         }
-        macAddressObservable.onNext(" ")
     }
 
     public func setFCMToken(_ token: String) {
