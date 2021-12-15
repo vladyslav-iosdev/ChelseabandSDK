@@ -426,7 +426,7 @@ public final class Chelseaband: ChelseabandType {
     
     public func sendLedCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
         do {
-            let ledCommand = try LEDCommandNew(fromData: data, withDecoder: decoder)
+            let ledCommand = try LEDCommand(fromData: data, withDecoder: decoder)
             return performSafe(command: ledCommand, timeOut: .seconds(5))
         } catch {
             return Observable<Void>.error(error)

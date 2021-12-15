@@ -1,5 +1,5 @@
 //
-//  LEDCommandNew.swift
+//  LEDCommand.swift
 //  ChelseabandSDK
 //
 //  Created by Sergey Pohrebnuak on 13.12.2021.
@@ -18,7 +18,7 @@ public enum LedError: LocalizedError {
     }
 }
 
-public struct LEDCommandNew: PerformWriteCommandProtocol {
+public struct LEDCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.ledCharacteristic
 
     public var dataForSend: Data { ledPattern.encodeToData() }
@@ -42,7 +42,7 @@ public struct LEDCommandNew: PerformWriteCommandProtocol {
     }
 }
 
-extension LEDCommandNew {
+extension LEDCommand {
     private struct LedPattern: LedPatternType, Decodable {
         let loopCount: UInt8
         let frames: [LedFrameType]

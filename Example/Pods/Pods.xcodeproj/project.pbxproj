@@ -313,7 +313,7 @@
 		C58175A32751215900BFE00E /* NFCCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A22751215900BFE00E /* NFCCommand.swift */; };
 		C58175A92751246900BFE00E /* Ticket.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A82751246800BFE00E /* Ticket.swift */; };
 		C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175B02757BE6E00BFE00E /* ScoreCommand.swift */; };
-		C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */; };
+		C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26627679C8E00C2F20D /* LEDCommand.swift */; };
 		C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26B27679EC200C2F20D /* ScoreModelType.swift */; };
 		C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26C27679EC200C2F20D /* LedPatternType.swift */; };
 		C58FD270276889B800C2F20D /* VibrationCommandNew.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */; };
@@ -855,7 +855,7 @@
 		C58175A22751215900BFE00E /* NFCCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NFCCommand.swift; sourceTree = "<group>"; };
 		C58175A82751246800BFE00E /* Ticket.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Ticket.swift; sourceTree = "<group>"; };
 		C58175B02757BE6E00BFE00E /* ScoreCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreCommand.swift; sourceTree = "<group>"; };
-		C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDCommandNew.swift; sourceTree = "<group>"; };
+		C58FD26627679C8E00C2F20D /* LEDCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LEDCommand.swift; sourceTree = "<group>"; };
 		C58FD26B27679EC200C2F20D /* ScoreModelType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreModelType.swift; sourceTree = "<group>"; };
 		C58FD26C27679EC200C2F20D /* LedPatternType.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LedPatternType.swift; sourceTree = "<group>"; };
 		C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommandNew.swift; sourceTree = "<group>"; };
@@ -1640,7 +1640,7 @@
 				C58175A22751215900BFE00E /* NFCCommand.swift */,
 				C58175B02757BE6E00BFE00E /* ScoreCommand.swift */,
 				C51F2246275A538200E1B64A /* PollCommand.swift */,
-				C58FD26627679C8E00C2F20D /* LEDCommandNew.swift */,
+				C58FD26627679C8E00C2F20D /* LEDCommand.swift */,
 				C58FD26F276889B800C2F20D /* VibrationCommandNew.swift */,
 			);
 			name = Commands;
@@ -2103,7 +2103,7 @@
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
-				C58FD26727679C8E00C2F20D /* LEDCommandNew.swift in Sources */,
+				C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
