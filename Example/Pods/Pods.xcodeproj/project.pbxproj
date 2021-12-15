@@ -409,7 +409,6 @@
 		F821445A44A82DF794F245579F3449B4 /* Sink.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1BE4932D4DE632FA41C7EDB72BAE736B /* Sink.swift */; };
 		F8BCF460D0845F1BCCEA48E14987054C /* DelegateProxyType.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8C21BE91884BF6AD5D2C6F3F7D43B85 /* DelegateProxyType.swift */; };
 		F8CE32AD6FE34DBCA802902DB787823E /* RxSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 72FFFFC7212D6C7FCED3AA2DA6E27561 /* RxSwift.framework */; };
-		F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */; };
 		FA00AA0DF95FBF974B552E062576FE01 /* RxCocoa-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 5B084E99A52D187D7C8FB9ED56C26F42 /* RxCocoa-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		FA7A3495F18BC3315374DA9A4D6C5D19 /* AdvertisementData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 115AA0615B395A70EFA42F6C4D93C311 /* AdvertisementData.swift */; };
 		FA82F4F3FCB288EBCE7A632FECAAAFB0 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 30B161D87083273932446DB161EAC427 /* Foundation.framework */; };
@@ -674,7 +673,6 @@
 		54FB449BE29B929523C1617B2BE4F388 /* RecursiveLock.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = RecursiveLock.swift; path = Platform/RecursiveLock.swift; sourceTree = "<group>"; };
 		5626F319C367D14738EAAA6E268D8A84 /* NotificationCenter+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "NotificationCenter+Rx.swift"; path = "RxCocoa/Foundation/NotificationCenter+Rx.swift"; sourceTree = "<group>"; };
 		568D87DC227ED1866F03FF7269239932 /* RxSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = RxSwift.debug.xcconfig; sourceTree = "<group>"; };
-		56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = BatteryCommand.swift; sourceTree = "<group>"; };
 		5707873C29213C22EA9E3F3FEC36C3E9 /* RxCocoa-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "RxCocoa-prefix.pch"; sourceTree = "<group>"; };
 		57855EF50775417E6B6B5C3CDC52232F /* Constraint.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Constraint.swift; path = Source/Constraint.swift; sourceTree = "<group>"; };
 		586C613C3E6F2F19142897AF9BA1369F /* InvocableType.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = InvocableType.swift; path = RxSwift/Schedulers/Internal/InvocableType.swift; sourceTree = "<group>"; };
@@ -1651,7 +1649,6 @@
 				C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */,
 				87BDF80B25FF9DC2007DCD36 /* LEDCommand.swift */,
 				87BDF80C25FF9DC2007DCD36 /* VibrationCommand.swift */,
-				56E4F3AF766BD101E920FF43A8DD95B5 /* BatteryCommand.swift */,
 				799DF0016C039125424C81057C8D0266 /* HexCommand.swift */,
 				A1DC09041497CD846EAC550A01F944BA /* SoundCommand.swift */,
 				C523122B2730067300CCCA10 /* ImageControlCommand.swift */,
@@ -2107,7 +2104,6 @@
 				C58175A32751215900BFE00E /* NFCCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
 				C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */,
-				F9D4B9FC5C967C66D9009E2DA77E8EF8 /* BatteryCommand.swift in Sources */,
 				87BDF82325FF9DD3007DCD36 /* CommandTrigger.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
 				C5547F7A2601FCF20084825B /* API.swift in Sources */,
