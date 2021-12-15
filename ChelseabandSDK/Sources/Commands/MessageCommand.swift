@@ -1,5 +1,5 @@
 //
-//  NewsCommand.swift
+//  MessageCommand.swift
 //  ChelseabandSDK
 //
 //  Created by Vladyslav Shepitko on 17.12.2020.
@@ -25,7 +25,7 @@ public protocol MessageType {
     var messageTypeIdentifier: UInt8 { get }
 }
 
-public struct MessageCommandNew: PerformWriteCommandProtocol {
+public struct MessageCommand: PerformWriteCommandProtocol {
     public let commandUUID = ChelseabandConfiguration.default.alertCharacteristic
 
     public var dataForSend: Data

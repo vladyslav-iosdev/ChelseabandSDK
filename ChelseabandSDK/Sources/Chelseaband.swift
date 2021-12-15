@@ -373,7 +373,7 @@ public final class Chelseaband: ChelseabandType {
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {
         do {
-            let messageCommand = try MessageCommandNew(message, type: type)
+            let messageCommand = try MessageCommand(message, type: type)
             return performSafe(command: messageCommand, timeOut: .seconds(5))
         } catch {
             return .error(error)
