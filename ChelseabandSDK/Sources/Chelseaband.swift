@@ -50,11 +50,6 @@ public protocol ChelseabandType {
 
     func forceSendConnectStatusOnServer()
     
-    // TODO: remove in future unused function perform
-    func perform(command: Command) -> Observable<Void>
-
-    func performSafe(command: Command, timeOut: DispatchTimeInterval) -> Observable<Void>
-    
     func perform(command: CommandNew) -> Observable<Void>
 
     func performSafe(command: CommandNew, timeOut: DispatchTimeInterval) -> Observable<Void>
@@ -158,7 +153,6 @@ public final class Chelseaband: ChelseabandType {
     
     public var isAuthorize: Observable<Bool> { UserDefaults.standard.isAuthorizeObservable }
 
-    private var readCharacteristicSubject: PublishSubject<Data> = .init()
     private var batteryLevelSubject: BehaviorSubject<UInt8> = .init(value: 0)
     private let device: DeviceType
     private let statistic: Statistics
@@ -186,6 +180,7 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func connect(peripheral: Peripheral) {
+        disposeBag = DisposeBag()
         connectionDisposable = device
             .connect(peripheral: peripheral)
             .subscribe(onNext: { [weak self] _ in
@@ -193,7 +188,7 @@ public final class Chelseaband: ChelseabandType {
                 strongSelf.connectedPeripheral = peripheral
                 strongSelf.lastConnectedPeripheralUUID = peripheral.UUID
 
-                strongSelf.setupChelseaband(device: strongSelf.device)
+                strongSelf.synchronizeBattery()
                 strongSelf.observeForConnectionStatusChange()
                 strongSelf.sendBandUUIDOnServer(peripheral)
                 strongSelf.synchronizeScore()
@@ -248,20 +243,6 @@ public final class Chelseaband: ChelseabandType {
                 self?.statistic.sendLocation(isInArea: $0)
             })
             .disposed(by: longLifeDisposeBag)
-    }
-
-    private func setupChelseaband(device: DeviceType) {
-        disposeBag = DisposeBag()
-        
-        device
-            .readCharacteristicObservable
-            .flatMap { $0.observeValueUpdateAndSetNotification() }
-            .compactMap { $0.characteristic.value }
-            .catchError { _ in .never() } //NOTE: update this to avoid sending never when error
-            .subscribe(readCharacteristicSubject)
-            .disposed(by: disposeBag)
-
-        synchronizeBattery()
     }
     
     private func synchronizeScore() {
@@ -487,13 +468,6 @@ public final class Chelseaband: ChelseabandType {
             })
             .disposed(by: disposeBag)
     }
-
-    public func perform(command: Command) -> Observable<Void> {
-        command
-            .perform(on: self, notifyWith: self)
-            .observeOn(MainScheduler.instance)
-            .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
-    }
     
     public func perform(command: CommandNew) -> Observable<Void> {
         command
@@ -507,16 +481,6 @@ public final class Chelseaband: ChelseabandType {
             .performAndObservNotify(on: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
-    }
-
-    public func performSafe(command: Command, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
-        connectionObservable
-            .skipWhile { !$0.isConnected }
-            .take(1)
-            .timeout(timeOut, scheduler: MainScheduler.instance)
-            .flatMap { _ -> Observable<Void> in
-                self.perform(command: command)
-            }
     }
     
     public func performSafe(command: CommandNew, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
@@ -601,23 +565,12 @@ public final class Chelseaband: ChelseabandType {
     }
 }
 
-extension Chelseaband: CommandNotifier {
-
-    public var notifyObservable: Observable<Data> {
-        readCharacteristicSubject
-    }
-}
-
 extension Chelseaband: CommandExecutor {
 
     public var isConnected: Observable<Bool> {
         connectionObservable
             .startWith(.disconnected)
             .map { $0.isConnected }
-    }
-
-    public func write(data: Data) -> Observable<Void> {
-        device.write(data: data, timeout: .seconds(5))
     }
     
     public func write(command: WritableCommand) -> Observable<Void> {

@@ -12,14 +12,9 @@ import CoreBluetooth
 public protocol CommandExecutor {
     var isConnected: Observable<Bool> { get }
 
-    func write(data: Data) -> Observable<Void>
     func write(command: WritableCommand) -> Observable<Void>
     func writeAndObservNotify(command: WritableCommand) -> Observable<Data>
     func read(command: ReadableCommand) -> Observable<Data?>
-}
-
-public protocol CommandNotifier { //TODO: remove in future
-    var notifyObservable: Observable<Data> { get }
 }
 
 public protocol GeneralCommand { //TODO: rename in future on command
@@ -71,8 +66,4 @@ public extension CommandNew {
 
 public protocol PerformReadCommandProtocol: ReadableCommand {
     func performRead(on executor: CommandExecutor) -> Observable<Void>
-}
-
-public protocol Command { //TODO: remove in future
-    func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void>
 }

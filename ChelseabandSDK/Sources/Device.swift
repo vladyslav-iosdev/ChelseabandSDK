@@ -102,8 +102,6 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     var bluetoothIsSearching: Observable<Bool> { get }
 
     var connectionObservable: Observable<Device.State> { get }
-
-    var readCharacteristicObservable: Observable<Characteristic> { get }
     
     var batteryCharacteristicObservable: Observable<Characteristic> { get }
     
@@ -122,8 +120,6 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
 
     func stopScanForPeripherals()
-
-    func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
     
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
     
@@ -186,10 +182,6 @@ public final class Device: DeviceType {
     public var connectionObservable: Observable<Device.State> {
         connectionBehaviourSubject
     }
-
-    public var readCharacteristicObservable: Observable<Characteristic> {
-        readCharacteristic.compactMap { $0 }
-    }
     
     public var batteryCharacteristicObservable: Observable<Characteristic> {
         batteryCharacteristic.compactMap { $0 }
@@ -219,8 +211,6 @@ public final class Device: DeviceType {
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
     private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
-    private var writeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
-    private var readCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var batteryCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var firmwareVersionCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
     private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<Characteristic?> = .init(value: nil)
@@ -517,27 +507,6 @@ public final class Device: DeviceType {
             .flatMap { $0.discoverServices(services) }
             .flatMap { Observable.from($0) }
             .debug("\(self).connect")
-    }
-
-    public func write(data: Data, timeout: DispatchTimeInterval = .seconds(5)) -> Observable<Void> {
-        return .deferred { [weak self] in
-            guard let strongSelf = self else {
-                return .error(BluetoothError.destroyed)
-            }
-
-            return strongSelf.writeCharacteristic
-                .flatMap { characteristic -> Observable<Characteristic> in
-                    if let value = characteristic {
-                        return value.writeValue(data, type: .withResponse).asObservable()
-                    } else {
-                        throw DeviceError.writeCharacteristicMissing
-                    }
-            }
-            .timeout(timeout, scheduler: MainScheduler.instance)
-            .mapToVoid()
-            .take(1)
-            .debug("\(strongSelf).write")
-        }
     }
     
     public func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void> {
