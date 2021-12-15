@@ -20,7 +20,7 @@ public enum SeatPositionCommandError: LocalizedError {
 
 public struct SeatPositionCommand: CommandNew {
     
-    public var uuidForWrite = ChelseabandConfiguration.default.seatingPositionCharacteristic
+    public var commandUUID = ChelseabandConfiguration.default.seatingPositionCharacteristic
     
     public var dataForSend: Data
     

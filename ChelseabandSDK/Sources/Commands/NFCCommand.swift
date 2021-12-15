@@ -20,7 +20,7 @@ public enum NFCCommandError: LocalizedError {
 
 public struct NFCCommand: CommandNew {
     
-    public var uuidForWrite = ChelseabandConfiguration.default.nfcTicketCharacteristic
+    public var commandUUID = ChelseabandConfiguration.default.nfcTicketCharacteristic
     
     public var dataForSend: Data
     

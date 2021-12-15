@@ -577,9 +577,9 @@ public final class Device: DeviceType {
         }
     }
     
-    private func findCharacteristic(forCommand command: GeneralCommand) -> Observable<Characteristic?> {
+    private func findCharacteristic(forCommand command: Command) -> Observable<Characteristic?> {
         Observable.combineLatest(fanbandCharacteristics)
-            .map { $0.first { $0.uuid == command.uuidForWrite } }
+            .map { $0.first { $0.uuid == command.commandUUID } }
             .take(1)
     }
     

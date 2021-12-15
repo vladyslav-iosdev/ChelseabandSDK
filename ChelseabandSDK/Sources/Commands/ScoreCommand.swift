@@ -26,7 +26,7 @@ public enum ScoreError: LocalizedError {
 
 public struct ScoreCommand: CommandNew {
     
-    public let uuidForWrite = ChelseabandConfiguration.default.scoreCharacteristic
+    public let commandUUID = ChelseabandConfiguration.default.scoreCharacteristic
     
     public var dataForSend: Data { scoreModel.encodeToData() }
     

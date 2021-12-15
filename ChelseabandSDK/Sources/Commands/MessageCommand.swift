@@ -26,7 +26,7 @@ public protocol MessageType {
 }
 
 public struct MessageCommandNew: CommandNew {
-    public let uuidForWrite = ChelseabandConfiguration.default.alertCharacteristic
+    public let commandUUID = ChelseabandConfiguration.default.alertCharacteristic
 
     public var dataForSend: Data
     

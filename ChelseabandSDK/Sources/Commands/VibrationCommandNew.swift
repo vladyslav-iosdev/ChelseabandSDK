@@ -19,7 +19,7 @@ public enum VibrationError: LocalizedError {
 }
 
 public struct VibrationCommandNew: CommandNew {
-    public let uuidForWrite = ChelseabandConfiguration.default.vibrationCharacteristic
+    public let commandUUID = ChelseabandConfiguration.default.vibrationCharacteristic
 
     public var dataForSend: Data { vibrationPattern.encodeToData() }
     

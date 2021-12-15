@@ -17,16 +17,16 @@ public protocol CommandExecutor {
     func read(command: ReadableCommand) -> Observable<Data?>
 }
 
-public protocol GeneralCommand { //TODO: rename in future on command
-    var uuidForWrite: ID { get } //TODO: rename in future on commandUUID
+public protocol Command {
+    var commandUUID: ID { get }
 }
 
-public protocol WritableCommand: GeneralCommand {
+public protocol WritableCommand: Command {
     var dataForSend: Data { get }
     var writeType: CBCharacteristicWriteType { get }
 }
 
-public protocol ReadableCommand: GeneralCommand {
+public protocol ReadableCommand: Command {
     
 }
 

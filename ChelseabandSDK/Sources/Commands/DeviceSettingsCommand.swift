@@ -13,13 +13,13 @@ public enum BandOrientation: UInt8 {
 }
 
 public struct DeviceSettingsCommand: CommandNew {
-    public let uuidForWrite = ChelseabandConfiguration.default.deviceSettingsCharacteristic
+    public let commandUUID = ChelseabandConfiguration.default.deviceSettingsCharacteristic
 
     public var dataForSend: Data { Data([bandOrientation.rawValue]) }
     
     private let bandOrientation: BandOrientation
     
-    init(bandOrientation: BandOrientation) {
+    public init(bandOrientation: BandOrientation) {
         self.bandOrientation = bandOrientation
     }
     

@@ -41,7 +41,7 @@ public enum PollCommandError: LocalizedError {
 
 public struct PollCommand: CommandNew {
     
-    public var uuidForWrite = ChelseabandConfiguration.default.pollCharacteristic
+    public var commandUUID = ChelseabandConfiguration.default.pollCharacteristic
     
     public var dataForSend: Data
     
