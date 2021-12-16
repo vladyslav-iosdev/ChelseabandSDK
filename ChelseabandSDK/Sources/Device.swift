@@ -419,6 +419,12 @@ public final class Device: DeviceType {
                                                 break
                                             }
                                         }
+                                        strongSelf.updateDeviceInfo()
+                                        strongSelf.updateSuotaParameters()
+                                        seal.onNext(())
+                                        countDownTimer?.dispose()
+
+                                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     }, onError: { error in
                                         strongSelf.batteryCharacteristic.on(.next(nil))
                                         strongSelf.firmwareVersionCharacteristic.on(.next(nil))
@@ -432,13 +438,6 @@ public final class Device: DeviceType {
                                         strongSelf.fanbandCharacteristics.removeAll()
 
                                         seal.onError(error)
-                                    }, onCompleted: {
-                                        strongSelf.updateDeviceInfo()
-                                        strongSelf.updateSuotaParameters()
-                                        seal.onNext(())
-                                        countDownTimer?.dispose()
-
-                                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     })
                             }
                         }

@@ -70,7 +70,7 @@ public enum ChelseabandConfiguration: Configuration {
     public var firmwareVersionCharacteristic: ID {
         switch self {
         case .default:
-            return ID(string: "2A28")
+            return ID(string: "2A26")
         }
     }
     
