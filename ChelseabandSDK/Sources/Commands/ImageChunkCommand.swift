@@ -8,55 +8,31 @@
 import RxSwift
 import CoreBluetooth
 
-public final class ImageChunkCommand: PerformWriteCommandProtocol {
-    public let commandUUID = ChelseabandConfiguration.default.imageChunkCharacteristic
-    
-    public var dataForSend: Data = Data()
-    
-    public var writeType: CBCharacteristicWriteType {
-        .withoutResponse
-    }
-    
+public struct ImagePerformCommand: CommandPerformer {
     private var imageChunkedArray: [Data]
     
     private static let maxChunkSize = 200
     
     init(_ binImage: Data) {
-        imageChunkedArray = binImage.createChunks(chunkSize: ImageChunkCommand.maxChunkSize)
+        imageChunkedArray = binImage.createChunks(chunkSize: ImagePerformCommand.maxChunkSize)
     }
     
     public func perform(on executor: CommandExecutor) -> Observable<Void> {
-        return .deferred { [weak self] in
-            return Observable<Void>.create { [weak self] seal in
-                guard let strongSelf = self else { return Disposables.create() }
-                
-                let writeDisposable = Observable.from(strongSelf.imageChunkedArray)
-                    .concatMap ({ [weak self] nextChunk -> Observable<Void> in
-                        guard let strongSelf = self else { return .just(())}
-                        strongSelf.dataForSend = nextChunk
-                        return executor.write(command: strongSelf)
-                    })
-                    .materialize()
-                    .subscribe(
-                        onNext: { result in
-                            switch result {
-                            case .next(_):
-                                break
-                            case .error(let error):
-                                seal.onError(error)
-                            case .completed:
-                                break
-                            }
-                        }, onCompleted: {
-                            seal.onNext(())
-                            seal.onCompleted()
-                        }
-                    )
-                
-                return Disposables.create {
-                    writeDisposable.dispose()
-                }
-            }
-        }
+        Observable.from(self.imageChunkedArray)
+            .concatMap ({ nextChunk -> Observable<Void> in
+                let command = ImageChunkCommand(dataForSend: nextChunk)
+                return executor.write(command: command)
+            })
+            .takeLast(1)
+    }
+}
+
+public struct ImageChunkCommand: WritableCommand {
+    public let commandUUID = ChelseabandConfiguration.default.imageChunkCharacteristic
+    
+    public var dataForSend: Data
+    
+    public var writeType: CBCharacteristicWriteType {
+        .withoutResponse
     }
 }

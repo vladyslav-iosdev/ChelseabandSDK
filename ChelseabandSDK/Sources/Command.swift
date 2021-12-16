@@ -35,8 +35,9 @@ public extension WritableCommand {
         .withResponse
     }
 }
+public typealias PerformableWriteCommand = CommandPerformer & WritableCommand
 
-public protocol PerformWriteCommandProtocol: WritableCommand {
+public protocol CommandPerformer {
     func perform(on executor: CommandExecutor) -> Observable<Void>
     func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data>
 }
@@ -55,7 +56,7 @@ public enum CommandError: LocalizedError {
     }
 }
 
-public extension PerformWriteCommandProtocol {
+public extension CommandPerformer {
     func perform(on executor: CommandExecutor) -> Observable<Void> {
         .error(CommandError.performCommandNotImplemented)
     }

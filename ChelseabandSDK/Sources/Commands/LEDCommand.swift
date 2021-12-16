@@ -18,7 +18,7 @@ public enum LedError: LocalizedError {
     }
 }
 
-public struct LEDCommand: PerformWriteCommandProtocol {
+public struct LEDCommand: PerformableWriteCommand {
     public let commandUUID = ChelseabandConfiguration.default.ledCharacteristic
 
     public var dataForSend: Data { ledPattern.encodeToData() }

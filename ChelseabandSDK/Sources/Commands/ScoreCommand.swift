@@ -24,7 +24,7 @@ public enum ScoreError: LocalizedError {
     }
 }
 
-public struct ScoreCommand: PerformWriteCommandProtocol {
+public struct ScoreCommand: PerformableWriteCommand {
     
     public let commandUUID = ChelseabandConfiguration.default.scoreCharacteristic
     

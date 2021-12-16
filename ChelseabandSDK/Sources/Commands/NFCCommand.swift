@@ -18,7 +18,7 @@ public enum NFCCommandError: LocalizedError {
     }
 }
 
-public struct NFCCommand: PerformWriteCommandProtocol {
+public struct NFCCommand: PerformableWriteCommand {
     
     public var commandUUID = ChelseabandConfiguration.default.nfcTicketCharacteristic
     

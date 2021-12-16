@@ -18,7 +18,7 @@ public enum VibrationError: LocalizedError {
     }
 }
 
-public struct VibrationCommand: PerformWriteCommandProtocol {
+public struct VibrationCommand: PerformableWriteCommand {
     public let commandUUID = ChelseabandConfiguration.default.vibrationCharacteristic
 
     public var dataForSend: Data { vibrationPattern.encodeToData() }

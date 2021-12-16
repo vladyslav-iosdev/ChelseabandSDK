@@ -50,9 +50,13 @@ public protocol ChelseabandType {
 
     func forceSendConnectStatusOnServer()
     
-    func perform(command: PerformWriteCommandProtocol) -> Observable<Void>
+    func performSafeAndObservNotify(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Data>
 
-    func performSafe(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval) -> Observable<Void>
+    func performAndObservNotify(command: CommandPerformer) -> Observable<Data>
+        
+    func perform(command: CommandPerformer) -> Observable<Void>
+
+    func performSafe(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Void>
     
     func performRead(command: PerformReadCommandProtocol) -> Observable<Void>
     
@@ -292,7 +296,7 @@ public final class Chelseaband: ChelseabandType {
         }
         
         let imageControl = ImageControlCommand(imageType, imageData: binImage)
-        let imageChunk = ImageChunkCommand(binImage)
+        let imageChunk = ImagePerformCommand(binImage)
         let commands = [
             performSafe(command: imageControl, timeOut: .seconds(5)),
             performSafe(command: imageChunk, timeOut: .seconds(5)),
@@ -469,21 +473,21 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
     
-    public func perform(command: PerformWriteCommandProtocol) -> Observable<Void> {
+    public func perform(command: CommandPerformer) -> Observable<Void> {
         command
             .perform(on: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
     
-    public func performAndObservNotify(command: PerformWriteCommandProtocol) -> Observable<Data> {
+    public func performAndObservNotify(command: CommandPerformer) -> Observable<Data> {
         command
             .performAndObserveNotify(on: self)
             .observeOn(MainScheduler.instance)
             .subscribeOn(SerialDispatchQueueScheduler(qos: .default))
     }
     
-    public func performSafe(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+    public func performSafe(command: CommandPerformer, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .skipWhile { _ in self.suotaUpdate != nil }
@@ -494,7 +498,7 @@ public final class Chelseaband: ChelseabandType {
             }
     }
     
-    public func performSafeAndObservNotify(command: PerformWriteCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Data> {
+    public func performSafeAndObservNotify(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Data> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .skipWhile { _ in self.suotaUpdate != nil }

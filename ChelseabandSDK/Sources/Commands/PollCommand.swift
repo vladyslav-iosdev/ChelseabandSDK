@@ -39,7 +39,7 @@ public enum PollCommandError: LocalizedError {
     }
 }
 
-public struct PollCommand: PerformWriteCommandProtocol {
+public struct PollCommand: PerformableWriteCommand {
     
     public var commandUUID = ChelseabandConfiguration.default.pollCharacteristic
     
