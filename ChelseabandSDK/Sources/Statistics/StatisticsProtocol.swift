@@ -19,6 +19,7 @@ protocol Statistics {
     func sendReaction(_: String)
     func fetchTicket() -> Observable<TicketType?>
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]>
+    func fetchFirmware() -> Observable<(version: String, firmwareURL: URL)>
 }
 
 extension Statistics {

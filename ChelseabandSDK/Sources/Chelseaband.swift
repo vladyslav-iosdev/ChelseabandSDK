@@ -94,7 +94,9 @@ public protocol ChelseabandType {
 
     func stopScanForPeripherals()
     
-    func updateFirmware() -> Observable<Double>
+    func fetchLastFirmwareVersion() -> Observable<String>
+    
+    func updateFirmware() -> Observable<(Double, String)>
     
     func appWillBeClose(callback: (() -> Void)?)
 }
@@ -103,6 +105,7 @@ public enum ChelseabandError: LocalizedError {
     case destroyed
     case userHaventTicket
     case bandDisconnected
+    case multipleFirmwareUpdateNotAvailable
     
     public var errorDescription: String? {
         switch self {
@@ -112,6 +115,8 @@ public enum ChelseabandError: LocalizedError {
             return "Looks like user still haven't ticket on server"
         case .bandDisconnected:
             return "Looks like band is disconnected, connect band to phone and try again"
+        case .multipleFirmwareUpdateNotAvailable:
+            return "Before start another SUOTA update finish previous"
         }
     }
 }
@@ -165,7 +170,7 @@ public final class Chelseaband: ChelseabandType {
     private var longLifeDisposeBag = DisposeBag()
     private let locationTracker: LocationTracker
     private let tokenBehaviourSubject = BehaviorSubject<String?>(value: nil)
-    private var suotaUpdate: SUOTAUpdateType? = nil
+    private var isFirmwareUpdatingNow = false
 
     required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
         self.device = device
@@ -209,6 +214,13 @@ public final class Chelseaband: ChelseabandType {
 
     public func isLastConnected(peripheral: Peripheral) -> Bool {
         lastConnectedPeripheralUUID == peripheral.UUID
+    }
+    
+    public func fetchLastFirmwareVersion() -> Observable<String> {
+        statistic.fetchFirmware()
+            .map { $0.version }
+            .take(1)
+            .timeout(.seconds(60), scheduler: MainScheduler.instance)
     }
     
     public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]> {
@@ -437,25 +449,44 @@ public final class Chelseaband: ChelseabandType {
         }
     }
     
-    public func updateFirmware() -> Observable<Double> {
-        if let suota = suotaUpdate {
-            return suota.percentOfUploadingObservable
+    public func updateFirmware() -> Observable<(Double, String)> {
+        guard !isFirmwareUpdatingNow else { return .error(ChelseabandError.multipleFirmwareUpdateNotAvailable) }
+        
+        return Observable<(Double, String)>.create { [weak self] seal in
+            guard let strongSelf = self else {
+                seal.onError(ChelseabandError.destroyed)
+                return Disposables.create()
+            }
+            
+            var suota: SUOTAUpdateType!
+            
+            let updateObservable = strongSelf.statistic.fetchFirmware()
+                .take(1)
+                .timeout(.seconds(60), scheduler: MainScheduler.instance)
+                .map { firmwareVersion, firmwareURL -> (String, Data) in
+                    do {
+                        seal.onNext((0, firmwareVersion))
+                        let firmwareData = try Data(contentsOf: firmwareURL)
+                        return (firmwareVersion, firmwareData)
+                    } catch let error {
+                       throw error
+                    }
+                }
+                .flatMap { [weak self] firmwareVersion, firmwareData -> Observable<(Double, String)> in
+                    guard let strongSelf = self else { throw ChelseabandError.destroyed }
+                    suota = SUOTAUpdate(updateDevice: strongSelf.device,
+                                            withData: firmwareData)
+                    return suota.percentOfUploadingObservable.map { ($0, firmwareVersion) }
+                }
+                .subscribe(seal)
+                
+            return Disposables.create {
+                updateObservable.dispose()
+            }
         }
-        
-        //TODO: remove contentsOfFile logic
-        let suota = SUOTAUpdate(updateDevice: device,
-                                withData: NSData(contentsOfFile: Bundle.main.path(forResource: "fanband.1.11.1.0", ofType: "img")!)! as Data)
-        
-        suota.percentOfUploadingObservable
-            .subscribe(onError: { [weak self] _ in
-                self?.suotaUpdate = nil
-            }, onCompleted: { [weak self] in
-                self?.suotaUpdate = nil
-            })
-            .disposed(by: disposeBag)
-        
-        suotaUpdate = suota
-        return suota.percentOfUploadingObservable
+        .share()
+        .do(onSubscribe: { self.isFirmwareUpdatingNow = true },
+            onDispose: { self.isFirmwareUpdatingNow = false })
     }
     
     public func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void> {
@@ -490,7 +521,7 @@ public final class Chelseaband: ChelseabandType {
     public func performSafe(command: CommandPerformer, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
-            .skipWhile { _ in self.suotaUpdate != nil }
+            .skipWhile { _ in self.isFirmwareUpdatingNow }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Void> in
@@ -501,7 +532,7 @@ public final class Chelseaband: ChelseabandType {
     public func performSafeAndObservNotify(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Data> {
         connectionObservable
             .skipWhile { !$0.isConnected }
-            .skipWhile { _ in self.suotaUpdate != nil }
+            .skipWhile { _ in self.isFirmwareUpdatingNow }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Data> in
@@ -512,7 +543,7 @@ public final class Chelseaband: ChelseabandType {
     public func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
         connectionObservable
             .skipWhile { !$0.isConnected }
-            .skipWhile { _ in self.suotaUpdate != nil }
+            .skipWhile { _ in self.isFirmwareUpdatingNow }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
             .flatMap { _ -> Observable<Void> in

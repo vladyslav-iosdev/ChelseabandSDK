@@ -18,6 +18,8 @@ public enum APIError: LocalizedError {
     case noPayloadDataInGameScoreResponse
     case oppositeTeamLogoNotLoaded
     case noScoreModelJSONStringInScoreResponse
+    case missedFirmwareResponse
+    case noSomeDataInFirmwareResponse
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -40,6 +42,10 @@ public enum APIError: LocalizedError {
             return "Opposite team logo not loaded"
         case .noScoreModelJSONStringInScoreResponse:
             return "Score model JSON String not found in score response"
+        case .missedFirmwareResponse:
+            return "No payload data in firmware response"
+        case .noSomeDataInFirmwareResponse:
+            return "No some data in firmware response or data incorrect"
         case .customServerError(let description):
             return description
         }
@@ -72,6 +78,7 @@ final class API: Statistics {
         case users(_ endpoint: UsersEndpoint)
         case notifications(_ endpoint: NotificationsEndpoint)
         case tickets(_ endpoint: TicketsEndpoint)
+        case firmwares(_ endpoint: FirmwaresEndpoint)
         
         enum AuthEndpoint: String {
             case sendOTP = "phone/send-code"
@@ -110,6 +117,10 @@ final class API: Statistics {
             case bandTicket = "band-ticket"
         }
         
+        enum FirmwaresEndpoint: String {
+            case latest
+        }
+        
         var path: String {
             var endpointURL: String!
             
@@ -123,6 +134,8 @@ final class API: Statistics {
             case .notifications(let endpoint):
                 endpointURL = endpoint.rawValue
             case .tickets(let endpoint):
+                endpointURL = endpoint.rawValue
+            case .firmwares(let endpoint):
                 endpointURL = endpoint.rawValue
             }
             
@@ -141,6 +154,8 @@ final class API: Statistics {
                 return "notifications/"
             case .tickets(_):
                 return "tickets/"
+            case .firmwares(_):
+                return "firmwares/"
             }
         }
     }
@@ -352,6 +367,38 @@ final class API: Statistics {
                         observer.onNext(result)
                     } catch let error {
                         observer.onError(error)
+                    }
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func fetchFirmware() -> Observable<(version: String, firmwareURL: URL)> {
+        Observable<(version: String, firmwareURL: URL)>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.firmwares(.latest).path,
+                                   method: .get)
+            { result in
+                switch result {
+                case .success(let json):
+                    guard let firmwareResponses = json["data"] as? [String: Any] else {
+                        observer.onError(APIError.missedFirmwareResponse)
+                        return
+                    }
+                    
+                    if let firmwareVersion = firmwareResponses["version"] as? String,
+                       let firmwarePath = firmwareResponses["fileUrl"] as? String,
+                       let firmwareURL = URL(string: firmwarePath)
+                    {
+                        observer.onNext((version: firmwareVersion, firmwareURL: firmwareURL))
+                    } else {
+                        observer.onError(APIError.noSomeDataInFirmwareResponse)
                     }
                 case .failure(let error):
                     observer.onError(error)
