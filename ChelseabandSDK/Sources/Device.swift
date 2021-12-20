@@ -343,6 +343,10 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.batteryCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.batteryCharacteristic)
                             case configuration.deviceInfoService:
                                 characteristicsDictionary[configuration.firmwareVersionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.firmwareVersionCharacteristic)
+                                characteristicsDictionary[configuration.hardwareCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.hardwareCharacteristic)
+                                characteristicsDictionary[configuration.serialCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.serialCharacteristic)
+                                characteristicsDictionary[configuration.modelCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.modelCharacteristic)
+                                characteristicsDictionary[configuration.manufacturerCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.manufacturerCharacteristic)
                             case configuration.suotaService:
                                 characteristicsDictionary[configuration.suotaPatchDataCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharSizeCharacteristic)
                                 characteristicsDictionary[configuration.suotaMtuCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMtuCharSizeCharacteristic)
@@ -381,6 +385,14 @@ public final class Device: DeviceType {
                                                 strongSelf.batteryCharacteristic.on(.next(characteristic))
                                             case configuration.firmwareVersionCharacteristic:
                                                 strongSelf.firmwareVersionCharacteristic.on(.next(characteristic))
+                                            case configuration.manufacturerCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.hardwareCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.modelCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.serialCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.suotaPatchDataCharSizeCharacteristic:
                                                 strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(characteristic))
                                             case configuration.suotaMtuCharSizeCharacteristic:

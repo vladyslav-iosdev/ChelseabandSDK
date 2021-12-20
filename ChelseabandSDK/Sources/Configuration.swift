@@ -13,6 +13,10 @@ public protocol Configuration {
     
     var deviceInfoService: ID { get }
     var firmwareVersionCharacteristic: ID { get }
+    var manufacturerCharacteristic: ID { get }
+    var modelCharacteristic: ID { get }
+    var hardwareCharacteristic: ID { get }
+    var serialCharacteristic: ID { get }
     
     var suotaService: ID { get }
     var suotaPatchDataCharSizeCharacteristic: ID { get }
@@ -64,6 +68,34 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "180A")
+        }
+    }
+    
+    public var manufacturerCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A29")
+        }
+    }
+    
+    public var modelCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A24")
+        }
+    }
+    
+    public var hardwareCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A27")
+        }
+    }
+    
+    public var serialCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A25")
         }
     }
     
@@ -217,6 +249,10 @@ public enum ChelseabandConfiguration: Configuration {
         [
             batteryCharacteristic.uuidString,
             firmwareVersionCharacteristic.uuidString,
+            manufacturerCharacteristic.uuidString,
+            modelCharacteristic.uuidString,
+            hardwareCharacteristic.uuidString,
+            serialCharacteristic.uuidString,
             suotaPatchDataCharSizeCharacteristic.uuidString,
             suotaMtuCharSizeCharacteristic.uuidString,
             suotaMemDevCharacteristic.uuidString,
