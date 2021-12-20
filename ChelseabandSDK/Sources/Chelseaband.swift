@@ -202,7 +202,7 @@ public final class Chelseaband: ChelseabandType {
 
                 strongSelf.synchronizeBattery()
                 strongSelf.observeForConnectionStatusChange()
-                strongSelf.sendBandUUIDOnServer(peripheral)
+                strongSelf.sendBandInfoOnServer()
                 strongSelf.synchronizeScore()
                 
             }, onError: { [weak self] error in
@@ -595,10 +595,23 @@ public final class Chelseaband: ChelseabandType {
             })
     }
     
-    private func sendBandUUIDOnServer(_ peripheral: Peripheral) {
-        guard let bandUUID = peripheral.UUID else { return }
-        
-        statistic.connectFanband(bandUUID: bandUUID)
+    private func sendBandInfoOnServer() {
+        Observable.combineLatest(SerialReadCommand().performRead(on: self),
+                                 HardwareReadCommand().performRead(on: self),
+                                 ManufacturerReadCommand().performRead(on: self),
+                                 ModelReadCommand().performRead(on: self),
+                                 firmwareVersionObservable)
+            .compactMap{ DeviceInfoTransferModel(serialData: $0,
+                                                 hardwareData: $1,
+                                                 manufacturerData: $2,
+                                                 modelData: $3,
+                                                 firmwareVersion: $4) }
+            .take(1)
+            .timeout(.seconds(30), scheduler: MainScheduler.instance)
+            .subscribe(onNext: { [weak self] in
+                self?.statistic.connectFanband(bandTransferModel: $0)
+            })
+            .disposed(by: disposeBag)
     }
     
     public func sendReaction(id: String) {

@@ -174,18 +174,10 @@ final class API: Statistics {
                     jsonParams: ["fcm": token])
     }
     
-    func connectFanband(bandUUID: String) {
+    func connectFanband(bandTransferModel: DeviceInfoTransferModelType) {
         sendRequest(Modules.users(.connectFanband).path,
-                               method: .patch,
-                               jsonParams: ["fanbandUUID": bandUUID])
-        { result in
-            switch result {
-            case .success(let dictionary):
-                break
-            case .failure(let error):
-                break
-            }
-        }
+                    method: .patch,
+                    jsonParams: bandTransferModel.getLikeDict())
     }
     
     func register(phoneNumber: String) -> Observable<Void> {

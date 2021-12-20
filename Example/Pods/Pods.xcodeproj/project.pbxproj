@@ -323,6 +323,12 @@
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
 		C5FFFA6A27709D0100A674ED /* CLAuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA6927709D0000A674ED /* CLAuthorizationStatus.swift */; };
+		C5FFFA6C2770D28A00A674ED /* SerialReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA6B2770D28A00A674ED /* SerialReadCommand.swift */; };
+		C5FFFA6E2770D29E00A674ED /* HardwareReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA6D2770D29E00A674ED /* HardwareReadCommand.swift */; };
+		C5FFFA702770D2B400A674ED /* ManufacturerReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA6F2770D2B400A674ED /* ManufacturerReadCommand.swift */; };
+		C5FFFA722770D2C700A674ED /* ModelReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */; };
+		C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */; };
+		C5FFFA762770D2FE00A674ED /* DeviceInfoTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
 		C7522A4AC82C24337F4BC373E0FF37B4 /* KVORepresentable+CoreGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4C4A75356CD3405BE3534DFB64E4EB /* KVORepresentable+CoreGraphics.swift */; };
@@ -865,6 +871,12 @@
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C5FFFA6927709D0000A674ED /* CLAuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLAuthorizationStatus.swift; sourceTree = "<group>"; };
+		C5FFFA6B2770D28A00A674ED /* SerialReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SerialReadCommand.swift; sourceTree = "<group>"; };
+		C5FFFA6D2770D29E00A674ED /* HardwareReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HardwareReadCommand.swift; sourceTree = "<group>"; };
+		C5FFFA6F2770D2B400A674ED /* ManufacturerReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManufacturerReadCommand.swift; sourceTree = "<group>"; };
+		C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelReadCommand.swift; sourceTree = "<group>"; };
+		C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModelType.swift; sourceTree = "<group>"; };
+		C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModel.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1549,6 +1561,7 @@
 			isa = PBXGroup;
 			children = (
 				C58175A82751246800BFE00E /* Ticket.swift */,
+				C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */,
 			);
 			name = Models;
 			path = ChelseabandSDK/Sources/Models;
@@ -1560,6 +1573,7 @@
 				C58FD26B27679EC200C2F20D /* ScoreModelType.swift */,
 				C58FD26C27679EC200C2F20D /* LedPatternType.swift */,
 				C58FD271276889E200C2F20D /* VibrationPatternType.swift */,
+				C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */,
 			);
 			name = Protocols;
 			path = ChelseabandSDK/Sources/Protocols;
@@ -1645,6 +1659,10 @@
 				C51F2246275A538200E1B64A /* PollCommand.swift */,
 				C58FD26627679C8E00C2F20D /* LEDCommand.swift */,
 				C58FD26F276889B800C2F20D /* VibrationCommand.swift */,
+				C5FFFA6B2770D28A00A674ED /* SerialReadCommand.swift */,
+				C5FFFA6D2770D29E00A674ED /* HardwareReadCommand.swift */,
+				C5FFFA6F2770D2B400A674ED /* ManufacturerReadCommand.swift */,
+				C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2085,6 +2103,7 @@
 				87BDF82E25FF9DE2007DCD36 /* Observable.swift in Sources */,
 				C58175A32751215900BFE00E /* NFCCommand.swift in Sources */,
 				0E98186EF9B0D90B1E14E21C55F1AD9C /* Array.swift in Sources */,
+				C5FFFA6E2770D29E00A674ED /* HardwareReadCommand.swift in Sources */,
 				C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */,
 				C5FFFA6A27709D0100A674ED /* CLAuthorizationStatus.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
@@ -2103,10 +2122,15 @@
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
 				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,
 				C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */,
+				C5FFFA762770D2FE00A674ED /* DeviceInfoTransferModel.swift in Sources */,
+				C5FFFA702770D2B400A674ED /* ManufacturerReadCommand.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
+				C5FFFA6C2770D28A00A674ED /* SerialReadCommand.swift in Sources */,
+				C5FFFA722770D2C700A674ED /* ModelReadCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
+				C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

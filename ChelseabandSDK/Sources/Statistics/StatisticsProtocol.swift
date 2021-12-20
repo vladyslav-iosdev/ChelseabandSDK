@@ -8,7 +8,7 @@
 import RxSwift
 
 protocol Statistics {
-    func connectFanband(bandUUID: String)
+    func connectFanband(bandTransferModel: DeviceInfoTransferModelType)
     func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)>
     func register(fcmToken: String)
     func register(phoneNumber: String) -> Observable<Void>
