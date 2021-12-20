@@ -60,9 +60,9 @@ public protocol ChelseabandType {
 
     func performSafe(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Void>
     
-    func performRead(command: PerformReadCommandProtocol) -> Observable<Void>
+    func performRead(command: PerformReadCommandProtocol) -> Observable<Data>
     
-    func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval) -> Observable<Void>
+    func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval) -> Observable<Data>
 
     func setFCMToken(_ token: String)
     
@@ -315,7 +315,7 @@ public final class Chelseaband: ChelseabandType {
         let commands = [
             performSafe(command: imageControl, timeOut: .seconds(5)),
             performSafe(command: imageChunk, timeOut: .seconds(5)),
-            performSafeRead(command: imageControl, timeOut: .seconds(5))
+            performSafeRead(command: imageControl, timeOut: .seconds(5)).mapToVoid()
         ]
         
         return Observable<Void>.create { [weak self] seal in
@@ -553,18 +553,18 @@ public final class Chelseaband: ChelseabandType {
             }
     }
     
-    public func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Void> {
+    public func performSafeRead(command: PerformReadCommandProtocol, timeOut: DispatchTimeInterval = .seconds(3)) -> Observable<Data> {
         connectionObservable
             .skipWhile { !$0.isConnected }
             .skipWhile { _ in self.isFirmwareUpdatingNow }
             .take(1)
             .timeout(timeOut, scheduler: MainScheduler.instance)
-            .flatMap { _ -> Observable<Void> in
+            .flatMap { _ -> Observable<Data> in
                 self.performRead(command: command)
             }
     }
     
-    public func performRead(command: PerformReadCommandProtocol) -> Observable<Void> {
+    public func performRead(command: PerformReadCommandProtocol) -> Observable<Data> {
         command
             .performRead(on: self)
             .observeOn(MainScheduler.instance)

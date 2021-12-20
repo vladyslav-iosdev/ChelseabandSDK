@@ -66,5 +66,5 @@ public extension CommandPerformer {
 }
 
 public protocol PerformReadCommandProtocol: ReadableCommand {
-    func performRead(on executor: CommandExecutor) -> Observable<Void>
+    func performRead(on executor: CommandExecutor) -> Observable<Data>
 }

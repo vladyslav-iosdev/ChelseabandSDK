@@ -71,7 +71,7 @@ public struct ImageControlCommand: PerformableWriteCommand {
 }
 
 extension ImageControlCommand: PerformReadCommandProtocol {
-    public func performRead(on executor: CommandExecutor) -> Observable<Void> {
+    public func performRead(on executor: CommandExecutor) -> Observable<Data> {
         executor.read(command: self)
             .do(onNext: {
                 guard let data = $0 else { throw ImageControlCommandError.noHashData }
@@ -84,7 +84,7 @@ extension ImageControlCommand: PerformReadCommandProtocol {
                     throw ImageControlCommandError.imageHashNotEqual
                 }
             })
-            .mapToVoid()
+            .map { _ in Data() }
     }
 }
 
