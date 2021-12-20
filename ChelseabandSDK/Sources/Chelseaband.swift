@@ -50,6 +50,8 @@ public protocol ChelseabandType {
 
     func forceSendConnectStatusOnServer()
     
+    func fetchGameLocationAndStartObserve()
+    
     func performSafeAndObservNotify(command: CommandPerformer, timeOut: DispatchTimeInterval) -> Observable<Data>
 
     func performAndObservNotify(command: CommandPerformer) -> Observable<Data>
@@ -181,6 +183,7 @@ public final class Chelseaband: ChelseabandType {
         locationTracker = LocationManagerTracker()
         observeForFCMTokenChange()
         observeLocationChange()
+        fetchGameLocationAndStartObserve()
     }
     private var connectedPeripheral: Peripheral?
 
@@ -504,6 +507,16 @@ public final class Chelseaband: ChelseabandType {
             .disposed(by: disposeBag)
     }
     
+    public func fetchGameLocationAndStartObserve() {
+        locationManager.locationStatusSubject
+            .filter { $0.canObserve }
+            .flatMap { _ in self.statistic.getPointForObserve() }
+            .subscribe(onNext: { [weak self] in
+                self?.locationTracker.addPointForObserve(pointInfo: $0)
+            })
+            .disposed(by: longLifeDisposeBag)
+    }
+    
     public func perform(command: CommandPerformer) -> Observable<Void> {
         command
             .perform(on: self)
@@ -577,6 +590,9 @@ public final class Chelseaband: ChelseabandType {
     
     public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool> {
         statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
+            .do(onNext: { _ in
+                self.locationTracker.requestStateForRegions()
+            })
     }
     
     private func sendBandUUIDOnServer(_ peripheral: Peripheral) {

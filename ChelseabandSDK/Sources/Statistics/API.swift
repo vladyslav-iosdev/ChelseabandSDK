@@ -20,6 +20,8 @@ public enum APIError: LocalizedError {
     case noScoreModelJSONStringInScoreResponse
     case missedFirmwareResponse
     case noSomeDataInFirmwareResponse
+    case cantParseLocationResponse
+    case cantConvertLocationPointToDouble
     case customServerError(String)
     
     public var errorDescription: String? {
@@ -46,6 +48,10 @@ public enum APIError: LocalizedError {
             return "No payload data in firmware response"
         case .noSomeDataInFirmwareResponse:
             return "No some data in firmware response or data incorrect"
+        case .cantParseLocationResponse:
+            return "Can't parse location response"
+        case .cantConvertLocationPointToDouble:
+            return "Can't convert location point to Double"
         case .customServerError(let description):
             return description
         }
@@ -87,6 +93,7 @@ final class API: Statistics {
         
         enum GamesEndpoint: String {
             case score
+            case location
         }
         
         enum UsersEndpoint: String {
@@ -267,6 +274,45 @@ final class API: Statistics {
                     }
 
                     observer.onNext((image: imageData, scoreModel: scoreModelData))
+                case .failure(let error):
+                    observer.onError(error)
+                }
+                observer.onCompleted()
+            }
+            
+            return Disposables.create()
+        }
+    }
+    
+    func getPointForObserve() -> Observable<(lat: Double, lng: Double, radius: Double)?> {
+        Observable<(lat: Double, lng: Double, radius: Double)?>.create { [weak self] observer in
+            guard let strongSelf = self else { return Disposables.create() }
+            
+            strongSelf.sendRequest(Modules.games(.location).path, method: .get) { result in
+                switch result {
+                case .success(let dictionary):
+                    guard let locationJSON = dictionary["data"] as? [String: Any]
+                    else {
+                        observer.onNext(nil)
+                        return
+                    }
+                    
+                    guard let lngString = locationJSON["lng"] as? String,
+                          let latString = locationJSON["lat"] as? String,
+                          let radius = locationJSON["inAreaRange"] as? Double
+                    else {
+                        observer.onError(APIError.cantParseLocationResponse)
+                        return
+                    }
+                    
+                    guard let lng = Double(lngString),
+                          let lat = Double(latString)
+                    else {
+                        observer.onError(APIError.cantConvertDataToJSON)
+                        return
+                    }
+
+                    observer.onNext((lat: lat, lng: lng, radius: radius))
                 case .failure(let error):
                     observer.onError(error)
                 }

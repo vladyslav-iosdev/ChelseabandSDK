@@ -20,6 +20,7 @@ protocol Statistics {
     func fetchTicket() -> Observable<TicketType?>
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]>
     func fetchFirmware() -> Observable<(version: String, firmwareURL: URL)>
+    func getPointForObserve() -> Observable<(lat: Double, lng: Double, radius: Double)?>
 }
 
 extension Statistics {

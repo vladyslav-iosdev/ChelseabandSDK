@@ -17,19 +17,20 @@ public protocol LocationManager: AnyObject {
 
 protocol LocationTracker: LocationManager {
     var isInAreaObservable: Observable<Bool> { get }
-    func startObserving()
-    func stopObserving()
+    // NOTE: for stop observing just pass nil
+    func addPointForObserve(pointInfo: (lat: Double, lng: Double, radius: Double)?)
+    func requestStateForRegions()
 }
 
 final class LocationManagerTracker: NSObject, LocationTracker {
     // MARK: Constants
     public let locationStatusSubject: BehaviorSubject<CLAuthorizationStatus>
     private let locationManager: CLLocationManager
-    private let disposeBag: DisposeBag
     private let isInAreaPublishSubject: PublishSubject<Bool> = .init()
     
     // MARK: Variables
     var isInAreaObservable: Observable<Bool> { isInAreaPublishSubject }
+    private var pointInfoForObserve: (lat: Double, lng: Double, radius: Double)? = nil
     
     override init() {
         locationManager = CLLocationManager()
@@ -37,7 +38,6 @@ final class LocationManagerTracker: NSObject, LocationTracker {
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.pausesLocationUpdatesAutomatically = false
         locationManager.activityType = .otherNavigation
-        disposeBag = DisposeBag()
         
         if #available(iOS 14.0, *) {
             locationStatusSubject = .init(value: locationManager.authorizationStatus)
@@ -56,26 +56,39 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     }
     
     // MARK: Internal Functions
-    func startObserving() {
-        locationManager.requestAlwaysAuthorization()
-        startObservLocation()
+    func addPointForObserve(pointInfo: (lat: Double, lng: Double, radius: Double)?) {
+        pointInfoForObserve = pointInfo
+        startObserving()
     }
     
-    func stopObserving() {
-        locationManager.stopUpdatingLocation()
+    func requestStateForRegions() {
+        locationManager.monitoredRegions.forEach { locationManager.requestState(for: $0) }
     }
     
     // MARK: Private Functions
-    private func startObservLocation() {
+    private func startObserving() {
+        locationManager.requestAlwaysAuthorization()
+        startObserveLocation()
+    }
+    
+    private func stopObserving() {
+        locationManager.stopUpdatingLocation()
+    }
+    
+    private func startObserveLocation() {
         guard CLLocationManager.locationServicesEnabled(),
               CLLocationManager.authorizationStatus() != .denied,
               CLLocationManager.isMonitoringAvailable(for: CLCircularRegion.self)
         else { return }
         
-        let regionCenter = CLLocationCoordinate2D(latitude: 33.75741395979292,
-                                                  longitude: -84.39633513106129)
+        locationManager.monitoredRegions.forEach { locationManager.stopMonitoring(for: $0) }
+        
+        guard let pointInfo = pointInfoForObserve else { return }
+        
+        let regionCenter = CLLocationCoordinate2D(latitude: pointInfo.lat,
+                                                  longitude: pointInfo.lng)
         let region = CLCircularRegion(center: regionCenter,
-                                      radius: 300,
+                                      radius: pointInfo.radius,
                                       identifier: "State Farm Arena")
         region.notifyOnExit = true
         region.notifyOnEntry = true
@@ -102,11 +115,11 @@ extension LocationManagerTracker: CLLocationManagerDelegate {
         if #available(iOS 14.0, *) {
             locationStatusSubject.onNext(manager.authorizationStatus)
         }
-        startObservLocation()
+        startObserveLocation()
     }
     
     func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
         locationStatusSubject.onNext(status)
-        startObservLocation()
+        startObserveLocation()
     }
 }
