@@ -347,6 +347,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.serialCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.serialCharacteristic)
                                 characteristicsDictionary[configuration.modelCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.modelCharacteristic)
                                 characteristicsDictionary[configuration.manufacturerCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.manufacturerCharacteristic)
+                                characteristicsDictionary[configuration.softwareCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.softwareCharacteristic)
                             case configuration.suotaService:
                                 characteristicsDictionary[configuration.suotaPatchDataCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharSizeCharacteristic)
                                 characteristicsDictionary[configuration.suotaMtuCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMtuCharSizeCharacteristic)
@@ -392,6 +393,8 @@ public final class Device: DeviceType {
                                             case configuration.modelCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.serialCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.softwareCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.suotaPatchDataCharSizeCharacteristic:
                                                 strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(characteristic))

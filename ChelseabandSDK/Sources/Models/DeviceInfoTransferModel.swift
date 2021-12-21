@@ -12,19 +12,22 @@ struct DeviceInfoTransferModel: DeviceInfoTransferModelType {
     private let hardwareVersion: String
     private let manufacturer: String
     private let model: String
+    private let software: String
     private let firmwareVersion: String
     
-    init?(serialData: Data, hardwareData: Data, manufacturerData: Data, modelData: Data, firmwareVersion: String?) {
+    init?(serialData: Data, hardwareData: Data, manufacturerData: Data, modelData: Data, softwareData: Data, firmwareVersion: String?) {
         guard let serial = String(data: serialData, encoding: .utf8),
               let hardwareVersion = String(data: hardwareData, encoding: .utf8),
               let manufacturer = String(data: manufacturerData, encoding: .utf8),
               let model = String(data: modelData, encoding: .utf8),
+              let software = String(data: softwareData, encoding: .utf8),
               let firmwareVersion = firmwareVersion else { return nil }
         
         self.serial = serial
         self.hardwareVersion = hardwareVersion
         self.manufacturer = manufacturer
         self.model = model
+        self.software = software
         self.firmwareVersion = firmwareVersion
     }
     
@@ -34,7 +37,8 @@ struct DeviceInfoTransferModel: DeviceInfoTransferModelType {
             "manufacturer": manufacturer,
             "model": model,
             "firmwareVersion": firmwareVersion,
-            "hardwareVersion": hardwareVersion
+            "hardwareVersion": hardwareVersion,
+            "software": software
         ]
     }
 }

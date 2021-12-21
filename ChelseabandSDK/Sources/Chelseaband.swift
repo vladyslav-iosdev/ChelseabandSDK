@@ -620,12 +620,14 @@ public final class Chelseaband: ChelseabandType {
                                  HardwareReadCommand().performRead(on: self),
                                  ManufacturerReadCommand().performRead(on: self),
                                  ModelReadCommand().performRead(on: self),
+                                 SoftwareReadCommand().performRead(on: self),
                                  firmwareVersionObservable)
             .compactMap{ DeviceInfoTransferModel(serialData: $0,
                                                  hardwareData: $1,
                                                  manufacturerData: $2,
                                                  modelData: $3,
-                                                 firmwareVersion: $4) }
+                                                 softwareData: $4,
+                                                 firmwareVersion: $5) }
             .take(1)
             .timeout(.seconds(30), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in

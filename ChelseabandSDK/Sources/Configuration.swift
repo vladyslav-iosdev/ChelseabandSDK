@@ -17,6 +17,7 @@ public protocol Configuration {
     var modelCharacteristic: ID { get }
     var hardwareCharacteristic: ID { get }
     var serialCharacteristic: ID { get }
+    var softwareCharacteristic: ID { get }
     
     var suotaService: ID { get }
     var suotaPatchDataCharSizeCharacteristic: ID { get }
@@ -96,6 +97,13 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "2A25")
+        }
+    }
+    
+    public var softwareCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A28")
         }
     }
     

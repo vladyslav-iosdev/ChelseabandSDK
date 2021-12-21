@@ -329,6 +329,7 @@
 		C5FFFA722770D2C700A674ED /* ModelReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */; };
 		C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */; };
 		C5FFFA762770D2FE00A674ED /* DeviceInfoTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */; };
+		C5FFFA7A27720D8D00A674ED /* SoftwareReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
 		C7522A4AC82C24337F4BC373E0FF37B4 /* KVORepresentable+CoreGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4C4A75356CD3405BE3534DFB64E4EB /* KVORepresentable+CoreGraphics.swift */; };
@@ -877,6 +878,7 @@
 		C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelReadCommand.swift; sourceTree = "<group>"; };
 		C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModelType.swift; sourceTree = "<group>"; };
 		C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModel.swift; sourceTree = "<group>"; };
+		C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareReadCommand.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1663,6 +1665,7 @@
 				C5FFFA6D2770D29E00A674ED /* HardwareReadCommand.swift */,
 				C5FFFA6F2770D2B400A674ED /* ManufacturerReadCommand.swift */,
 				C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */,
+				C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2117,6 +2120,7 @@
 				96777F90C354CB637F0BEDEFF32E43F7 /* Device.swift in Sources */,
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
+				C5FFFA7A27720D8D00A674ED /* SoftwareReadCommand.swift in Sources */,
 				C58FD270276889B800C2F20D /* VibrationCommand.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
