@@ -11,7 +11,7 @@ import CoreBluetooth
 public struct ImagePerformCommand: CommandPerformer {
     private var imageChunkedArray: [Data]
     
-    private static let maxChunkSize = 200
+    private static let maxChunkSize = 182
     
     init(_ binImage: Data) {
         imageChunkedArray = binImage.createChunks(chunkSize: ImagePerformCommand.maxChunkSize)

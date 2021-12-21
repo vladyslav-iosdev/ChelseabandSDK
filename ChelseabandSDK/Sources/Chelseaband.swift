@@ -311,6 +311,26 @@ public final class Chelseaband: ChelseabandType {
         }
         
         let imageControl = ImageControlCommand(imageType, imageData: binImage)
+        
+        //NOTE: before send new image we check does this image uploaded, if yes return, else upload new image
+        return performSafeRead(command: imageControl, timeOut: .seconds(5)).mapToVoid()
+            .materialize()
+            .flatMap { result -> Observable<Void> in
+                switch result {
+                case .error(let error):
+                    return self.uploadNewImage(binImage, imageType: imageType)
+                default:
+                    return .just(())
+                }
+            }
+    }
+    
+    private func uploadNewImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void> {
+        guard imageType.imageLength == binImage.count else {
+            return Observable<Void>.error(ImageControlCommandError.wrongImageSize)
+        }
+        
+        let imageControl = ImageControlCommand(imageType, imageData: binImage)
         let imageChunk = ImagePerformCommand(binImage)
         let commands = [
             performSafe(command: imageControl, timeOut: .seconds(5)),
