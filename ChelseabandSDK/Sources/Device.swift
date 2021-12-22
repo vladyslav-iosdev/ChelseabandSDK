@@ -102,8 +102,6 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     var bluetoothIsSearching: Observable<Bool> { get }
 
     var connectionObservable: Observable<Device.State> { get }
-
-    var readCharacteristicObservable: Observable<CharacteristicType> { get }
     
     var batteryCharacteristicObservable: Observable<CharacteristicType> { get }
     
@@ -122,13 +120,15 @@ public protocol DeviceType: UpdateDeviceViaSuotaType {
     func startScanForPeripherals() -> Observable<[ScannedPeripheral]>
 
     func stopScanForPeripherals()
-
-    func write(data: Data, timeout: DispatchTimeInterval) -> Observable<Void>
     
     func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void>
+    
+    func writeAndObservNotify(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Data>
+    
+    func read(command: ReadableCommand, timeout: DispatchTimeInterval) -> Observable<Data?>
 }
 
-public enum DeviceError: Error {
+public enum DeviceError: LocalizedError {
     case maxRetryAttempts
     case writeCharacteristicMissing
     case mandatoryCharacteristicsMissing
@@ -144,6 +144,17 @@ public enum DeviceError: Error {
             }
         } else {
             return true
+        }
+    }
+    
+    public var errorDescription: String? {
+        switch self {
+        case .maxRetryAttempts:
+            return "Maximum retry attempts"
+        case .writeCharacteristicMissing:
+            return "Write characteristic missing"
+        case .mandatoryCharacteristicsMissing:
+            return "Mandatory characteristics missing"
         }
     }
 }
@@ -259,10 +270,6 @@ public final class Device: DeviceType {
     public var connectionObservable: Observable<Device.State> {
         connectionBehaviourSubject
     }
-
-    public var readCharacteristicObservable: Observable<CharacteristicType> {
-        readCharacteristic.compactMap { $0 }
-    }
     
     public var batteryCharacteristicObservable: Observable<CharacteristicType> {
         batteryCharacteristic.compactMap { $0 }
@@ -292,8 +299,6 @@ public final class Device: DeviceType {
     private var disposeBag = DisposeBag()
     private let connectionBehaviourSubject = BehaviorSubject<Device.State>(value: .disconnected)
     private let bluetoothIsSearchingSubject: PublishSubject<Bool> = .init()
-    private var writeCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
-    private var readCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
     private var batteryCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
     private var firmwareVersionCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
     private var suotaPatchDataCharSizeCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
@@ -304,7 +309,7 @@ public final class Device: DeviceType {
     private var suotaPatchDataCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
     private var suotaServStatusCharacteristic: BehaviorSubject<CharacteristicType?> = .init(value: nil)
     private var peripheral: BehaviorSubject<ScannedPeripheralType?> = .init(value: nil)
-    private var fanbandCharacteristicsForWrite = [Observable<CharacteristicType>]()
+    private var fanbandCharacteristics = [Observable<CharacteristicType>]()
 
     public init(configuration: Configuration) {
         self.configuration = configuration
@@ -396,6 +401,7 @@ public final class Device: DeviceType {
                 var connectionDisposable: Disposable?
                 var characteristicsDisposable: Disposable?
                 var characteristicsDictionary: [String: Observable<CharacteristicType>] = [:]
+
                 var countDownTimer: Disposable?
 
                 connectionDisposable = strongSelf.connect(peripheral: peripheral, services: configuration.servicesForDiscovering)
@@ -407,7 +413,7 @@ public final class Device: DeviceType {
                     .subscribe(onNext: { event in
                         strongSelf.peripheral.onNext(peripheral)
                         if countDownTimer == nil {
-                            countDownTimer = Observable<Int>.timer(.seconds(0), period: .seconds(30), scheduler: MainScheduler.instance)
+                            countDownTimer = Observable<Int>.timer(.seconds(0), period: .seconds(15), scheduler: MainScheduler.instance)
                                 .skip(1)
                                 .take(1)
                                 .subscribe(onNext: { timePassed in
@@ -426,6 +432,11 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.batteryCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.batteryCharacteristic)
                             case configuration.deviceInfoService:
                                 characteristicsDictionary[configuration.firmwareVersionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.firmwareVersionCharacteristic)
+                                characteristicsDictionary[configuration.hardwareCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.hardwareCharacteristic)
+                                characteristicsDictionary[configuration.serialCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.serialCharacteristic)
+                                characteristicsDictionary[configuration.modelCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.modelCharacteristic)
+                                characteristicsDictionary[configuration.manufacturerCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.manufacturerCharacteristic)
+                                characteristicsDictionary[configuration.softwareCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.softwareCharacteristic)
                             case configuration.suotaService:
                                 characteristicsDictionary[configuration.suotaPatchDataCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharSizeCharacteristic)
                                 characteristicsDictionary[configuration.suotaMtuCharSizeCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaMtuCharSizeCharacteristic)
@@ -435,8 +446,16 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.suotaPatchDataCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaPatchDataCharacteristic)
                                 characteristicsDictionary[configuration.suotaServStatusCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.suotaServStatusCharacteristic)
                             case configuration.fanbandService:
+                                characteristicsDictionary[configuration.seatingPositionCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.seatingPositionCharacteristic)
+                                characteristicsDictionary[configuration.nfcTicketCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.nfcTicketCharacteristic)
+                                characteristicsDictionary[configuration.deviceSettingsCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.deviceSettingsCharacteristic)
                                 characteristicsDictionary[configuration.ledCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.ledCharacteristic)
                                 characteristicsDictionary[configuration.vibrationCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.vibrationCharacteristic)
+                                characteristicsDictionary[configuration.imageControlCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageControlCharacteristic)
+                                characteristicsDictionary[configuration.imageChunkCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.imageChunkCharacteristic)
+                                characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
+                                characteristicsDictionary[configuration.scoreCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.scoreCharacteristic)
+                                characteristicsDictionary[configuration.pollCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
                             default:
                                 break
                             }
@@ -446,6 +465,7 @@ public final class Device: DeviceType {
                             })
                             
                             if allSatisfy {
+                                strongSelf.fanbandCharacteristics.removeAll()
                                 let characteristicsObservable = characteristicsDictionary.map { $0.value }
                                 let characteristicsDisposable = Observable.combineLatest(characteristicsObservable)
                                     .subscribe(onNext: { characteristics in
@@ -455,6 +475,16 @@ public final class Device: DeviceType {
                                                 strongSelf.batteryCharacteristic.on(.next(characteristic))
                                             case configuration.firmwareVersionCharacteristic:
                                                 strongSelf.firmwareVersionCharacteristic.on(.next(characteristic))
+                                            case configuration.manufacturerCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.hardwareCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.modelCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.serialCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.softwareCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.suotaPatchDataCharSizeCharacteristic:
                                                 strongSelf.suotaPatchDataCharSizeCharacteristic.on(.next(characteristic))
                                             case configuration.suotaMtuCharSizeCharacteristic:
@@ -470,13 +500,35 @@ public final class Device: DeviceType {
                                             case configuration.suotaServStatusCharacteristic:
                                                 strongSelf.suotaServStatusCharacteristic.on(.next(characteristic))
                                             case configuration.vibrationCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.seatingPositionCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.nfcTicketCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.deviceSettingsCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.ledCharacteristic:
-                                                strongSelf.fanbandCharacteristicsForWrite.append(Observable.just(characteristic))
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.imageControlCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.imageChunkCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.alertCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.scoreCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.pollCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             default:
                                                 break
                                             }
                                         }
+                                        strongSelf.updateDeviceInfo()
+                                        strongSelf.updateSuotaParameters()
+                                        seal.onNext(())
+                                        countDownTimer?.dispose()
+
+                                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     }, onError: { error in
                                         strongSelf.batteryCharacteristic.on(.next(nil))
                                         strongSelf.firmwareVersionCharacteristic.on(.next(nil))
@@ -487,15 +539,9 @@ public final class Device: DeviceType {
                                         strongSelf.suotaPatchLenCharacteristic.on(.next(nil))
                                         strongSelf.suotaPatchDataCharacteristic.on(.next(nil))
                                         strongSelf.suotaServStatusCharacteristic.on(.next(nil))
+                                        strongSelf.fanbandCharacteristics.removeAll()
 
                                         seal.onError(error)
-                                    }, onCompleted: {
-                                        strongSelf.updateDeviceInfo()
-                                        strongSelf.updateSuotaParameters()
-                                        seal.onNext(())
-                                        countDownTimer?.dispose()
-
-                                        strongSelf.connectionBehaviourSubject.onNext(Device.State.connected)
                                     })
                             }
                         }
@@ -523,20 +569,9 @@ public final class Device: DeviceType {
                 .timeout(self.scanningRetry, scheduler: MainScheduler.instance)
                 .retryWithDelay(timeInterval: self.scanningRetry) {
                     set.removeAllObjects()
-                    //NOTE: if you make reconnect to device in delay time peripheral wouln't added to set
-                    if  let value = try? self.peripheral.value(),
-                        value.peripheralType.isConnected {
-                        set.add(value)
-                    }
                 }
                 .scan(set, accumulator: { set, peripheral -> NSMutableSet in
-                    if !set.contains(where: {
-                        ($0 as? Peripheral)?.peripheral.identifier == peripheral.peripheral.identifier
-                    })
-                    {
-                        set.add(peripheral)
-                    }
-
+                    set.add(peripheral)
                     return set
                 })
                 .compactMap { $0.allObjects as? [Peripheral] }
@@ -576,27 +611,6 @@ public final class Device: DeviceType {
             .flatMap { Observable.from($0) }
             .debug("\(self).connect")
     }
-
-    public func write(data: Data, timeout: DispatchTimeInterval = .seconds(5)) -> Observable<Void> {
-        return .deferred { [weak self] in
-            guard let strongSelf = self else {
-                return .error(BluetoothError.destroyed)
-            }
-
-            return strongSelf.writeCharacteristic
-                .flatMap { characteristic -> Observable<CharacteristicType> in
-                    if let value = characteristic {
-                        return value.writeValue(data, type: .withResponse).asObservable()
-                    } else {
-                        throw DeviceError.writeCharacteristicMissing
-                    }
-            }
-            .timeout(timeout, scheduler: MainScheduler.instance)
-            .mapToVoid()
-            .take(1)
-            .debug("\(strongSelf).write")
-        }
-    }
     
     public func write(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Void> {
         return .deferred { [weak self] in
@@ -604,11 +618,11 @@ public final class Device: DeviceType {
                 return .error(BluetoothError.destroyed)
             }
 
-            return strongSelf.findCharacteristicForWrite(command: command)
+            return strongSelf.findCharacteristic(forCommand: command)
                 .flatMap { characteristic -> Observable<CharacteristicType> in
                     if let value = characteristic {
                         return value.writeValue(command.dataForSend,
-                                                type: .withResponse).asObservable()
+                                                type: command.writeType).asObservable()
                     } else {
                         throw DeviceError.writeCharacteristicMissing
                     }
@@ -620,9 +634,55 @@ public final class Device: DeviceType {
         }
     }
     
-    private func findCharacteristicForWrite(command: WritableCommand) -> Observable<CharacteristicType?> {
-        Observable.combineLatest(fanbandCharacteristicsForWrite)
-            .map { $0.first { $0.uuid == command.uuidForWrite } }
+    public func writeAndObservNotify(command: WritableCommand, timeout: DispatchTimeInterval) -> Observable<Data> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.findCharacteristic(forCommand: command)
+                .flatMap { characteristic -> Observable<CharacteristicType> in
+                    if let value = characteristic {
+                        return value.writeValue(command.dataForSend,
+                                                type: command.writeType).asObservable()
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+            }
+            .timeout(timeout, scheduler: MainScheduler.instance)
+            .take(1)
+            .flatMap { $0.observeValueUpdateAndSetNotification() }
+            .compactMap { $0.value }
+            .debug("\(strongSelf).write")
+        }
+    }
+    
+    public func read(command: ReadableCommand, timeout: DispatchTimeInterval) -> Observable<Data?> {
+        return .deferred { [weak self] in
+            guard let strongSelf = self else {
+                return .error(BluetoothError.destroyed)
+            }
+
+            return strongSelf.findCharacteristic(forCommand: command)
+                .flatMap { characteristic -> Observable<Data?> in
+                    if let value = characteristic {
+                        return value.readValue()
+                            .map { $0.value }
+                            .asObservable()
+                        
+                    } else {
+                        throw DeviceError.writeCharacteristicMissing
+                    }
+            }
+            .timeout(timeout, scheduler: MainScheduler.instance)
+            .take(1)
+            .debug("\(strongSelf).write")
+        }
+    }
+    
+    private func findCharacteristic(forCommand command: Command) -> Observable<CharacteristicType?> {
+        Observable.combineLatest(fanbandCharacteristics)
+            .map { $0.first { $0.uuid == command.commandUUID } }
             .take(1)
     }
     

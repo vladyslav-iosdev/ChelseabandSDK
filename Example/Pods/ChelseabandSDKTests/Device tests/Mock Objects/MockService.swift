@@ -37,7 +37,12 @@ extension MockService {
     
     static var deviceInfoService: MockService {
         .init(uuid: ChelseabandConfiguration.default.deviceInfoService,
-              characteristics: [MockCharacteristic.firmwareVersion])
+              characteristics: [MockCharacteristic.firmwareVersion,
+                                .software,
+                                .hardware,
+                                .model,
+                                .manufacturer,
+                                .serial])
     }
     
     static var suotaService: MockService {
@@ -55,6 +60,14 @@ extension MockService {
     static var fanbandService: MockService {
         .init(uuid: ChelseabandConfiguration.default.fanbandService,
               characteristics: [MockCharacteristic.led,
-                                .vibration])
+                                .vibration,
+                                .seatingPosition,
+                                .nfcTicket,
+                                .alert,
+                                .score,
+                                .poll,
+                                .imageChunk,
+                                .imageControl,
+                                .deviceSettings])
     }
 }

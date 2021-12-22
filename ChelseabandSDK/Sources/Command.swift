@@ -7,27 +7,64 @@
 
 import Foundation
 import RxSwift
+import CoreBluetooth
 
 public protocol CommandExecutor {
     var isConnected: Observable<Bool> { get }
 
-    func write(data: Data) -> Observable<Void>
     func write(command: WritableCommand) -> Observable<Void>
-}
-
-public protocol CommandNotifier {
-    var notifyObservable: Observable<Data> { get }
-}
-
-public protocol WritableCommand {
-    var uuidForWrite: ID { get }
-    var dataForSend: Data { get }
-}
-
-public protocol CommandNew: WritableCommand {
-    func perform(on executor: CommandExecutor) -> Observable<Void>
+    func writeAndObservNotify(command: WritableCommand) -> Observable<Data>
+    func read(command: ReadableCommand) -> Observable<Data?>
 }
 
 public protocol Command {
-    func perform(on executor: CommandExecutor, notifyWith notifier: CommandNotifier) -> Observable<Void>
+    var commandUUID: ID { get }
+}
+
+public protocol WritableCommand: Command {
+    var dataForSend: Data { get }
+    var writeType: CBCharacteristicWriteType { get }
+}
+
+public protocol ReadableCommand: Command {
+    
+}
+
+public extension WritableCommand {
+    var writeType: CBCharacteristicWriteType {
+        .withResponse
+    }
+}
+public typealias PerformableWriteCommand = CommandPerformer & WritableCommand
+
+public protocol CommandPerformer {
+    func perform(on executor: CommandExecutor) -> Observable<Void>
+    func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data>
+}
+
+public enum CommandError: LocalizedError {
+    case performCommandNotImplemented
+    case performAndObserveCommandNotImplemented
+    
+    public var errorDescription: String? {
+        switch self {
+        case .performCommandNotImplemented:
+            return "Perform command not implemented"
+        case .performAndObserveCommandNotImplemented:
+            return "Perform and observe command not implemented"
+        }
+    }
+}
+
+public extension CommandPerformer {
+    func perform(on executor: CommandExecutor) -> Observable<Void> {
+        .error(CommandError.performCommandNotImplemented)
+    }
+    func performAndObserveNotify(on executor: CommandExecutor) -> Observable<Data> {
+        .error(CommandError.performAndObserveCommandNotImplemented)
+    }
+}
+
+public protocol PerformReadCommandProtocol: ReadableCommand {
+    func performRead(on executor: CommandExecutor) -> Observable<Data>
 }

@@ -13,6 +13,11 @@ public protocol Configuration {
     
     var deviceInfoService: ID { get }
     var firmwareVersionCharacteristic: ID { get }
+    var manufacturerCharacteristic: ID { get }
+    var modelCharacteristic: ID { get }
+    var hardwareCharacteristic: ID { get }
+    var serialCharacteristic: ID { get }
+    var softwareCharacteristic: ID { get }
     
     var suotaService: ID { get }
     var suotaPatchDataCharSizeCharacteristic: ID { get }
@@ -24,8 +29,16 @@ public protocol Configuration {
     var suotaServStatusCharacteristic: ID { get }
     
     var fanbandService: ID { get }
+    var seatingPositionCharacteristic: ID { get }
+    var nfcTicketCharacteristic: ID { get }
+    var deviceSettingsCharacteristic: ID { get }
     var ledCharacteristic: ID { get }
     var vibrationCharacteristic: ID { get }
+    var imageControlCharacteristic: ID { get }
+    var imageChunkCharacteristic: ID { get }
+    var alertCharacteristic: ID { get }
+    var scoreCharacteristic: ID { get }
+    var pollCharacteristic: ID { get }
     
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }
@@ -59,10 +72,45 @@ public enum ChelseabandConfiguration: Configuration {
         }
     }
     
-    public var firmwareVersionCharacteristic: ID {
+    public var manufacturerCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A29")
+        }
+    }
+    
+    public var modelCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A24")
+        }
+    }
+    
+    public var hardwareCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A27")
+        }
+    }
+    
+    public var serialCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A25")
+        }
+    }
+    
+    public var softwareCharacteristic: ID {
         switch self {
         case .default:
             return ID(string: "2A28")
+        }
+    }
+    
+    public var firmwareVersionCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "2A26")
         }
     }
     
@@ -70,6 +118,27 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "00000000-1111-2222-2222-333333333333")
+        }
+    }
+    
+    public var seatingPositionCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111111")
+        }
+    }
+    
+    public var nfcTicketCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111116")
+        }
+    }
+    
+    public var deviceSettingsCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111117")
         }
     }
     
@@ -84,6 +153,41 @@ public enum ChelseabandConfiguration: Configuration {
         switch self {
         case .default:
             return ID(string: "11111111-0000-0000-0000-111111111113")
+        }
+    }
+    
+    public var imageControlCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111119")
+        }
+    }
+    
+    public var imageChunkCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-11111111111a")
+        }
+    }
+    
+    public var alertCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-11111111111b")
+        }
+    }
+    
+    public var scoreCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-11111111111c")
+        }
+    }
+    
+    public var pollCharacteristic: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-111111111118")
         }
     }
     
@@ -153,6 +257,10 @@ public enum ChelseabandConfiguration: Configuration {
         [
             batteryCharacteristic.uuidString,
             firmwareVersionCharacteristic.uuidString,
+            manufacturerCharacteristic.uuidString,
+            modelCharacteristic.uuidString,
+            hardwareCharacteristic.uuidString,
+            serialCharacteristic.uuidString,
             suotaPatchDataCharSizeCharacteristic.uuidString,
             suotaMtuCharSizeCharacteristic.uuidString,
             suotaMemDevCharacteristic.uuidString,
@@ -160,8 +268,16 @@ public enum ChelseabandConfiguration: Configuration {
             suotaPatchLenCharacteristic.uuidString,
             suotaPatchDataCharacteristic.uuidString,
             suotaServStatusCharacteristic.uuidString,
+            deviceSettingsCharacteristic.uuidString,
+            seatingPositionCharacteristic.uuidString,
+            nfcTicketCharacteristic.uuidString,
             ledCharacteristic.uuidString,
-            vibrationCharacteristic.uuidString
+            vibrationCharacteristic.uuidString,
+            imageControlCharacteristic.uuidString,
+            imageChunkCharacteristic.uuidString,
+            alertCharacteristic.uuidString,
+            scoreCharacteristic.uuidString,
+            pollCharacteristic.uuidString
         ]
     }
 }

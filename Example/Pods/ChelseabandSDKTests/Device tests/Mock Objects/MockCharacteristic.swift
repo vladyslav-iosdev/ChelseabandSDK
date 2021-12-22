@@ -72,6 +72,31 @@ extension MockCharacteristic {
               uuid: ChelseabandConfiguration.default.firmwareVersionCharacteristic)
     }
     
+    static var hardware: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.hardwareCharacteristic)
+    }
+    
+    static var software: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.softwareCharacteristic)
+    }
+    
+    static var manufacturer: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.manufacturerCharacteristic)
+    }
+    
+    static var model: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.modelCharacteristic)
+    }
+    
+    static var serial: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.serialCharacteristic)
+    }
+    
     static var suotaPatch: MockCharacteristic {
         .init(cbCharacteristic: MockCBCharacteristic.empty,
               uuid: ChelseabandConfiguration.default.suotaPatchDataCharSizeCharacteristic)
@@ -115,5 +140,45 @@ extension MockCharacteristic {
     static var vibration: MockCharacteristic {
         .init(cbCharacteristic: MockCBCharacteristic.empty,
               uuid: ChelseabandConfiguration.default.vibrationCharacteristic)
+    }
+    
+    static var seatingPosition: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.seatingPositionCharacteristic)
+    }
+    
+    static var nfcTicket: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.nfcTicketCharacteristic)
+    }
+    
+    static var deviceSettings: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.deviceSettingsCharacteristic)
+    }
+    
+    static var imageChunk: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.imageChunkCharacteristic)
+    }
+    
+    static var imageControl: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.imageControlCharacteristic)
+    }
+    
+    static var alert: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.alertCharacteristic)
+    }
+    
+    static var score: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.scoreCharacteristic)
+    }
+    
+    static var poll: MockCharacteristic {
+        .init(cbCharacteristic: MockCBCharacteristic.empty,
+              uuid: ChelseabandConfiguration.default.pollCharacteristic)
     }
 }

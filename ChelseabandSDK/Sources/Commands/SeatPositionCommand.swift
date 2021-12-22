@@ -1,0 +1,39 @@
+//
+//  SeatPositionCommand.swift
+//  ChelseabandSDK
+//
+//  Created by Sergey Pohrebnuak on 26.11.2021.
+//
+
+import RxSwift
+
+public enum SeatPositionCommandError: LocalizedError {
+    case cantConvertToSeatData
+    
+    public var errorDescription: String? {
+        switch self {
+        case .cantConvertToSeatData:
+            return "Can't convert ticket to seat data which will be send to the band"
+        }
+    }
+}
+
+public struct SeatPositionCommand: PerformableWriteCommand {
+    
+    public var commandUUID = ChelseabandConfiguration.default.seatingPositionCharacteristic
+    
+    public var dataForSend: Data
+    
+    public func perform(on executor: CommandExecutor) -> Observable<Void> {
+        executor.write(command: self)
+    }
+    
+    init(fromTicket ticket: TicketType) throws {
+        let resultString = "\(ticket.section)\n\(ticket.row)\n\(ticket.seat)\0"
+        if let data = resultString.data(using: .utf8) {
+            dataForSend = data
+        } else {
+            throw SeatPositionCommandError.cantConvertToSeatData
+        }
+    }
+}

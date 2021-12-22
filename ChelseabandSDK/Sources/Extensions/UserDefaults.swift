@@ -6,57 +6,63 @@
 //
 
 import Foundation
+import RxSwift
 
 extension UserDefaults {
     // MARK: - Keys
-    private enum Keys {
-        static let apiBaseEndpoint: String = "apiBaseEndpoint"
-        static let apiKey: String = "apiKey"
-        static let pushToken: String = "pushTokenKey"
-        static let lastConnectedPeripheralUUID: String = "lastConnectedPeripheralUUIDKey"
-        static let firmwareVersion: String = "firmwareVersion"
+    private enum Keys: String {
+        case apiBaseEndpoint
+        case apiKey
+        case lastConnectedPeripheralUUID
+        case firmwareVersion
+        case userId
     }
     
     var apiBaseEndpoint: String {
-        get { value(forKey: Keys.apiBaseEndpoint) as? String ?? "" }
-        set { setValue(newValue, forKey: Keys.apiBaseEndpoint) }
+        get { value(forKey: Keys.apiBaseEndpoint.rawValue) as? String ?? "" }
+        set { setValue(newValue, forKey: Keys.apiBaseEndpoint.rawValue) }
     }
     
     var apiKey: String {
-        get { value(forKey: Keys.apiKey) as? String ?? "" }
-        set { setValue(newValue, forKey: Keys.apiKey) }
+        get { value(forKey: Keys.apiKey.rawValue) as? String ?? "" }
+        set { setValue(newValue, forKey: Keys.apiKey.rawValue) }
     }
     
-    var pushToken: String? {
+    var isAuthorizeObservable: Observable<Bool> {
+        UserDefaults.standard.rx.observe(String.self, Keys.userId.rawValue)
+            .map { $0 != nil }
+    }
+    
+    var userId: String? {
         get {
-            return value(forKey: Keys.pushToken) as? String
+            return value(forKey: Keys.userId.rawValue) as? String
         }
 
         set {
             if let value = newValue {
-                setValue(value, forKey: Keys.pushToken)
+                setValue(value, forKey: Keys.userId.rawValue)
             } else {
-                removeObject(forKey: Keys.pushToken)
+                removeObject(forKey: Keys.userId.rawValue)
             }
         }
     }
 
     var lastConnectedPeripheralUUID: String? {
         get {
-            return value(forKey: Keys.lastConnectedPeripheralUUID) as? String
+            return value(forKey: Keys.lastConnectedPeripheralUUID.rawValue) as? String
         }
         set {
             if let value = newValue {
-                setValue(value, forKey: Keys.lastConnectedPeripheralUUID)
+                setValue(value, forKey: Keys.lastConnectedPeripheralUUID.rawValue)
             } else {
-                removeObject(forKey: Keys.lastConnectedPeripheralUUID)
-                removeObject(forKey: Keys.firmwareVersion)
+                removeObject(forKey: Keys.lastConnectedPeripheralUUID.rawValue)
+                removeObject(forKey: Keys.firmwareVersion.rawValue)
             }
         }
     }
     
     var firmwareVersion: String? {
-        get { value(forKey: Keys.firmwareVersion) as? String }
-        set { setValue(newValue, forKey: Keys.firmwareVersion) }
+        get { value(forKey: Keys.firmwareVersion.rawValue) as? String }
+        set { setValue(newValue, forKey: Keys.firmwareVersion.rawValue) }
     }
 }

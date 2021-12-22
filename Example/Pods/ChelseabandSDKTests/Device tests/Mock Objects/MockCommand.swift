@@ -15,7 +15,7 @@ final class MockCommand: WritableCommand {
         case notExisted
     }
     
-    let uuidForWrite: ID
+    let commandUUID: ID
     
     var dataForSend: Data {
         Data([1])
@@ -24,9 +24,9 @@ final class MockCommand: WritableCommand {
     init(typeOfUUID: TypeOfUUID) {
         switch typeOfUUID {
         case .existed:
-            uuidForWrite = ChelseabandConfiguration.default.ledCharacteristic
+            commandUUID = ChelseabandConfiguration.default.ledCharacteristic
         case .notExisted:
-            uuidForWrite = .init(string: "00000000-0000-0000-0000-000000000000")
+            commandUUID = .init(string: "00000000-0000-0000-0000-000000000000")
         }
     }
 }

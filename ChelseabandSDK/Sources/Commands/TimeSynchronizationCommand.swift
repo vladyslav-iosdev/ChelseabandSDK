@@ -8,7 +8,7 @@
 import Foundation
 import RxSwift
 
-public struct TimeSynchronizationCommand: CommandNew {
+public struct TimeSynchronizationCommand: PerformableWriteCommand {
     
     private let date: Date
         
@@ -27,7 +27,7 @@ public struct TimeSynchronizationCommand: CommandNew {
         }
     }
     
-    public var uuidForWrite = ChelseabandConfiguration.default.batteryCharacteristic // TODO: Change on time characteristic
+    public var commandUUID = ChelseabandConfiguration.default.batteryCharacteristic // TODO: Change on time characteristic
     
     public var dataForSend: Data {
         let dateTime: Data = year.data + Data([month, day, hours, minutes, seconds])

@@ -9,6 +9,7 @@ import RxSwift
 import ChelseabandSDK
 
 struct MockCommandsExecutor: CommandExecutor {
+    
     private var device: DeviceType
     
     var isConnected: Observable<Bool> = .just(true)
@@ -17,11 +18,15 @@ struct MockCommandsExecutor: CommandExecutor {
         self.device = device
     }
         
-    func write(data: Data) -> Observable<Void> {
-        .just(())
-    }
-        
     func write(command: WritableCommand) -> Observable<Void> {
         device.write(command: command, timeout: .seconds(5))
+    }
+    
+    func writeAndObservNotify(command: WritableCommand) -> Observable<Data> {
+        .just(Data())
+    }
+    
+    func read(command: ReadableCommand) -> Observable<Data?> {
+        .just(Data())
     }
 }
