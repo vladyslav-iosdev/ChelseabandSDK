@@ -166,7 +166,7 @@ public final class Chelseaband: ChelseabandType {
 
     private var batteryLevelSubject: BehaviorSubject<UInt8> = .init(value: 0)
     private let device: DeviceType
-    private let statistic: Statistics
+    private let networkManager: NetworkManagerType
     private var connectionDisposable: Disposable? = .none
     private var disposeBag = DisposeBag()
     private var longLifeDisposeBag = DisposeBag()
@@ -176,7 +176,7 @@ public final class Chelseaband: ChelseabandType {
 
     required public init(device: DeviceType, apiBaseEndpoint: String, apiKey: String) {
         self.device = device
-        self.statistic = API()
+        self.networkManager = NetworkManager()
         UserDefaults.standard.apiBaseEndpoint = apiBaseEndpoint
         UserDefaults.standard.apiKey = apiKey
         
@@ -212,7 +212,7 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func appWillBeClose(callback: (() -> Void)?) {
-        statistic.sendBand(status: false, callback: callback)
+        networkManager.sendBand(status: false, callback: callback)
     }
 
     public func isLastConnected(peripheral: Peripheral) -> Bool {
@@ -220,14 +220,14 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchLastFirmwareVersion() -> Observable<String> {
-        statistic.fetchFirmware()
+        networkManager.fetchFirmware()
             .map { $0.firmwareVersion }
             .take(1)
             .timeout(.seconds(60), scheduler: MainScheduler.instance)
     }
     
     public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]> {
-        statistic.fetchSurveyResponses(forNotificationId: id)
+        networkManager.fetchSurveyResponses(forNotificationId: id)
     }
 
     private var fcmTokenObservable: Observable<String> {
@@ -245,27 +245,27 @@ public final class Chelseaband: ChelseabandType {
         Observable.combineLatest(fcmTokenObservable, connectedOrDisconnectedObservable)
             .map { $0.1 }
             .subscribe(onNext: {
-                self.statistic.sendBand(status: $0.isConnected)
+                self.networkManager.sendBand(status: $0.isConnected)
             }).disposed(by: disposeBag)
     }
 
     private func observeForFCMTokenChange() {
         fcmTokenObservable
             .subscribe(onNext: { token in
-                self.statistic.register(fcmToken: token)
+                self.networkManager.register(fcmToken: token)
             }).disposed(by: longLifeDisposeBag)
     }
 
     private func observeLocationChange() {
         locationTracker.isInAreaObservable
             .subscribe(onNext: { [weak self] in
-                self?.statistic.sendLocation(isInArea: $0)
+                self?.networkManager.sendLocation(isInArea: $0)
             })
             .disposed(by: longLifeDisposeBag)
     }
     
     private func synchronizeScore() {
-        statistic.getCurrentScore()
+        networkManager.getCurrentScore()
             .flatMap { [weak self] resultTuple -> Observable<Data> in
                 guard let strongSelf = self else { throw ChelseabandError.destroyed }
                 return strongSelf.uploadImage(resultTuple.image,
@@ -371,7 +371,7 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType> {
-        Observable.combineLatest(statistic.fetchTicket(), connectionObservable)
+        Observable.combineLatest(networkManager.fetchTicket(), connectionObservable)
             .skipWhile { !$0.1.isConnected }
             .timeout(.seconds(15), scheduler: MainScheduler.instance)
             .take(1)
@@ -406,7 +406,7 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchTicket() -> Observable<TicketType?> {
-        statistic.fetchTicket()
+        networkManager.fetchTicket()
             .take(1)
     }
     
@@ -451,7 +451,7 @@ public final class Chelseaband: ChelseabandType {
     }
 
     public func sendPoll(response: Int?, id: String) -> Observable<Void> {
-        statistic.sendVotingResponse(response, id)
+        networkManager.sendVotingResponse(response, id)
     }
     
     public func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
@@ -483,7 +483,7 @@ public final class Chelseaband: ChelseabandType {
             
             var suota: SUOTAUpdateType!
             
-            let updateObservable = strongSelf.statistic.fetchFirmware()
+            let updateObservable = strongSelf.networkManager.fetchFirmware()
                 .take(1)
                 .timeout(.seconds(60), scheduler: MainScheduler.instance)
                 .map { firmwareInfo -> (String, Data) in
@@ -522,7 +522,7 @@ public final class Chelseaband: ChelseabandType {
             .take(1)
             .timeout(.seconds(2), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.statistic.sendBand(status: $0.isConnected)
+                self?.networkManager.sendBand(status: $0.isConnected)
             })
             .disposed(by: disposeBag)
     }
@@ -530,7 +530,7 @@ public final class Chelseaband: ChelseabandType {
     public func fetchGameLocationAndStartObserve() {
         locationManager.locationStatusSubject
             .filter { $0.canObserve }
-            .flatMap { _ in self.statistic.getPointForObserve() }
+            .flatMap { _ in self.networkManager.getPointForObserve() }
             .subscribe(onNext: { [weak self] in
                 self?.locationTracker.addPointForObserve(pointInfo: $0)
             })
@@ -605,11 +605,11 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func register(phoneNumber: String) -> Observable<Void> {
-        statistic.register(phoneNumber: phoneNumber)
+        networkManager.register(phoneNumber: phoneNumber)
     }
     
     public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool> {
-        statistic.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
+        networkManager.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
             .do(onNext: { _ in
                 self.locationTracker.requestStateForRegions()
             })
@@ -631,13 +631,13 @@ public final class Chelseaband: ChelseabandType {
             .take(1)
             .timeout(.seconds(30), scheduler: MainScheduler.instance)
             .subscribe(onNext: { [weak self] in
-                self?.statistic.connectFanband(bandTransferModel: $0)
+                self?.networkManager.connectFanband(bandTransferModel: $0)
             })
             .disposed(by: disposeBag)
     }
     
     public func sendReaction(id: String) {
-        statistic.sendReaction(id)
+        networkManager.sendReaction(id)
     }
 
     public func startScanForPeripherals() -> Observable<[Peripheral]> {

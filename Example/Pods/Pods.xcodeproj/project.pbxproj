@@ -305,7 +305,7 @@
 		C51F2247275A538200E1B64A /* PollCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F2246275A538200E1B64A /* PollCommand.swift */; };
 		C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523122B2730067300CCCA10 /* ImageControlCommand.swift */; };
 		C5547F762601F22B0084825B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F752601F22B0084825B /* UserDefaults.swift */; };
-		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
+		C5547F7B2601FCF20084825B /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* NetworkManager.swift */; };
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
 		C55B132C276207A100DF487E /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55B132B276207A100DF487E /* Peripheral.swift */; };
 		C58175A12751213B00BFE00E /* SeatPositionCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58175A02751213B00BFE00E /* SeatPositionCommand.swift */; };
@@ -868,7 +868,7 @@
 		C51F2246275A538200E1B64A /* PollCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCommand.swift; sourceTree = "<group>"; };
 		C523122B2730067300CCCA10 /* ImageControlCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageControlCommand.swift; sourceTree = "<group>"; };
 		C5547F752601F22B0084825B /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
-		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
+		C5547F792601FCF20084825B /* NetworkManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
 		C55B132B276207A100DF487E /* Peripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peripheral.swift; sourceTree = "<group>"; };
 		C58175A02751213B00BFE00E /* SeatPositionCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeatPositionCommand.swift; sourceTree = "<group>"; };
@@ -1578,7 +1578,6 @@
 		C5547F772601FCF20084825B /* Statistics */ = {
 			isa = PBXGroup;
 			children = (
-				C5547F792601FCF20084825B /* StatisticsProtocol.swift */,
 				C5547F7E260214A40084825B /* LocationManagerTracker.swift */,
 			);
 			name = Statistics;
@@ -1618,6 +1617,7 @@
 				C5FFFA9B2775EBE200A674ED /* Providers */,
 				C5FFFA7F2775B5E800A674ED /* URLRequestBuilder.swift */,
 				C5FFFA852775B64B00A674ED /* ProviderManager.swift */,
+				C5547F792601FCF20084825B /* NetworkManager.swift */,
 			);
 			name = Network;
 			path = ChelseabandSDK/Sources/Network;
@@ -2201,7 +2201,7 @@
 				C5FFFA942775CAD800A674ED /* ScoreResponse.swift in Sources */,
 				C5FFFA842775B61C00A674ED /* UsersProvider.swift in Sources */,
 				C5FFFA722770D2C700A674ED /* ModelReadCommand.swift in Sources */,
-				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
+				C5547F7B2601FCF20084825B /* NetworkManager.swift in Sources */,
 				C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */,
 				C5FFFA882775B66700A674ED /* DataResponse.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */,

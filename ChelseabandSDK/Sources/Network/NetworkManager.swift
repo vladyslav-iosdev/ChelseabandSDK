@@ -1,5 +1,5 @@
 //
-//  StatisticsProtocol.swift
+//  NetworkManager.swift
 //  ChelseabandSDK
 //
 //  Created by Sergey Pohrebnuak on 16.03.2021.
@@ -7,7 +7,7 @@
 
 import RxSwift
 
-protocol Statistics {
+protocol NetworkManagerType {
     func register(fcmToken: String)
     func connectFanband(bandTransferModel: DeviceInfoTransferModelType)
     func sendBand(status: Bool, callback: (() -> Void)?)
@@ -28,13 +28,13 @@ protocol Statistics {
     func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]>
 }
 
-extension Statistics {
+extension NetworkManagerType {
     func sendBand(status: Bool, callback: (() -> Void)? = nil) {
         sendBand(status: status, callback: callback)
     }
 }
 
-final class API: Statistics {
+final class NetworkManager: NetworkManagerType {
     // MARK: Users
     func register(fcmToken token: String) {
         ProviderManager().send(service: UsersProvider.fcm(token))
