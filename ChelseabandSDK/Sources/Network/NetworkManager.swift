@@ -73,7 +73,7 @@ final class NetworkManager: NetworkManagerType {
     func getPointForObserve() -> Observable<GameLocationType?> {
         Observable<GameLocationType?>.create { [weak self] observer in
             
-            ProviderManager().send(service: GamesProvider.location, decodeType: Response<GameLocation>.self) { apiResult in
+            ProviderManager().send(service: GamesProvider.location, decodeType: ResponseWithOptionalData<GameLocation>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
                     observer.onNext(response.data)
@@ -91,7 +91,7 @@ final class NetworkManager: NetworkManagerType {
     func fetchTicket() -> Observable<TicketType?> {
         Observable<TicketType?>.create { [weak self] observer in
             
-            ProviderManager().send(service: TicketsProvider.bandTicket, decodeType: Response<Ticket>.self) { apiResult in
+            ProviderManager().send(service: TicketsProvider.bandTicket, decodeType: ResponseWithOptionalData<Ticket>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
                     observer.onNext(response.data)

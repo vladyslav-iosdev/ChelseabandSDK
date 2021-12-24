@@ -51,7 +51,7 @@ struct ResponseWithOptionalData<T: Decodable>: ResponseType {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try values.decode(Int.self, forKey: .statusCode)
         message = try values.decode(String.self, forKey: .message)
-        data = try values.decode(T.self, forKey: .data)
+        data = try? values.decode(T.self, forKey: .data)
     }
 }
 
