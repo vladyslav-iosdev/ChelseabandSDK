@@ -46,7 +46,7 @@ public protocol ChelseabandType {
     
     func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
     
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]>
+    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]>
 
     func forceSendConnectStatusOnServer()
     
@@ -221,12 +221,12 @@ public final class Chelseaband: ChelseabandType {
     
     public func fetchLastFirmwareVersion() -> Observable<String> {
         statistic.fetchFirmware()
-            .map { $0.version }
+            .map { $0.firmwareVersion }
             .take(1)
             .timeout(.seconds(60), scheduler: MainScheduler.instance)
     }
     
-    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[(answer: String, count: Int)]> {
+    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]> {
         statistic.fetchSurveyResponses(forNotificationId: id)
     }
 
@@ -486,11 +486,11 @@ public final class Chelseaband: ChelseabandType {
             let updateObservable = strongSelf.statistic.fetchFirmware()
                 .take(1)
                 .timeout(.seconds(60), scheduler: MainScheduler.instance)
-                .map { firmwareVersion, firmwareURL -> (String, Data) in
+                .map { firmwareInfo -> (String, Data) in
                     do {
-                        seal.onNext((0, firmwareVersion))
-                        let firmwareData = try Data(contentsOf: firmwareURL)
-                        return (firmwareVersion, firmwareData)
+                        seal.onNext((0, firmwareInfo.firmwareVersion))
+                        let firmwareData = try Data(contentsOf: firmwareInfo.firmwareURL)
+                        return (firmwareInfo.firmwareVersion, firmwareData)
                     } catch let error {
                        throw error
                     }

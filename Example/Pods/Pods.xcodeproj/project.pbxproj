@@ -305,7 +305,6 @@
 		C51F2247275A538200E1B64A /* PollCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51F2246275A538200E1B64A /* PollCommand.swift */; };
 		C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C523122B2730067300CCCA10 /* ImageControlCommand.swift */; };
 		C5547F762601F22B0084825B /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F752601F22B0084825B /* UserDefaults.swift */; };
-		C5547F7A2601FCF20084825B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F782601FCF20084825B /* API.swift */; };
 		C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F792601FCF20084825B /* StatisticsProtocol.swift */; };
 		C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5547F7E260214A40084825B /* LocationManagerTracker.swift */; };
 		C55B132C276207A100DF487E /* Peripheral.swift in Sources */ = {isa = PBXBuildFile; fileRef = C55B132B276207A100DF487E /* Peripheral.swift */; };
@@ -330,6 +329,20 @@
 		C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */; };
 		C5FFFA762770D2FE00A674ED /* DeviceInfoTransferModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */; };
 		C5FFFA7A27720D8D00A674ED /* SoftwareReadCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */; };
+		C5FFFA802775B5E800A674ED /* URLRequestBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA7F2775B5E800A674ED /* URLRequestBuilder.swift */; };
+		C5FFFA822775B60A00A674ED /* GamesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA812775B60A00A674ED /* GamesProvider.swift */; };
+		C5FFFA842775B61C00A674ED /* UsersProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA832775B61C00A674ED /* UsersProvider.swift */; };
+		C5FFFA862775B64B00A674ED /* ProviderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA852775B64B00A674ED /* ProviderManager.swift */; };
+		C5FFFA882775B66700A674ED /* DataResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA872775B66700A674ED /* DataResponse.swift */; };
+		C5FFFA8A2775B69500A674ED /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA892775B69500A674ED /* Response.swift */; };
+		C5FFFA8C2775B6B000A674ED /* GameLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA8B2775B6B000A674ED /* GameLocation.swift */; };
+		C5FFFA8E2775CA5F00A674ED /* TicketsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA8D2775CA5F00A674ED /* TicketsProvider.swift */; };
+		C5FFFA902775CA7700A674ED /* FirmwaresProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA8F2775CA7700A674ED /* FirmwaresProvider.swift */; };
+		C5FFFA922775CAAD00A674ED /* LatestFirmwareInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA912775CAAD00A674ED /* LatestFirmwareInfo.swift */; };
+		C5FFFA942775CAD800A674ED /* ScoreResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA932775CAD800A674ED /* ScoreResponse.swift */; };
+		C5FFFA962775EB5200A674ED /* SurveyResponses.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA952775EB5200A674ED /* SurveyResponses.swift */; };
+		C5FFFA982775EB9F00A674ED /* AuthProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA972775EB9F00A674ED /* AuthProvider.swift */; };
+		C5FFFA9A2775EBB800A674ED /* NotificationsProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA992775EBB800A674ED /* NotificationsProvider.swift */; };
 		C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */; };
 		C6C408BED9B728CA0388BACA7EA0559F /* AsSingle.swift in Sources */ = {isa = PBXBuildFile; fileRef = F5184615706B2DC39CB9AB0428B7A145 /* AsSingle.swift */; };
 		C7522A4AC82C24337F4BC373E0FF37B4 /* KVORepresentable+CoreGraphics.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6C4C4A75356CD3405BE3534DFB64E4EB /* KVORepresentable+CoreGraphics.swift */; };
@@ -855,7 +868,6 @@
 		C51F2246275A538200E1B64A /* PollCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PollCommand.swift; sourceTree = "<group>"; };
 		C523122B2730067300CCCA10 /* ImageControlCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageControlCommand.swift; sourceTree = "<group>"; };
 		C5547F752601F22B0084825B /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
-		C5547F782601FCF20084825B /* API.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
 		C5547F792601FCF20084825B /* StatisticsProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StatisticsProtocol.swift; sourceTree = "<group>"; };
 		C5547F7E260214A40084825B /* LocationManagerTracker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationManagerTracker.swift; sourceTree = "<group>"; };
 		C55B132B276207A100DF487E /* Peripheral.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Peripheral.swift; sourceTree = "<group>"; };
@@ -879,6 +891,20 @@
 		C5FFFA732770D2E400A674ED /* DeviceInfoTransferModelType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModelType.swift; sourceTree = "<group>"; };
 		C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceInfoTransferModel.swift; sourceTree = "<group>"; };
 		C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SoftwareReadCommand.swift; sourceTree = "<group>"; };
+		C5FFFA7F2775B5E800A674ED /* URLRequestBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLRequestBuilder.swift; sourceTree = "<group>"; };
+		C5FFFA812775B60A00A674ED /* GamesProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GamesProvider.swift; sourceTree = "<group>"; };
+		C5FFFA832775B61C00A674ED /* UsersProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UsersProvider.swift; sourceTree = "<group>"; };
+		C5FFFA852775B64B00A674ED /* ProviderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProviderManager.swift; sourceTree = "<group>"; };
+		C5FFFA872775B66700A674ED /* DataResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataResponse.swift; sourceTree = "<group>"; };
+		C5FFFA892775B69500A674ED /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
+		C5FFFA8B2775B6B000A674ED /* GameLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameLocation.swift; sourceTree = "<group>"; };
+		C5FFFA8D2775CA5F00A674ED /* TicketsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TicketsProvider.swift; sourceTree = "<group>"; };
+		C5FFFA8F2775CA7700A674ED /* FirmwaresProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirmwaresProvider.swift; sourceTree = "<group>"; };
+		C5FFFA912775CAAD00A674ED /* LatestFirmwareInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LatestFirmwareInfo.swift; sourceTree = "<group>"; };
+		C5FFFA932775CAD800A674ED /* ScoreResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoreResponse.swift; sourceTree = "<group>"; };
+		C5FFFA952775EB5200A674ED /* SurveyResponses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SurveyResponses.swift; sourceTree = "<group>"; };
+		C5FFFA972775EB9F00A674ED /* AuthProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthProvider.swift; sourceTree = "<group>"; };
+		C5FFFA992775EBB800A674ED /* NotificationsProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsProvider.swift; sourceTree = "<group>"; };
 		C66D6565C3E770156214C795D9B70E6A /* CurrentThreadScheduler.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = CurrentThreadScheduler.swift; path = RxSwift/Schedulers/CurrentThreadScheduler.swift; sourceTree = "<group>"; };
 		C7E081DF1D181D42DAEF8973A4F484FF /* GroupedObservable.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = GroupedObservable.swift; path = RxSwift/GroupedObservable.swift; sourceTree = "<group>"; };
 		C7F39B17ADEAE3C8401CDFCB6F7D5D5A /* UIButton+Rx.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = "UIButton+Rx.swift"; path = "RxCocoa/iOS/UIButton+Rx.swift"; sourceTree = "<group>"; };
@@ -1437,6 +1463,7 @@
 				C5547F752601F22B0084825B /* UserDefaults.swift */,
 				C55B132B276207A100DF487E /* Peripheral.swift */,
 				C5FFFA6927709D0000A674ED /* CLAuthorizationStatus.swift */,
+				C5FFFA872775B66700A674ED /* DataResponse.swift */,
 			);
 			name = Extensions;
 			path = ChelseabandSDK/Sources/Extensions;
@@ -1552,7 +1579,6 @@
 			isa = PBXGroup;
 			children = (
 				C5547F792601FCF20084825B /* StatisticsProtocol.swift */,
-				C5547F782601FCF20084825B /* API.swift */,
 				C5547F7E260214A40084825B /* LocationManagerTracker.swift */,
 			);
 			name = Statistics;
@@ -1564,6 +1590,11 @@
 			children = (
 				C58175A82751246800BFE00E /* Ticket.swift */,
 				C5FFFA752770D2FE00A674ED /* DeviceInfoTransferModel.swift */,
+				C5FFFA892775B69500A674ED /* Response.swift */,
+				C5FFFA8B2775B6B000A674ED /* GameLocation.swift */,
+				C5FFFA912775CAAD00A674ED /* LatestFirmwareInfo.swift */,
+				C5FFFA932775CAD800A674ED /* ScoreResponse.swift */,
+				C5FFFA952775EB5200A674ED /* SurveyResponses.swift */,
 			);
 			name = Models;
 			path = ChelseabandSDK/Sources/Models;
@@ -1579,6 +1610,30 @@
 			);
 			name = Protocols;
 			path = ChelseabandSDK/Sources/Protocols;
+			sourceTree = "<group>";
+		};
+		C5FFFA7E2775B5C800A674ED /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				C5FFFA9B2775EBE200A674ED /* Providers */,
+				C5FFFA7F2775B5E800A674ED /* URLRequestBuilder.swift */,
+				C5FFFA852775B64B00A674ED /* ProviderManager.swift */,
+			);
+			name = Network;
+			path = ChelseabandSDK/Sources/Network;
+			sourceTree = "<group>";
+		};
+		C5FFFA9B2775EBE200A674ED /* Providers */ = {
+			isa = PBXGroup;
+			children = (
+				C5FFFA812775B60A00A674ED /* GamesProvider.swift */,
+				C5FFFA832775B61C00A674ED /* UsersProvider.swift */,
+				C5FFFA8D2775CA5F00A674ED /* TicketsProvider.swift */,
+				C5FFFA8F2775CA7700A674ED /* FirmwaresProvider.swift */,
+				C5FFFA972775EB9F00A674ED /* AuthProvider.swift */,
+				C5FFFA992775EBB800A674ED /* NotificationsProvider.swift */,
+			);
+			path = Providers;
 			sourceTree = "<group>";
 		};
 		CF1408CF629C7361332E53B88F7BD30C = {
@@ -1678,6 +1733,7 @@
 				945E40E69B1D7DD10A0798B82A4D03F9 /* Command.swift */,
 				60ED621770F8AB869B6615D3A031EE91 /* Configuration.swift */,
 				B13D729595F41E37AF515F9FD5BBDBBC /* Device.swift */,
+				C5FFFA7E2775B5C800A674ED /* Network */,
 				C5547F772601FCF20084825B /* Statistics */,
 				E315B39525CDFDC690D5EAFCB040402B /* Commands */,
 				C58FD26A27679EC200C2F20D /* Protocols */,
@@ -2110,10 +2166,14 @@
 				C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */,
 				C5FFFA6A27709D0100A674ED /* CLAuthorizationStatus.swift in Sources */,
 				8C08826028DC42A00F726231787B9158 /* Chelseaband.swift in Sources */,
-				C5547F7A2601FCF20084825B /* API.swift in Sources */,
 				BBEC909CFDE0CC66F61D59B881F688CA /* ChelseabandSDK-dummy.m in Sources */,
+				C5FFFA982775EB9F00A674ED /* AuthProvider.swift in Sources */,
+				C5FFFA9A2775EBB800A674ED /* NotificationsProvider.swift in Sources */,
+				C5FFFA922775CAAD00A674ED /* LatestFirmwareInfo.swift in Sources */,
 				C523122C2730067300CCCA10 /* ImageControlCommand.swift in Sources */,
+				C5FFFA8C2775B6B000A674ED /* GameLocation.swift in Sources */,
 				C6553880228ABBEC8B22A2115BA3B505 /* Command.swift in Sources */,
+				C5FFFA962775EB5200A674ED /* SurveyResponses.swift in Sources */,
 				C55B132C276207A100DF487E /* Peripheral.swift in Sources */,
 				C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */,
 				EA1AC7E1284CB9BD12947E1CD909350E /* Configuration.swift in Sources */,
@@ -2121,20 +2181,29 @@
 				C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */,
 				C58175B12757BE6E00BFE00E /* ScoreCommand.swift in Sources */,
 				C5FFFA7A27720D8D00A674ED /* SoftwareReadCommand.swift in Sources */,
+				C5FFFA8E2775CA5F00A674ED /* TicketsProvider.swift in Sources */,
 				C58FD270276889B800C2F20D /* VibrationCommand.swift in Sources */,
+				C5FFFA862775B64B00A674ED /* ProviderManager.swift in Sources */,
 				C5547F7F260214A40084825B /* LocationManagerTracker.swift in Sources */,
+				C5FFFA822775B60A00A674ED /* GamesProvider.swift in Sources */,
 				C51F2247275A538200E1B64A /* PollCommand.swift in Sources */,
 				C58FD26D27679EC200C2F20D /* ScoreModelType.swift in Sources */,
 				C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */,
+				C5FFFA902775CA7700A674ED /* FirmwaresProvider.swift in Sources */,
 				C5FFFA762770D2FE00A674ED /* DeviceInfoTransferModel.swift in Sources */,
 				C5FFFA702770D2B400A674ED /* ManufacturerReadCommand.swift in Sources */,
 				86ED96B9EB34712BE2ECCA4DA38A5F99 /* String.swift in Sources */,
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
+				C5FFFA802775B5E800A674ED /* URLRequestBuilder.swift in Sources */,
+				C5FFFA8A2775B69500A674ED /* Response.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
 				C5FFFA6C2770D28A00A674ED /* SerialReadCommand.swift in Sources */,
+				C5FFFA942775CAD800A674ED /* ScoreResponse.swift in Sources */,
+				C5FFFA842775B61C00A674ED /* UsersProvider.swift in Sources */,
 				C5FFFA722770D2C700A674ED /* ModelReadCommand.swift in Sources */,
 				C5547F7B2601FCF20084825B /* StatisticsProtocol.swift in Sources */,
 				C5FFFA742770D2E400A674ED /* DeviceInfoTransferModelType.swift in Sources */,
+				C5FFFA882775B66700A674ED /* DataResponse.swift in Sources */,
 				C58FD26727679C8E00C2F20D /* LEDCommand.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

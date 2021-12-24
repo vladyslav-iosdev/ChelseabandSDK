@@ -18,7 +18,7 @@ public protocol LocationManager: AnyObject {
 protocol LocationTracker: LocationManager {
     var isInAreaObservable: Observable<Bool> { get }
     // NOTE: for stop observing just pass nil
-    func addPointForObserve(pointInfo: (lat: Double, lng: Double, radius: Double)?)
+    func addPointForObserve(pointInfo: GameLocationType?)
     func requestStateForRegions()
 }
 
@@ -30,7 +30,7 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     
     // MARK: Variables
     var isInAreaObservable: Observable<Bool> { isInAreaPublishSubject }
-    private var pointInfoForObserve: (lat: Double, lng: Double, radius: Double)? = nil
+    private var pointInfoForObserve: GameLocationType? = nil
     
     override init() {
         locationManager = CLLocationManager()
@@ -56,7 +56,7 @@ final class LocationManagerTracker: NSObject, LocationTracker {
     }
     
     // MARK: Internal Functions
-    func addPointForObserve(pointInfo: (lat: Double, lng: Double, radius: Double)?) {
+    func addPointForObserve(pointInfo: GameLocationType?) {
         pointInfoForObserve = pointInfo
         startObserving()
     }
@@ -85,8 +85,8 @@ final class LocationManagerTracker: NSObject, LocationTracker {
         
         guard let pointInfo = pointInfoForObserve else { return }
         
-        let regionCenter = CLLocationCoordinate2D(latitude: pointInfo.lat,
-                                                  longitude: pointInfo.lng)
+        let regionCenter = CLLocationCoordinate2D(latitude: pointInfo.latitude,
+                                                  longitude: pointInfo.longitude)
         let region = CLCircularRegion(center: regionCenter,
                                       radius: pointInfo.radius,
                                       identifier: "State Farm Arena")
