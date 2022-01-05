@@ -14,7 +14,7 @@ protocol NetworkManagerType {
     func sendLocation(isInArea: Bool)
     
     func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)>
-    func getPointForObserve() -> Observable<GameLocationType?>
+    func getPointForObserve() -> Single<GameLocationType?>
     
     func fetchTicket() -> Observable<TicketType?>
     
@@ -70,17 +70,16 @@ final class NetworkManager: NetworkManagerType {
         }
     }
     
-    func getPointForObserve() -> Observable<GameLocationType?> {
-        Observable<GameLocationType?>.create { [weak self] observer in
+    func getPointForObserve() -> Single<GameLocationType?> {
+        .create { [weak self] observer in
             
             ProviderManager().send(service: GamesProvider.location, decodeType: ResponseWithOptionalData<GameLocation>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer.onNext(response.data)
+                    observer(.success(response.data))
                 case .failure(let error):
-                    observer.onError(error)
+                    observer(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()
