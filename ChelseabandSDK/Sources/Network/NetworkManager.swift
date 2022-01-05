@@ -20,8 +20,8 @@ protocol NetworkManagerType {
     
     func fetchFirmware() -> Observable<LatestFirmwareInfoType>
     
-    func register(phoneNumber: String) -> Observable<Void>
-    func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Observable<Bool>
+    func register(phoneNumber: String) -> Single<Void>
+    func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Single<Bool>
     
     func sendReaction(_: String)
     func sendVotingResponse(_: Int?, _: String) -> Observable<Void>
@@ -124,36 +124,33 @@ final class NetworkManager: NetworkManagerType {
     }
     
     // MARK: Auth
-    func register(phoneNumber: String) -> Observable<Void> {
-        Observable<Void>.create { observer in
+    func register(phoneNumber: String) -> Single<Void> {
+        Single<Void>.create { observer in
             
             ProviderManager().send(service: AuthProvider.sendOTP(phoneNumber), decodeType: ResponseWithoutData.self) { apiResult in
                 switch apiResult {
                 case .success(let _):
-                    observer.onNext(())
+                    observer(.success(()))
                 case .failure(let error):
-                    observer.onError(error)
+                    observer(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()
         }
     }
     
-    func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool>
-    {
-        Observable<Bool>.create { observer in
+    func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Single<Bool> {
+        Single<Bool>.create { observer in
             
             let verifyProvider = AuthProvider.verify(phone: phoneNumber, code: OTPCode, fcm: fcm)
             ProviderManager().send(service: verifyProvider, decodeType: VerifyPhoneNumberResponse.self) { apiResult in
                 switch apiResult {
                 case .success(let model):
-                    observer.onNext(model.isCorrectPin)
+                    observer(.success(model.isCorrectPin))
                 case .failure(let error):
-                    observer.onError(error)
+                    observer(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()

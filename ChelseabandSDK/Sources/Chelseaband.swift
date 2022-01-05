@@ -66,9 +66,9 @@ public protocol ChelseabandType {
 
     func setFCMToken(_ token: String)
     
-    func register(phoneNumber: String) -> Observable<Void>
+    func register(phoneNumber: String) -> Single<Void>
     
-    func verify(phoneNumber: String, withOTPCode: String, andFCM: String) -> Observable<Bool>
+    func verify(phoneNumber: String, withOTPCode: String, andFCM: String) -> Single<Bool>
     
     func uploadImage(_ binImage: Data, imageType: ImageControlCommand.AlertImage) -> Observable<Void>
     
@@ -604,11 +604,11 @@ public final class Chelseaband: ChelseabandType {
         tokenBehaviourSubject.onNext(token)
     }
     
-    public func register(phoneNumber: String) -> Observable<Void> {
+    public func register(phoneNumber: String) -> Single<Void> {
         networkManager.register(phoneNumber: phoneNumber)
     }
     
-    public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Observable<Bool> {
+    public func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Single<Bool> {
         networkManager.verify(phoneNumber: phoneNumber, withOTPCode: OTPCode, andFCM: fcm)
             .do(onNext: { _ in
                 self.locationTracker.requestStateForRegions()
