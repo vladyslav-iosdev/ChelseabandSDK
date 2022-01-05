@@ -13,7 +13,7 @@ protocol NetworkManagerType {
     func sendBand(status: Bool, callback: (() -> Void)?)
     func sendLocation(isInArea: Bool)
     
-    func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)>
+    func getCurrentScore() -> Single<(image: Data, scoreModel: Data)>
     func getPointForObserve() -> Single<GameLocationType?>
     
     func fetchTicket() -> Observable<TicketType?>
@@ -53,17 +53,16 @@ final class NetworkManager: NetworkManagerType {
     }
     
     // MARK: Games
-    func getCurrentScore() -> Observable<(image: Data, scoreModel: Data)> {
-        Observable<(image: Data, scoreModel: Data)>.create { [weak self] observer in
+    func getCurrentScore() -> Single<(image: Data, scoreModel: Data)> {
+        .create { [weak self] single in
             
             ProviderManager().send(service: GamesProvider.score, decodeType: Response<ScoreResponse>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer.onNext((response.data.imageData, response.data.scoreModelData))
+                    single(.success((response.data.imageData, response.data.scoreModelData)))
                 case .failure(let error):
-                    observer.onError(error)
+                    single(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()
@@ -71,14 +70,14 @@ final class NetworkManager: NetworkManagerType {
     }
     
     func getPointForObserve() -> Single<GameLocationType?> {
-        .create { [weak self] observer in
+        .create { [weak self] single in
             
             ProviderManager().send(service: GamesProvider.location, decodeType: ResponseWithOptionalData<GameLocation>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer(.success(response.data))
+                    single(.success(response.data))
                 case .failure(let error):
-                    observer(.error(error))
+                    single(.error(error))
                 }
             }
             

@@ -78,7 +78,7 @@ public protocol ChelseabandType {
     
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
     
-    func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void>
+    func sendGoalCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
     func sendVibrationCommand(data: Data, decoder: JSONDecoder) -> Observable<Void>
     
@@ -266,18 +266,18 @@ public final class Chelseaband: ChelseabandType {
     
     private func synchronizeScore() {
         networkManager.getCurrentScore()
-            .flatMap { [weak self] resultTuple -> Observable<Data> in
+            .flatMap { [weak self] resultTuple -> Single<Void> in
                 guard let strongSelf = self else { throw ChelseabandError.destroyed }
-                return strongSelf.uploadImage(resultTuple.image,
-                                  imageType: .opposingTeamImage)
-                    .map { resultTuple.scoreModel }
+                
+                let uploadImageObservable = strongSelf.uploadImage(resultTuple.image,
+                                                                   imageType: .opposingTeamImage)
+                let sendScoreObservable = strongSelf.sendGoalCommand(data: resultTuple.scoreModel,
+                                                                     decoder: .init())
+                return Observable.from([uploadImageObservable, sendScoreObservable])
+                    .concatMap { $0 }
+                    .takeLast(1)
+                    .asSingle()
             }
-            .take(1)
-            .flatMap { [weak self] scoreModelData -> Observable<Void> in
-                guard let strongSelf  = self else { throw ChelseabandError.destroyed }
-                return strongSelf.sendGoalCommandNew(data: scoreModelData, decoder: .init())
-            }
-            .take(1)
             .timeout(.seconds(60), scheduler: MainScheduler.instance)
             .subscribe()
             .disposed(by: disposeBag)
@@ -419,12 +419,12 @@ public final class Chelseaband: ChelseabandType {
         }
     }
     
-    public func sendGoalCommandNew(data: Data, decoder: JSONDecoder) -> Observable<Void> {
+    public func sendGoalCommand(data: Data, decoder: JSONDecoder) -> Observable<Void> {
         do {
             let scoreCommand = try ScoreCommand(fromData: data, withDecoder: decoder)
             return performSafe(command: scoreCommand, timeOut: .seconds(5))
         } catch {
-            return Observable<Void>.error(error)
+            return .error(error)
         }
     }
     
