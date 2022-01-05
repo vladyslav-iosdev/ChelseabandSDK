@@ -18,7 +18,7 @@ protocol NetworkManagerType {
     
     func fetchTicket() -> Single<TicketType?>
     
-    func fetchFirmware() -> Observable<LatestFirmwareInfoType>
+    func fetchFirmware() -> Single<LatestFirmwareInfoType>
     
     func register(phoneNumber: String) -> Single<Void>
     func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Single<Bool>
@@ -103,17 +103,16 @@ final class NetworkManager: NetworkManagerType {
     }
     
     // MARK: Firmwares
-    func fetchFirmware() -> Observable<LatestFirmwareInfoType> {
-        Observable<LatestFirmwareInfoType>.create { [weak self] observer in
+    func fetchFirmware() -> Single<LatestFirmwareInfoType> {
+        .create { [weak self] single in
             
             ProviderManager().send(service: FirmwaresProvider.latest, decodeType: Response<LatestFirmwareInfo>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer.onNext(response.data)
+                    single(.success(response.data))
                 case .failure(let error):
-                    observer.onError(error)
+                    single(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()

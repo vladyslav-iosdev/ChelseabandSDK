@@ -96,7 +96,7 @@ public protocol ChelseabandType {
 
     func stopScanForPeripherals()
     
-    func fetchLastFirmwareVersion() -> Observable<String>
+    func fetchLastFirmwareVersion() -> Single<String>
     
     func updateFirmware() -> Observable<(Double, String)>
     
@@ -219,11 +219,9 @@ public final class Chelseaband: ChelseabandType {
         lastConnectedPeripheralUUID == peripheral.UUID
     }
     
-    public func fetchLastFirmwareVersion() -> Observable<String> {
+    public func fetchLastFirmwareVersion() -> Single<String> {
         networkManager.fetchFirmware()
             .map { $0.firmwareVersion }
-            .take(1)
-            .timeout(.seconds(60), scheduler: MainScheduler.instance)
     }
     
     public func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]> {
@@ -483,8 +481,7 @@ public final class Chelseaband: ChelseabandType {
             var suota: SUOTAUpdateType!
             
             let updateObservable = strongSelf.networkManager.fetchFirmware()
-                .take(1)
-                .timeout(.seconds(60), scheduler: MainScheduler.instance)
+                .asObservable()
                 .map { firmwareInfo -> (String, Data) in
                     do {
                         seal.onNext((0, firmwareInfo.firmwareVersion))
