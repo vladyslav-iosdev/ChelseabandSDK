@@ -7,7 +7,7 @@
 
 import RxSwift
 
-extension ObservableType {
+public extension ObservableType {
     func mapTimeoutError(to error: Error) -> Observable<Element> {
         catchError {
             if case RxSwift.RxError.timeout = $0 {
