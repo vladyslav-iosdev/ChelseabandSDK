@@ -24,8 +24,8 @@ protocol NetworkManagerType {
     func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM: String) -> Single<Bool>
     
     func sendReaction(_: String)
-    func sendVotingResponse(_: Int?, _: String) -> Observable<Void>
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]>
+    func sendVotingResponse(_: Int?, _: String) -> Single<Void>
+    func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]>
 }
 
 extension NetworkManagerType {
@@ -125,14 +125,14 @@ final class NetworkManager: NetworkManagerType {
     
     // MARK: Auth
     func register(phoneNumber: String) -> Single<Void> {
-        Single<Void>.create { observer in
+        .create { single in
             
             ProviderManager().send(service: AuthProvider.sendOTP(phoneNumber), decodeType: ResponseWithoutData.self) { apiResult in
                 switch apiResult {
                 case .success(let _):
-                    observer(.success(()))
+                    single(.success(()))
                 case .failure(let error):
-                    observer(.error(error))
+                    single(.error(error))
                 }
             }
             
@@ -141,15 +141,15 @@ final class NetworkManager: NetworkManagerType {
     }
     
     func verify(phoneNumber: String, withOTPCode OTPCode: String, andFCM fcm: String) -> Single<Bool> {
-        Single<Bool>.create { observer in
+        .create { single in
             
             let verifyProvider = AuthProvider.verify(phone: phoneNumber, code: OTPCode, fcm: fcm)
             ProviderManager().send(service: verifyProvider, decodeType: VerifyPhoneNumberResponse.self) { apiResult in
                 switch apiResult {
                 case .success(let model):
-                    observer(.success(model.isCorrectPin))
+                    single(.success(model.isCorrectPin))
                 case .failure(let error):
-                    observer(.error(error))
+                    single(.error(error))
                 }
             }
             
@@ -162,34 +162,32 @@ final class NetworkManager: NetworkManagerType {
         ProviderManager().send(service: NotificationsProvider.react(id))
     }
     
-    func sendVotingResponse(_ response: Int?, _ id: String) -> Observable<Void> {
-        Observable<Void>.create { observer in
+    func sendVotingResponse(_ response: Int?, _ id: String) -> Single<Void> {
+        .create { single in
             
             ProviderManager().send(service: NotificationsProvider.answer(id: id, answer: response), decodeType: ResponseWithoutData.self) { apiResult in
                 switch apiResult {
                 case .success:
-                    observer.onNext(())
+                    single(.success(()))
                 case .failure(let error):
-                    observer.onError(error)
+                    single(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()
         }
     }
     
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]> {
-        Observable<[SurveyResponseType]>.create { observer in
+    func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]> {
+        .create { single in
             
             ProviderManager().send(service: NotificationsProvider.surveyResponse(id), decodeType: Response<SurveyResponses>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer.onNext(response.data.responses)
+                    single(.success(response.data.responses))
                 case .failure(let error):
-                    observer.onError(error)
+                    single(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()

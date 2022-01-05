@@ -46,7 +46,7 @@ public protocol ChelseabandType {
     
     func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
     
-    func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]>
+    func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]>
 
     func forceSendConnectStatusOnServer()
     
@@ -88,7 +88,7 @@ public protocol ChelseabandType {
     
     func sendEndPollCommand() -> Observable<Void>
     
-    func sendPoll(response: Int?, id: String) -> Observable<Void>
+    func sendPoll(response: Int?, id: String) -> Single<Void>
     
     func sendReaction(id: String)
 
@@ -226,7 +226,7 @@ public final class Chelseaband: ChelseabandType {
             .timeout(.seconds(60), scheduler: MainScheduler.instance)
     }
     
-    public func fetchSurveyResponses(forNotificationId id: String) -> Observable<[SurveyResponseType]> {
+    public func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]> {
         networkManager.fetchSurveyResponses(forNotificationId: id)
     }
 
@@ -450,7 +450,7 @@ public final class Chelseaband: ChelseabandType {
         }
     }
 
-    public func sendPoll(response: Int?, id: String) -> Observable<Void> {
+    public func sendPoll(response: Int?, id: String) -> Single<Void> {
         networkManager.sendVotingResponse(response, id)
     }
     
