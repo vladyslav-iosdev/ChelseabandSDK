@@ -16,7 +16,7 @@ protocol NetworkManagerType {
     func getCurrentScore() -> Single<(image: Data, scoreModel: Data)>
     func getPointForObserve() -> Single<GameLocationType?>
     
-    func fetchTicket() -> Observable<TicketType?>
+    func fetchTicket() -> Single<TicketType?>
     
     func fetchFirmware() -> Observable<LatestFirmwareInfoType>
     
@@ -86,17 +86,16 @@ final class NetworkManager: NetworkManagerType {
     }
     
     // MARK: Tickets
-    func fetchTicket() -> Observable<TicketType?> {
-        Observable<TicketType?>.create { [weak self] observer in
+    func fetchTicket() -> Single<TicketType?> {
+        .create { [weak self] single in
             
             ProviderManager().send(service: TicketsProvider.bandTicket, decodeType: ResponseWithOptionalData<Ticket>.self) { apiResult in
                 switch apiResult {
                 case .success(let response):
-                    observer.onNext(response.data)
+                    single(.success(response.data))
                 case .failure(let error):
-                    observer.onError(error)
+                    single(.error(error))
                 }
-                observer.onCompleted()
             }
             
             return Disposables.create()

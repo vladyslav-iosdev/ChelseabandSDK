@@ -74,7 +74,7 @@ public protocol ChelseabandType {
     
     func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType>
     
-    func fetchTicket() -> Observable<TicketType?>
+    func fetchTicket() -> Single<TicketType?>
     
     func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void>
     
@@ -371,7 +371,7 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchFreshTicketAndUploadOnBand() -> Observable<TicketType> {
-        Observable.combineLatest(networkManager.fetchTicket(), connectionObservable)
+        Observable.combineLatest(networkManager.fetchTicket().asObservable(), connectionObservable)
             .skipWhile { !$0.1.isConnected }
             .timeout(.seconds(15), scheduler: MainScheduler.instance)
             .take(1)
@@ -405,9 +405,8 @@ public final class Chelseaband: ChelseabandType {
             .takeLast(1)
     }
     
-    public func fetchTicket() -> Observable<TicketType?> {
+    public func fetchTicket() -> Single<TicketType?> {
         networkManager.fetchTicket()
-            .take(1)
     }
     
     public func sendMessageCommand(_ message: String, withType type: MessageType, id: String) -> Observable<Void> {
