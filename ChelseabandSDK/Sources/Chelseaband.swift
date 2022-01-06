@@ -183,7 +183,7 @@ public final class Chelseaband: ChelseabandType {
         locationTracker = LocationManagerTracker()
         observeForFCMTokenChange()
         observeLocationChange()
-        fetchGameLocationAndStartObserve()
+        observeLocationStatusAndFetchPoint()
     }
     private var connectedPeripheral: Peripheral?
 
@@ -524,6 +524,14 @@ public final class Chelseaband: ChelseabandType {
     }
     
     public func fetchGameLocationAndStartObserve() {
+        networkManager.getPointForObserve()
+            .subscribe(onSuccess: { [weak self] in
+                self?.locationTracker.addPointForObserve(pointInfo: $0)
+            })
+            .disposed(by: longLifeDisposeBag)
+    }
+    
+    private func observeLocationStatusAndFetchPoint() {
         locationManager.locationStatusSubject
             .filter { $0.canObserve }
             .flatMap { _ in self.networkManager.getPointForObserve() }
