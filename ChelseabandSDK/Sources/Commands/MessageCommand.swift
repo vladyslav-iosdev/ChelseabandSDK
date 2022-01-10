@@ -10,6 +10,7 @@ import RxSwift
 public enum MessageCommandError: LocalizedError {
     case messageIsEmpty
     case cantDecodeMessageToData
+    case messageIsLong
     
     public var errorDescription: String? {
         switch self {
@@ -17,6 +18,8 @@ public enum MessageCommandError: LocalizedError {
             return "Message is empty"
         case .cantDecodeMessageToData:
             return "Cant decode message to data"
+        case .messageIsLong:
+            return "Message is long. Maximum length of message is 98 symbols"
         }
     }
 }
@@ -40,6 +43,8 @@ public struct MessageCommand: PerformableWriteCommand {
         guard let messageData = nullTerminatedMessage.uppercased().data(using: .utf8) else {
             throw MessageCommandError.cantDecodeMessageToData
         }
+        //NOTE: 99 it's maximum of message length
+        guard messageData.count <= 99 else { throw MessageCommandError.messageIsLong }
         
         dataForSend = type.messageTypeIdentifier.data + messageData
     }
