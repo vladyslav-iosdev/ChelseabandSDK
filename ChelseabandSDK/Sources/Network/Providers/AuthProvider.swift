@@ -36,7 +36,8 @@ enum AuthProvider: URLRequestBuilder {
         case .verify(let data):
             return ["phone": data.phone,
                     "code": data.code,
-                    "fcm": data.fcm]
+                    "fcm": data.fcm,
+                    "platform": "ios"]
         }
     }
 }

@@ -42,7 +42,8 @@ enum UsersProvider: URLRequestBuilder {
     var parameters: Parameters? {
         switch self {
         case .fcm(let token):
-            return ["fcm": token]
+            return ["fcm": token,
+                    "platform": "ios"]
         case .connectFanband(let bandTransferModel):
             return bandTransferModel.getLikeDict()
         case .status(let status):
