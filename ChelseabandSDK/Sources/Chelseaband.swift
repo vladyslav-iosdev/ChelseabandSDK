@@ -268,7 +268,7 @@ public final class Chelseaband: ChelseabandType {
                 guard let strongSelf = self else { throw ChelseabandError.destroyed }
                 
                 let uploadImageObservable = strongSelf.uploadImage(resultTuple.image,
-                                                                   imageType: .opposingTeamImage)
+                                                                   imageType: .opposingTeamsLogos)
                 let sendScoreObservable = strongSelf.sendGoalCommand(data: resultTuple.scoreModel,
                                                                      decoder: .init())
                 return Observable.from([uploadImageObservable, sendScoreObservable])
@@ -334,6 +334,7 @@ public final class Chelseaband: ChelseabandType {
             performSafe(command: imageControl, timeOut: .seconds(5)),
             performSafe(command: imageChunk, timeOut: .seconds(5)),
             performSafeRead(command: imageControl, timeOut: .seconds(5)).mapToVoid()
+                .delaySubscription(.milliseconds(100), scheduler: MainScheduler.instance)//NOTE: firmware should have a time for calculate hash
         ]
         
         return Observable<Void>.create { [weak self] seal in
