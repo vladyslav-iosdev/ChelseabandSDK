@@ -53,14 +53,15 @@ public struct ScoreCommand: PerformableWriteCommand {
 
 extension ScoreCommand {
     private struct ScoreModel: ScoreModelType, Decodable {
-        var wakeUpScreen: UInt8
-        var titleType: UInt8
-        var time: UInt16
-        var title: String
+        let wakeUpScreen: UInt8
+        let titleType: UInt8
+        let opposingTeamID: UInt8 = 0 //TODO: change in future on real opposing team id
+        let time: UInt16
+        let title: String
         private var nullTerminatedTitle: String {
             title + "\0"
         }
-        var body: String?
+        let body: String?
         private var nullTerminatedBody: String? {
             if let body = body {
                 return body + "\0"
@@ -71,6 +72,7 @@ extension ScoreCommand {
         func encodeToData() -> Data {
             var resultData = Data([wakeUpScreen, titleType])
             resultData.append(time.data)
+            resultData.append(Data([opposingTeamID]))
             resultData.append(nullTerminatedTitle.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             resultData.append(nullTerminatedBody?.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             

@@ -26,13 +26,13 @@ struct ScoreResponse: Decodable {
     let scoreModelData: Data
     
     enum CodingKeys: String, CodingKey {
-        case binImage
+        case binOppTeamsLogos
         case scoreJsonString
     }
     
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
-        let imageStringURL = try values.decode(String.self, forKey: .binImage)
+        let imageStringURL = try values.decode(String.self, forKey: .binOppTeamsLogos)
         if let imageURL = URL(string: imageStringURL),
            let imageData = try? Data(contentsOf: imageURL) {
             self.imageData = imageData

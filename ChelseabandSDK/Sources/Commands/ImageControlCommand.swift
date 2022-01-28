@@ -90,13 +90,13 @@ extension ImageControlCommand: PerformReadCommandProtocol {
 
 extension ImageControlCommand {
     public enum AlertImage {
-        case opposingTeamImage
+        case opposingTeamsLogos
         case alertIcon
         case gamedayTheme
         
         var imageType: UInt8 {
             switch self {
-            case .opposingTeamImage:
+            case .opposingTeamsLogos:
                 return 0
             case .alertIcon:
                 return 1
@@ -107,8 +107,8 @@ extension ImageControlCommand {
         
         var imageLength: UInt32 {
             switch self {
-            case .opposingTeamImage:
-                return 2240
+            case .opposingTeamsLogos:
+                return 64960
             case .alertIcon:
                 return 2738
             case .gamedayTheme:
