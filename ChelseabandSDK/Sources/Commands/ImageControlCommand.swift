@@ -108,7 +108,7 @@ extension ImageControlCommand {
         var imageLength: UInt32 {
             switch self {
             case .opposingTeamsLogos:
-                return 64960
+                return 67200
             case .alertIcon:
                 return 2738
             case .gamedayTheme:

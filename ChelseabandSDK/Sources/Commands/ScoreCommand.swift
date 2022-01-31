@@ -55,7 +55,7 @@ extension ScoreCommand {
     private struct ScoreModel: ScoreModelType, Decodable {
         let wakeUpScreen: UInt8
         let titleType: UInt8
-        let opposingTeamID: UInt8 = 0 //TODO: change in future on real opposing team id
+        let opposingTeamIndex: UInt8
         let time: UInt16
         let title: String
         private var nullTerminatedTitle: String {
@@ -72,7 +72,7 @@ extension ScoreCommand {
         func encodeToData() -> Data {
             var resultData = Data([wakeUpScreen, titleType])
             resultData.append(time.data)
-            resultData.append(Data([opposingTeamID]))
+            resultData.append(Data([opposingTeamIndex]))
             resultData.append(nullTerminatedTitle.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             resultData.append(nullTerminatedBody?.uppercased().data(using: .utf8) ?? Data()) //NOTE: band ignore lowercase symbols
             
