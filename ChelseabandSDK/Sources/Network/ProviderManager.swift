@@ -12,8 +12,15 @@ enum Result<T: Decodable> {
     case failure(Error)
 }
 
-public enum ProviderManagerError: Error {
+public enum ProviderManagerError: LocalizedError {
     case unknownError(String)
+    
+    public var errorDescription: String? {
+        switch self {
+        case .unknownError(let error):
+            return error
+        }
+    }
 }
 
 final class ProviderManager<T: URLRequestBuilder> {

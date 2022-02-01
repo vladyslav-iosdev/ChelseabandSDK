@@ -12,6 +12,28 @@ protocol ResponseType: Decodable {
     var message: String { get }
 }
 
+fileprivate enum ResponseCodingKeys: String, CodingKey {
+    case message
+}
+
+extension ResponseType {
+    static func getResponseMessage(from decoder: Decoder) -> String {
+        let defaultMessage = "Message description not found"
+        
+        guard let values = try? decoder.container(keyedBy: ResponseCodingKeys.self) else {
+            return defaultMessage
+        }
+        
+        if let message = try? values.decode(String.self, forKey: .message) {
+            return message
+        } else if let messages = try? values.decode([String].self, forKey: .message) {
+            return messages.joined(separator: "\n")
+        } else {
+            return defaultMessage
+        }
+    }
+}
+
 struct ResponseWithoutData: ResponseType {
     let statusCode: Int
     let message: String
@@ -31,7 +53,7 @@ struct Response<T: Decodable>: ResponseType {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try values.decode(Int.self, forKey: .statusCode)
-        message = try values.decode(String.self, forKey: .message)
+        message = Self.getResponseMessage(from: decoder)
         data = try values.decode(T.self, forKey: .data)
     }
 }
@@ -50,7 +72,7 @@ struct ResponseWithOptionalData<T: Decodable>: ResponseType {
     init(from decoder: Decoder) throws {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         statusCode = try values.decode(Int.self, forKey: .statusCode)
-        message = try values.decode(String.self, forKey: .message)
+        message = Self.getResponseMessage(from: decoder)
         data = try? values.decode(T.self, forKey: .data)
     }
 }
@@ -70,17 +92,21 @@ struct VerifyPhoneNumberResponse: ResponseType {
         let values = try decoder.container(keyedBy: CodingKeys.self)
         let statusCode = try values.decode(Int.self, forKey: .statusCode)
         
-        if statusCode == 60022 {
+        switch statusCode {
+        case 60022:
             isCorrectPin = false
             self.statusCode = 0 //NOTE: mark status code like all success because manager provider will mark response like failure
-        } else {
+        case 0:
             let data = try values.decode(UserIdModel.self, forKey: .data)
             UserDefaults.standard.userId =  data.userId
             isCorrectPin = true
             self.statusCode = statusCode
+        default:
+            isCorrectPin = false
+            self.statusCode = statusCode
         }
         
-        message = try values.decode(String.self, forKey: .message)
+        self.message = Self.getResponseMessage(from: decoder)
     }
     
     private struct UserIdModel: Decodable {
