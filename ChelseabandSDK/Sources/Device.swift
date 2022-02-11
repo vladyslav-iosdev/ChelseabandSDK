@@ -367,6 +367,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
                                 characteristicsDictionary[configuration.scoreCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.scoreCharacteristic)
                                 characteristicsDictionary[configuration.pollCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
+                                characteristicsDictionary[configuration.displayBrightness.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
                             default:
                                 break
                             }
@@ -429,6 +430,8 @@ public final class Device: DeviceType {
                                             case configuration.scoreCharacteristic:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             case configuration.pollCharacteristic:
+                                                strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
+                                            case configuration.displayBrightness:
                                                 strongSelf.fanbandCharacteristics.append(Observable.just(characteristic))
                                             default:
                                                 break

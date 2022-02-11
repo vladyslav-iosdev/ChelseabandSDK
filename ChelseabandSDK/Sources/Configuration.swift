@@ -39,6 +39,7 @@ public protocol Configuration {
     var alertCharacteristic: ID { get }
     var scoreCharacteristic: ID { get }
     var pollCharacteristic: ID { get }
+    var displayBrightness: ID { get }
     
     var advertisementServices: [ID] { get }
     var servicesForDiscovering: [ID] { get }
@@ -191,6 +192,13 @@ public enum ChelseabandConfiguration: Configuration {
         }
     }
     
+    public var displayBrightness: ID {
+        switch self {
+        case .default:
+            return ID(string: "11111111-0000-0000-0000-11111111111e")
+        }
+    }
+    
     public var suotaService: ID {
         switch self {
         case .default:
@@ -277,7 +285,8 @@ public enum ChelseabandConfiguration: Configuration {
             imageChunkCharacteristic.uuidString,
             alertCharacteristic.uuidString,
             scoreCharacteristic.uuidString,
-            pollCharacteristic.uuidString
+            pollCharacteristic.uuidString,
+            displayBrightness.uuidString
         ]
     }
 }
