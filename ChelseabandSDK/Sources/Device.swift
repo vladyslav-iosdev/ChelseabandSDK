@@ -367,7 +367,7 @@ public final class Device: DeviceType {
                                 characteristicsDictionary[configuration.alertCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.alertCharacteristic)
                                 characteristicsDictionary[configuration.scoreCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.scoreCharacteristic)
                                 characteristicsDictionary[configuration.pollCharacteristic.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
-                                characteristicsDictionary[configuration.displayBrightness.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.pollCharacteristic)
+                                characteristicsDictionary[configuration.displayBrightness.uuidString] = strongSelf.discoverCharacteristics(service, id: configuration.displayBrightness)
                             default:
                                 break
                             }

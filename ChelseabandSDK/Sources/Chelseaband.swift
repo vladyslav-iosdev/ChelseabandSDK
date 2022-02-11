@@ -46,6 +46,8 @@ public protocol ChelseabandType {
     
     func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void>
     
+    func setDisplayBrightness(_ displayBrightness: DisplayBrightness) -> Observable<Void>
+    
     func fetchSurveyResponses(forNotificationId id: String) -> Single<[SurveyResponseType]>
 
     func forceSendConnectStatusOnServer()
@@ -512,6 +514,11 @@ public final class Chelseaband: ChelseabandType {
     public func updateBandSettings(bandOrientation: BandOrientation) -> Observable<Void> {
         let deviceSettingsCommand = DeviceSettingsCommand(bandOrientation: bandOrientation)
         return performSafe(command: deviceSettingsCommand, timeOut: .seconds(5))
+    }
+    
+    public func setDisplayBrightness(_ displayBrightness: DisplayBrightness) -> Observable<Void> {
+        let displayBrightnessCommand = DisplayBrightnessCommand(displayBrightness: displayBrightness)
+        return performSafe(command: displayBrightnessCommand, timeOut: .seconds(5))
     }
     
     public func forceSendConnectStatusOnServer() {

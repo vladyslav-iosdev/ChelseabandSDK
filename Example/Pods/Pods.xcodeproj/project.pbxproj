@@ -319,6 +319,7 @@
 		C58FD272276889E200C2F20D /* VibrationPatternType.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD271276889E200C2F20D /* VibrationPatternType.swift */; };
 		C58FD27D276A0F2C00C2F20D /* MessageCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */; };
 		C59AF52398D2F4F4DDD1E596691845B2 /* GroupBy.swift in Sources */ = {isa = PBXBuildFile; fileRef = 175CB03DA94F8D1700654115A6E63DC3 /* GroupBy.swift */; };
+		C5B3BB6327B6A75E003E0CCB /* DisplayBrightnessCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5B3BB6227B6A75E003E0CCB /* DisplayBrightnessCommand.swift */; };
 		C5EDE6852732C3E600D9619C /* ImageChunkCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */; };
 		C5F82768274FA18400A5F95E /* DeviceSettingsCommand.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */; };
 		C5FFFA6A27709D0100A674ED /* CLAuthorizationStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = C5FFFA6927709D0000A674ED /* CLAuthorizationStatus.swift */; };
@@ -881,6 +882,7 @@
 		C58FD26F276889B800C2F20D /* VibrationCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationCommand.swift; sourceTree = "<group>"; };
 		C58FD271276889E200C2F20D /* VibrationPatternType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VibrationPatternType.swift; sourceTree = "<group>"; };
 		C58FD27C276A0F2C00C2F20D /* MessageCommand.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageCommand.swift; sourceTree = "<group>"; };
+		C5B3BB6227B6A75E003E0CCB /* DisplayBrightnessCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayBrightnessCommand.swift; sourceTree = "<group>"; };
 		C5EDE6842732C3E600D9619C /* ImageChunkCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageChunkCommand.swift; sourceTree = "<group>"; };
 		C5F82767274FA18400A5F95E /* DeviceSettingsCommand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeviceSettingsCommand.swift; sourceTree = "<group>"; };
 		C5FFFA6927709D0000A674ED /* CLAuthorizationStatus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CLAuthorizationStatus.swift; sourceTree = "<group>"; };
@@ -1721,6 +1723,7 @@
 				C5FFFA6F2770D2B400A674ED /* ManufacturerReadCommand.swift */,
 				C5FFFA712770D2C700A674ED /* ModelReadCommand.swift */,
 				C5FFFA7927720D8D00A674ED /* SoftwareReadCommand.swift */,
+				C5B3BB6227B6A75E003E0CCB /* DisplayBrightnessCommand.swift */,
 			);
 			name = Commands;
 			path = ChelseabandSDK/Sources/Commands;
@@ -2196,6 +2199,7 @@
 				C58175A92751246900BFE00E /* Ticket.swift in Sources */,
 				C5FFFA802775B5E800A674ED /* URLRequestBuilder.swift in Sources */,
 				C5FFFA8A2775B69500A674ED /* Response.swift in Sources */,
+				C5B3BB6327B6A75E003E0CCB /* DisplayBrightnessCommand.swift in Sources */,
 				C58FD26E27679EC200C2F20D /* LedPatternType.swift in Sources */,
 				C5FFFA6C2770D28A00A674ED /* SerialReadCommand.swift in Sources */,
 				C5FFFA942775CAD800A674ED /* ScoreResponse.swift in Sources */,
