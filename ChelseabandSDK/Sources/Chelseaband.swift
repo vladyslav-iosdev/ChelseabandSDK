@@ -334,7 +334,7 @@ public final class Chelseaband: ChelseabandType {
             performSafe(command: imageControl, timeOut: .seconds(5)),
             performSafe(command: imageChunk, timeOut: .seconds(5)),
             performSafeRead(command: imageControl, timeOut: .seconds(5)).mapToVoid()
-                .delaySubscription(.milliseconds(100), scheduler: MainScheduler.instance)//NOTE: firmware should have a time for calculate hash
+                .delaySubscription(.milliseconds(500), scheduler: MainScheduler.instance)//NOTE: firmware should have a time for calculate hash
         ]
         
         return Observable<Void>.create { [weak self] seal in
