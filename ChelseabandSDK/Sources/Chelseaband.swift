@@ -186,6 +186,7 @@ public final class Chelseaband: ChelseabandType {
         observeForFCMTokenChange()
         observeLocationChange()
         observeLocationStatusAndFetchPoint()
+        observeForConnectionStatusChange()
     }
     private var connectedPeripheral: Peripheral?
 
@@ -203,7 +204,6 @@ public final class Chelseaband: ChelseabandType {
                 strongSelf.lastConnectedPeripheralUUID = peripheral.UUID
 
                 strongSelf.synchronizeBattery()
-                strongSelf.observeForConnectionStatusChange()
                 strongSelf.sendBandInfoOnServer()
                 strongSelf.synchronizeScore()
                 
@@ -244,9 +244,9 @@ public final class Chelseaband: ChelseabandType {
     private func observeForConnectionStatusChange() {
         Observable.combineLatest(fcmTokenObservable, connectedOrDisconnectedObservable)
             .map { $0.1 }
-            .subscribe(onNext: {
-                self.networkManager.sendBand(status: $0.isConnected)
-            }).disposed(by: disposeBag)
+            .subscribe(onNext: { [weak self] in
+                self?.networkManager.sendBand(status: $0.isConnected)
+            }).disposed(by: longLifeDisposeBag)
     }
 
     private func observeForFCMTokenChange() {
