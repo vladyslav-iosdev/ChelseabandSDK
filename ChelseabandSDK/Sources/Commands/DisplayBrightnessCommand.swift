@@ -12,7 +12,7 @@ public enum DisplayBrightness: UInt8, CaseIterable {
     case brightnessEqualTo_25 = 100
     case brightnessEqualTo_50 = 150
     case brightnessEqualTo_75 = 200
-    case brightnessEqualTo_100 = 250
+    case brightnessEqualTo_100 = 255
 }
 
 public struct DisplayBrightnessCommand: PerformableWriteCommand {
