@@ -379,6 +379,7 @@ public final class Device: DeviceType {
                             if allSatisfy {
                                 strongSelf.fanbandCharacteristics.removeAll()
                                 let characteristicsObservable = characteristicsDictionary.map { $0.value }
+                                // TODO: check why if didn't fount characteristic combine latest didn't work
                                 let characteristicsDisposable = Observable.combineLatest(characteristicsObservable)
                                     .subscribe(onNext: { characteristics in
                                         characteristics.forEach { characteristic in
